@@ -1,0 +1,211 @@
+
+<h2 class="sr-only">চাইনিজ রিমেইন্ডার থিওরেম — বাংলায় ধাপে ধাপে ইন্টারেক্টিভ ব্যাখ্যা ও ক্যালকুলেটর</h2>
+<style>
+  *{box-sizing:border-box}
+  .wrap{padding:1.5rem 0;font-family:var(--font-sans)}
+  .sec{margin-bottom:2rem}
+  .lbl{font-size:13px;color:var(--color-text-secondary);margin-bottom:6px}
+  .card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:10px}
+  .big{font-size:22px;font-weight:500;color:var(--color-text-primary);text-align:center;padding:.75rem;background:var(--color-background-secondary);border-radius:var(--border-radius-md);margin-bottom:1rem}
+  .explain{font-size:14px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:.75rem}
+  .step-bar{display:flex;gap:0;margin-bottom:1.5rem;border-radius:var(--border-radius-md);overflow:hidden;border:0.5px solid var(--color-border-tertiary)}
+  .step-btn{flex:1;padding:8px 4px;font-size:12px;font-weight:500;color:var(--color-text-secondary);background:var(--color-background-secondary);border:none;cursor:pointer;border-right:0.5px solid var(--color-border-tertiary);transition:background .15s,color .15s;text-align:center}
+  .step-btn:last-child{border-right:none}
+  .step-btn.active{background:#EEEDFE;color:#3C3489}
+  .step-panel{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1.5rem;min-height:160px}
+  .math{font-size:16px;font-weight:500;color:var(--color-text-primary);margin:.5rem 0}
+  .hl{color:#534AB7;font-weight:500}
+  .hl2{color:#0F6E56;font-weight:500}
+  .hl3{color:#854F0B;font-weight:500}
+  .cond-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:8px;margin-bottom:1rem}
+  .cond-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem;text-align:center}
+  .cond-top{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+  .cond-sub{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:.75rem}
+  .field{display:flex;flex-direction:column;gap:4px}
+  .field label{font-size:12px;color:var(--color-text-secondary)}
+  .field input{width:72px}
+  .ans-box{background:#EEEDFE;border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-top:1rem}
+  .ans-num{font-size:32px;font-weight:500;color:#3C3489;text-align:center}
+  .ans-sub{font-size:13px;color:#534AB7;text-align:center;margin-top:4px}
+  .step-detail{font-size:13px;color:var(--color-text-secondary);line-height:1.8}
+  .step-detail .row-item{display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+  .step-detail .row-item:last-child{border:none}
+  .verify-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:.75rem}
+  .badge{padding:4px 12px;border-radius:var(--border-radius-md);font-size:12px;font-weight:500}
+  .badge-ok{background:#E1F5EE;color:#085041}
+  .badge-err{background:#FCEBEB;color:#791F1F}
+  .err-msg{font-size:13px;color:var(--color-text-danger);margin-top:.5rem}
+  hr.div{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.5rem 0}
+</style>
+
+<div class="wrap">
+
+  <div class="sec">
+    <div class="big">x ≡ r₁ (mod m₁)<br>x ≡ r₂ (mod m₂)<br>x ≡ r₃ (mod m₃)</div>
+    <div class="explain">
+      CRT বলে — যদি <span class="hl">m₁, m₂, m₃</span> পরস্পর সহমৌলিক (coprime) হয়, তাহলে উপরের সমীকরণ-তন্ত্রের <span class="hl">একটিমাত্র সমাধান</span> আছে, যেটি <span class="hl">M = m₁×m₂×m₃</span>-এর মধ্যে পড়ে।
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <div class="sec">
+    <div class="lbl">গল্পের উদাহরণ</div>
+    <div class="card">
+      <div class="explain" style="margin:0">
+        একটি সংখ্যাকে <span class="hl">৩</span> দিয়ে ভাগ করলে ভাগশেষ <span class="hl">২</span>,<br>
+        <span class="hl2">৫</span> দিয়ে ভাগ করলে ভাগশেষ <span class="hl2">৩</span>,<br>
+        <span class="hl3">৭</span> দিয়ে ভাগ করলে ভাগশেষ <span class="hl3">২</span>।<br><br>
+        সংখ্যাটি কত? — CRT দিয়ে খুঁজে বের করো।
+      </div>
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <div class="sec">
+    <div class="lbl">ধাপে ধাপে সমাধান — ক্লাসিক উদাহরণ (x≡2 mod 3, x≡3 mod 5, x≡2 mod 7)</div>
+    <div class="step-bar">
+      <button class="step-btn active" onclick="showStep(0)">ধাপ ১</button>
+      <button class="step-btn" onclick="showStep(1)">ধাপ ২</button>
+      <button class="step-btn" onclick="showStep(2)">ধাপ ৩</button>
+      <button class="step-btn" onclick="showStep(3)">ধাপ ৪</button>
+      <button class="step-btn" onclick="showStep(4)">উত্তর</button>
+    </div>
+    <div class="step-panel" id="step-panel"></div>
+  </div>
+
+  <hr class="div">
+
+  <div class="sec">
+    <div class="lbl">নিজে চেষ্টা করো — CRT ক্যালকুলেটর</div>
+    <div class="cond-grid" id="cond-grid">
+      <div class="cond-card">
+        <div class="cond-top">শর্ত ১</div>
+        <div class="row" style="justify-content:center;margin:.5rem 0 0">
+          <div class="field"><label>ভাগশেষ r₁</label><input type="number" id="r0" value="2" min="0" oninput="calcCRT()"></div>
+          <div class="field" style="align-self:flex-end;padding-bottom:6px;font-size:13px;color:var(--color-text-secondary)">mod</div>
+          <div class="field"><label>মডুলাস m₁</label><input type="number" id="m0" value="3" min="2" oninput="calcCRT()"></div>
+        </div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-top">শর্ত ২</div>
+        <div class="row" style="justify-content:center;margin:.5rem 0 0">
+          <div class="field"><label>ভাগশেষ r₂</label><input type="number" id="r1" value="3" min="0" oninput="calcCRT()"></div>
+          <div class="field" style="align-self:flex-end;padding-bottom:6px;font-size:13px;color:var(--color-text-secondary)">mod</div>
+          <div class="field"><label>মডুলাস m₂</label><input type="number" id="m1" value="5" min="2" oninput="calcCRT()"></div>
+        </div>
+      </div>
+      <div class="cond-card">
+        <div class="cond-top">শর্ত ৩</div>
+        <div class="row" style="justify-content:center;margin:.5rem 0 0">
+          <div class="field"><label>ভাগশেষ r₃</label><input type="number" id="r2" value="2" min="0" oninput="calcCRT()"></div>
+          <div class="field" style="align-self:flex-end;padding-bottom:6px;font-size:13px;color:var(--color-text-secondary)">mod</div>
+          <div class="field"><label>মডুলাস m₃</label><input type="number" id="m2" value="7" min="2" oninput="calcCRT()"></div>
+        </div>
+      </div>
+    </div>
+    <div id="crt-out"></div>
+    <div style="margin-top:1rem">
+      <button onclick="sendPrompt('CRT-এর বাস্তব জীবনের ব্যবহার কী?')">বাস্তব প্রয়োগ জানতে চাই ↗</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b]}return a}
+function extGcd(a,b){if(!b)return[a,1,0];const[g,x,y]=extGcd(b,a%b);return[g,y,x-Math.floor(a/b)*y]}
+function modInv(a,m){const[g,x]=extGcd(((a%m)+m)%m,m);if(g!==1)return null;return((x%m)+m)%m}
+
+const steps=[
+  {title:"ধাপ ১ — শর্তগুলো লেখো এবং M বের করো",body:`
+    <div class="explain">আমাদের তিনটি শর্ত আছে:</div>
+    <div class="math"><span class="hl">x ≡ 2 (mod 3)</span></div>
+    <div class="math"><span class="hl2">x ≡ 3 (mod 5)</span></div>
+    <div class="math"><span class="hl3">x ≡ 2 (mod 7)</span></div>
+    <div class="explain" style="margin-top:.75rem">
+      প্রথমে সব মডুলাসের গুণফল M বের করি:<br>
+      <strong style="color:var(--color-text-primary)">M = 3 × 5 × 7 = 105</strong><br>
+      এই M-এর মধ্যেই আমাদের উত্তর পাওয়া যাবে।
+    </div>`
+  },
+  {title:"ধাপ ২ — প্রতিটি Mᵢ বের করো",body:`
+    <div class="explain">প্রতিটি শর্তের জন্য <strong style="color:var(--color-text-primary)">Mᵢ = M ÷ mᵢ</strong> হিসাব করি:</div>
+    <div class="step-detail">
+      <div class="row-item"><span><span class="hl">M₁ = 105 ÷ 3</span></span><span class="hl">= 35</span></div>
+      <div class="row-item"><span><span class="hl2">M₂ = 105 ÷ 5</span></span><span class="hl2">= 21</span></div>
+      <div class="row-item"><span><span class="hl3">M₃ = 105 ÷ 7</span></span><span class="hl3">= 15</span></div>
+    </div>
+    <div class="explain" style="margin-top:.75rem">Mᵢ মানে — i-তম মডুলাস ছাড়া বাকি সবার গুণফল।</div>`
+  },
+  {title:"ধাপ ৩ — প্রতিটি yᵢ (মডুলার ইনভার্স) বের করো",body:`
+    <div class="explain"><strong style="color:var(--color-text-primary)">yᵢ = Mᵢ⁻¹ (mod mᵢ)</strong> — Extended Euclidean দিয়ে:</div>
+    <div class="step-detail">
+      <div class="row-item"><span><span class="hl">y₁: 35⁻¹ mod 3</span> → 35 mod 3 = 2, 2⁻¹ mod 3</span><span class="hl">= 2</span></div>
+      <div class="row-item"><span><span class="hl2">y₂: 21⁻¹ mod 5</span> → 21 mod 5 = 1, 1⁻¹ mod 5</span><span class="hl2">= 1</span></div>
+      <div class="row-item"><span><span class="hl3">y₃: 15⁻¹ mod 7</span> → 15 mod 7 = 1, 1⁻¹ mod 7</span><span class="hl3">= 1</span></div>
+    </div>
+    <div class="explain" style="margin-top:.75rem">যাচাই: <span class="hl">35×2 = 70 ≡ 1 (mod 3)</span> ✓ &nbsp; <span class="hl2">21×1 ≡ 1 (mod 5)</span> ✓ &nbsp; <span class="hl3">15×1 ≡ 1 (mod 7)</span> ✓</div>`
+  },
+  {title:"ধাপ ৪ — x বের করো",body:`
+    <div class="explain">সূত্র: <strong style="color:var(--color-text-primary)">x = Σ (rᵢ × Mᵢ × yᵢ) mod M</strong></div>
+    <div class="step-detail">
+      <div class="row-item"><span><span class="hl">r₁×M₁×y₁ = 2 × 35 × 2</span></span><span class="hl">= 140</span></div>
+      <div class="row-item"><span><span class="hl2">r₂×M₂×y₂ = 3 × 21 × 1</span></span><span class="hl2">= 63</span></div>
+      <div class="row-item"><span><span class="hl3">r₃×M₃×y₃ = 2 × 15 × 1</span></span><span class="hl3">= 30</span></div>
+      <div class="row-item"><span>মোট যোগ</span><span style="font-weight:500;color:var(--color-text-primary)">= 233</span></div>
+      <div class="row-item"><span>x = 233 mod 105</span><span style="font-weight:500;color:var(--color-text-primary)">= 23</span></div>
+    </div>`
+  },
+  {title:"উত্তর — যাচাই করো",body:`
+    <div class="ans-box" style="margin-bottom:1rem"><div class="ans-num">x = 23</div><div class="ans-sub">এবং M=105-এর মধ্যে এটিই একমাত্র সমাধান</div></div>
+    <div class="step-detail">
+      <div class="row-item"><span><span class="hl">23 ÷ 3</span> = ভাগশেষ</span><span class="hl">2 ✓</span></div>
+      <div class="row-item"><span><span class="hl2">23 ÷ 5</span> = ভাগশেষ</span><span class="hl2">3 ✓</span></div>
+      <div class="row-item"><span><span class="hl3">23 ÷ 7</span> = ভাগশেষ</span><span class="hl3">2 ✓</span></div>
+    </div>
+    <div class="explain" style="margin-top:.75rem">পরবর্তী সমাধান হবে <strong style="color:var(--color-text-primary)">23 + 105 = 128</strong>, তারপর <strong style="color:var(--color-text-primary)">233</strong> — এভাবে চলতে থাকবে।</div>`
+  }
+];
+
+let cur=0;
+function showStep(i){
+  cur=i;
+  document.querySelectorAll('.step-btn').forEach((b,j)=>b.classList.toggle('active',j===i));
+  document.getElementById('step-panel').innerHTML=`<div style="font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.75rem">${steps[i].title}</div>${steps[i].body}`;
+}
+showStep(0);
+
+function calcCRT(){
+  const rs=[parseInt(document.getElementById('r0').value)||0,parseInt(document.getElementById('r1').value)||0,parseInt(document.getElementById('r2').value)||0];
+  const ms=[parseInt(document.getElementById('m0').value)||3,parseInt(document.getElementById('m1').value)||5,parseInt(document.getElementById('m2').value)||7];
+  const out=document.getElementById('crt-out');
+
+  for(let i=0;i<3;i++){if(isNaN(ms[i])||ms[i]<2){out.innerHTML='<div class="err-msg">মডুলাস ন্যূনতম ২ হতে হবে।</div>';return}}
+
+  for(let i=0;i<3;i++)for(let j=i+1;j<3;j++){if(gcd(ms[i],ms[j])!==1){out.innerHTML=`<div class="err-msg">m${i+1} এবং m${j+1} সহমৌলিক নয় (gcd=${gcd(ms[i],ms[j])})। CRT কাজ করবে না।</div>`;return}}
+
+  const M=ms.reduce((a,b)=>a*b,1);
+  const Mi=ms.map(m=>M/m);
+  const yi=Mi.map((m,i)=>modInv(m,ms[i]));
+
+  if(yi.some(v=>v===null)){out.innerHTML='<div class="err-msg">মডুলার ইনভার্স বের করা সম্ভব হয়নি।</div>';return}
+
+  const terms=rs.map((r,i)=>r*Mi[i]*yi[i]);
+  const sum=terms.reduce((a,b)=>a+b,0);
+  const x=((sum%M)+M)%M;
+
+  const rows=ms.map((m,i)=>`<div class="row-item"><span>r${i+1}×M${i+1}×y${i+1} = ${rs[i]}×${Mi[i]}×${yi[i]}</span><span style="font-weight:500;color:var(--color-text-primary)">${terms[i]}</span></div>`).join('');
+  const checks=ms.map((m,i)=>`<span class="badge ${x%m===rs[i]?'badge-ok':'badge-err'}">${x} mod ${m} = ${x%m} ${x%m===rs[i]?'✓':'✗'}</span>`).join('');
+
+  out.innerHTML=`
+    <div class="step-detail">${rows}
+      <div class="row-item"><span>মোট যোগফল</span><span style="font-weight:500;color:var(--color-text-primary)">${sum}</span></div>
+      <div class="row-item"><span>x = ${sum} mod ${M}</span><span style="font-weight:500;color:var(--color-text-primary)">${x}</span></div>
+    </div>
+    <div class="ans-box"><div class="ans-num">x = ${x}</div><div class="ans-sub">M = ${M}-এর মধ্যে একমাত্র সমাধান</div></div>
+    <div class="verify-row">${checks}</div>`;
+}
+calcCRT();
+</script>

@@ -1,0 +1,356 @@
+
+<h2 class="sr-only">Interactive Dijkstra's shortest path algorithm — step through the algorithm and see distances update live on the graph</h2>
+<style>
+*{box-sizing:border-box}
+.w{padding:1.5rem 0;font-family:var(--font-sans)}
+.sec{margin-bottom:1.5rem}
+hr.dv{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.25rem 0}
+.lbl{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px}
+canvas{display:block;width:100%;height:240px;border-radius:var(--border-radius-lg);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary)}
+.ctrl-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:.75rem 0}
+.dist-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:.75rem 0}
+.dc{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.5rem .4rem;text-align:center}
+.dc-node{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:2px}
+.dc-val{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.dc.visited{background:#E1F5EE;border-color:#5DCAA5}
+.dc.visited .dc-node{color:#085041}
+.dc.visited .dc-val{color:#0F6E56}
+.dc.current{background:#EEEDFE;border-color:#7F77DD}
+.dc.current .dc-node{color:#3C3489}
+.dc.current .dc-val{color:#534AB7}
+.dc.source{background:#FAEEDA;border-color:#EF9F27}
+.dc.source .dc-node{color:#633806}
+.dc.source .dc-val{color:#854F0B}
+.step-box{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;min-height:64px;font-size:13px;color:var(--color-text-secondary);line-height:1.7}
+.step-box strong{color:var(--color-text-primary)}
+.step-counter{font-size:12px;color:var(--color-text-tertiary);margin-bottom:.25rem}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--color-text-secondary);margin-top:.5rem}
+.leg-item{display:flex;align-items:center;gap:5px}
+.leg-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.queue-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:.5rem}
+.q-pill{padding:3px 10px;border-radius:10px;font-size:12px;font-weight:500;background:#EEEDFE;color:#3C3489;border:0.5px solid #AFA9EC}
+.q-pill.cur{background:#534AB7;color:#fff;border-color:#534AB7}
+.path-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:.5rem;font-size:13px;color:var(--color-text-secondary)}
+.path-node{padding:2px 10px;border-radius:8px;background:#E1F5EE;color:#085041;border:0.5px solid #5DCAA5;font-weight:500;font-size:13px}
+.path-arr{color:var(--color-text-tertiary)}
+.code-block{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.75rem 1rem;font-family:var(--font-mono),monospace;font-size:12px;color:var(--color-text-primary);line-height:1.8;white-space:pre;overflow-x:auto}
+.kw{color:#534AB7;font-weight:500}
+.cm{color:var(--color-text-tertiary)}
+.st{color:#0F6E56}
+.nb{color:#D85A30}
+</style>
+
+<div class="w">
+
+<div class="sec">
+  <div class="lbl">Graph — weighted undirected (source = A)</div>
+  <canvas id="gc"></canvas>
+  <div class="legend">
+    <div class="leg-item"><div class="leg-dot" style="background:#EF9F27;border:1.5px solid #BA7517"></div>Source (A)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#534AB7;border:1.5px solid #3C3489"></div>Current node</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#1D9E75;border:1.5px solid #0F6E56"></div>Visited / finalized</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#EEEDFE;border:1.5px solid #7F77DD"></div>Unvisited</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#D85A30;border-radius:0;height:3px;width:18px"></div>Shortest path</div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="lbl">Distance table — updated each step</div>
+  <div class="dist-grid" id="dist-grid"></div>
+</div>
+
+<div class="sec">
+  <div class="lbl">Priority queue (unvisited nodes, sorted by distance)</div>
+  <div class="queue-row" id="queue-row"></div>
+</div>
+
+<div class="sec">
+  <div class="step-counter" id="step-counter">Step 0 of 0</div>
+  <div class="step-box" id="step-box">Press "Next step" to begin Dijkstra from node A.</div>
+  <div class="ctrl-row">
+    <button onclick="prevStep()">← Prev</button>
+    <button onclick="nextStep()">Next step →</button>
+    <button onclick="runAll()">Run all</button>
+    <button onclick="resetAlgo()">Reset</button>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="lbl">Shortest paths from A</div>
+  <div id="paths-out"></div>
+</div>
+
+<hr class="dv">
+
+<div class="sec">
+  <div class="lbl">Python implementation</div>
+<div class="code-block"><span class="kw">import</span> heapq
+
+<span class="kw">def</span> <span class="st">dijkstra</span>(graph, start):
+    <span class="cm"># dist[v] = shortest known distance from start to v</span>
+    dist = {v: float(<span class="nb">'inf'</span>) <span class="kw">for</span> v <span class="kw">in</span> graph}
+    dist[start] = <span class="nb">0</span>
+    prev = {v: <span class="kw">None</span> <span class="kw">for</span> v <span class="kw">in</span> graph}  <span class="cm"># to reconstruct path</span>
+
+    <span class="cm"># Min-heap: (distance, node)</span>
+    pq = [(<span class="nb">0</span>, start)]
+
+    <span class="kw">while</span> pq:
+        d, u = heapq.heappop(pq)    <span class="cm"># pick node with smallest dist</span>
+        <span class="kw">if</span> d > dist[u]:
+            <span class="kw">continue</span>              <span class="cm"># stale entry, skip</span>
+
+        <span class="kw">for</span> v, weight <span class="kw">in</span> graph[u].items():
+            new_dist = dist[u] + weight
+            <span class="kw">if</span> new_dist < dist[v]:   <span class="cm"># relaxation step</span>
+                dist[v] = new_dist
+                prev[v] = u
+                heapq.heappush(pq, (new_dist, v))
+
+    <span class="kw">return</span> dist, prev
+
+<span class="cm"># Example graph</span>
+graph = {
+    <span class="nb">'A'</span>: {<span class="nb">'B'</span>: <span class="nb">4</span>, <span class="nb">'C'</span>: <span class="nb">2</span>},
+    <span class="nb">'B'</span>: {<span class="nb">'A'</span>: <span class="nb">4</span>, <span class="nb">'C'</span>: <span class="nb">1</span>, <span class="nb">'D'</span>: <span class="nb">5</span>},
+    <span class="nb">'C'</span>: {<span class="nb">'A'</span>: <span class="nb">2</span>, <span class="nb">'B'</span>: <span class="nb">1</span>, <span class="nb">'D'</span>: <span class="nb">8</span>, <span class="nb">'E'</span>: <span class="nb">10</span>},
+    <span class="nb">'D'</span>: {<span class="nb">'B'</span>: <span class="nb">5</span>, <span class="nb">'C'</span>: <span class="nb">8</span>, <span class="nb">'E'</span>: <span class="nb">2</span>, <span class="nb">'F'</span>: <span class="nb">6</span>},
+    <span class="nb">'E'</span>: {<span class="nb">'C'</span>: <span class="nb">10</span>, <span class="nb">'D'</span>: <span class="nb">2</span>, <span class="nb">'F'</span>: <span class="nb">3</span>},
+    <span class="nb">'F'</span>: {<span class="nb">'D'</span>: <span class="nb">6</span>, <span class="nb">'E'</span>: <span class="nb">3</span>},
+}
+dist, prev = dijkstra(graph, <span class="nb">'A'</span>)</div>
+</div>
+
+<div style="margin-top:.5rem;display:flex;gap:8px;flex-wrap:wrap">
+  <button onclick="sendPrompt('explain BFS and DFS graph traversal from basic')">BFS & DFS traversal ↗</button>
+  <button onclick="sendPrompt('explain graph theory in bangla')">Graph theory in Bangla ↗</button>
+</div>
+
+</div>
+
+<script>
+const NODES = ['A','B','C','D','E','F'];
+const POS = [
+  {x:.12,y:.5},{x:.35,y:.12},{x:.35,y:.82},
+  {x:.65,y:.12},{x:.65,y:.82},{x:.88,y:.5}
+];
+const EDGES = [
+  ['A','B',4],['A','C',2],
+  ['B','C',1],['B','D',5],
+  ['C','D',8],['C','E',10],
+  ['D','E',2],['D','F',6],
+  ['E','F',3]
+];
+const INF = Infinity;
+const SRC = 'A';
+
+const graph = {};
+NODES.forEach(n => graph[n]={});
+EDGES.forEach(([u,v,w])=>{ graph[u][v]=w; graph[v][u]=w; });
+
+function runDijkstra() {
+  const dist = {}; const prev = {}; const visited = new Set();
+  NODES.forEach(n=>{ dist[n]=INF; prev[n]=null; });
+  dist[SRC]=0;
+  const steps=[];
+
+  let pq = NODES.map(n=>({n,d:dist[n]})).sort((a,b)=>a.d-b.d);
+
+  steps.push({
+    dist:{...dist}, prev:{...prev}, visited:new Set(visited),
+    current:null, pq:[...pq],
+    msg:`<strong>Initialise.</strong> Set dist[A]=0, all others=∞. Add all nodes to priority queue.`,
+    relaxed:null
+  });
+
+  while(true){
+    const unvisited = NODES.filter(n=>!visited.has(n));
+    if(!unvisited.length) break;
+    const u = unvisited.reduce((best,n)=>dist[n]<dist[best]?n:best, unvisited[0]);
+    if(dist[u]===INF) break;
+
+    visited.add(u);
+    pq = NODES.filter(n=>!visited.has(n)).map(n=>({n,d:dist[n]})).sort((a,b)=>a.d-b.d);
+
+    const relaxed=[];
+    Object.entries(graph[u]).forEach(([v,w])=>{
+      if(!visited.has(v)){
+        const nd = dist[u]+w;
+        if(nd < dist[v]){
+          dist[v]=nd; prev[v]=u;
+          relaxed.push({v,old:dist[v]>nd?'∞':dist[v],nd,w});
+        }
+      }
+    });
+
+    const nbStr = Object.entries(graph[u]).filter(([v])=>!visited.has(v))
+      .map(([v,w])=>`${v}(${w})`).join(', ') || 'none';
+
+    steps.push({
+      dist:{...dist}, prev:{...prev}, visited:new Set(visited),
+      current:u, pq:[...pq],
+      relaxed,
+      msg:`<strong>Visit ${u}</strong> (dist=${dist[u]===INF?'∞':dist[u]}). Check neighbors: ${nbStr}.`+
+        (relaxed.length ? ` Updated: `+relaxed.map(r=>`dist[${r.v}] → ${r.nd}`).join(', ')+'.':' No improvements found.')
+    });
+  }
+
+  steps.push({
+    dist:{...dist}, prev:{...prev}, visited:new Set(visited),
+    current:null, pq:[],
+    relaxed:null,
+    msg:`<strong>Done!</strong> All reachable nodes finalized. Shortest distances from A are locked in.`
+  });
+
+  return steps;
+}
+
+const STEPS = runDijkstra();
+let stepIdx = 0;
+
+function getPath(prev, target){
+  const path=[];
+  let cur=target;
+  while(cur!==null){ path.unshift(cur); cur=prev[cur]; }
+  return path[0]===SRC ? path : [];
+}
+
+function getPathEdges(prev, target){
+  const edges=new Set();
+  let cur=target;
+  while(prev[cur]!==null && prev[cur]!==undefined){
+    edges.add(prev[cur]+'-'+cur);
+    edges.add(cur+'-'+prev[cur]);
+    cur=prev[cur];
+  }
+  return edges;
+}
+
+function drawGraph(step){
+  const cv=document.getElementById('gc');
+  const W=cv.offsetWidth, H=cv.offsetHeight;
+  cv.width=W*devicePixelRatio; cv.height=H*devicePixelRatio;
+  const ctx=cv.getContext('2d');
+  ctx.scale(devicePixelRatio,devicePixelRatio);
+
+  const pos=POS.map(p=>({x:p.x*W,y:p.y*H}));
+  const ni={};
+  NODES.forEach((n,i)=>ni[n]=i);
+
+  const pathEdges = step.current ? new Set() :
+    NODES.reduce((s,n)=>{ getPathEdges(step.prev,n).forEach(e=>s.add(e)); return s; }, new Set());
+
+  EDGES.forEach(([u,v,w])=>{
+    const p1=pos[ni[u]],p2=pos[ni[v]];
+    const isPath = pathEdges.has(u+'-'+v)||pathEdges.has(v+'-'+u);
+    const isActive = step.current &&
+      (step.visited.has(u)||step.visited.has(v)) &&
+      (u===step.current||v===step.current);
+
+    ctx.beginPath();
+    ctx.moveTo(p1.x,p1.y); ctx.lineTo(p2.x,p2.y);
+    ctx.strokeStyle = isPath?'#D85A30': isActive?'#5DCAA5':'#D3D1C7';
+    ctx.lineWidth = isPath?3: isActive?2:1;
+    ctx.stroke();
+
+    const mx=(p1.x+p2.x)/2, my=(p1.y+p2.y)/2;
+    ctx.beginPath();
+    ctx.arc(mx,my,11,0,Math.PI*2);
+    ctx.fillStyle='var(--color-background-primary,#fff)' ;
+    ctx.fill();
+    ctx.fillStyle=isPath?'#D85A30':'#888780';
+    ctx.font='bold 11px sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(w,mx,my);
+  });
+
+  NODES.forEach((n,i)=>{
+    const p=pos[i];
+    const isSrc=n===SRC;
+    const isCur=n===step.current;
+    const isVis=step.visited.has(n);
+    const fill = isCur?'#534AB7': isSrc&&isVis?'#1D9E75': isSrc?'#EF9F27': isVis?'#1D9E75':'#EEEDFE';
+    const stroke = isCur?'#3C3489': isSrc&&isVis?'#0F6E56': isSrc?'#BA7517': isVis?'#0F6E56':'#7F77DD';
+    const textCol = (isCur||isVis||isSrc)?'#fff':'#3C3489';
+
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,22,0,Math.PI*2);
+    ctx.fillStyle=fill; ctx.fill();
+    ctx.strokeStyle=stroke; ctx.lineWidth=2; ctx.stroke();
+
+    ctx.fillStyle=textCol;
+    ctx.font='bold 13px sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(n,p.x,p.y-1);
+
+    const d=step.dist[n];
+    const dStr=d===INF?'∞':String(d);
+    ctx.font='bold 10px sans-serif';
+    ctx.fillStyle=isCur?'#AFA9EC': isVis?'#9FE1CB': isSrc?'#FAC775':'#888780';
+    ctx.fillText(dStr,p.x,p.y+12);
+  });
+}
+
+function renderDistGrid(step){
+  document.getElementById('dist-grid').innerHTML=NODES.map(n=>{
+    const d=step.dist[n];
+    let cls='dc';
+    if(n===SRC&&step.visited.has(n)) cls+=' visited';
+    else if(n===SRC) cls+=' source';
+    else if(n===step.current) cls+=' current';
+    else if(step.visited.has(n)) cls+=' visited';
+    return `<div class="${cls}"><div class="dc-node">${n}</div><div class="dc-val">${d===INF?'∞':d}</div></div>`;
+  }).join('');
+}
+
+function renderQueue(step){
+  const pq=step.pq;
+  document.getElementById('queue-row').innerHTML = pq.length===0
+    ? '<span style="font-size:12px;color:var(--color-text-tertiary)">Empty — all nodes visited</span>'
+    : pq.map((item,i)=>`<span class="q-pill${i===0?' cur':''}">${item.n}:${item.d===INF?'∞':item.d}</span>`).join('');
+}
+
+function renderPaths(step){
+  const out=document.getElementById('paths-out');
+  if(step.pq.length>0 && step.current!==null){
+    out.innerHTML='<div style="font-size:13px;color:var(--color-text-tertiary)">Run all steps to see final paths.</div>';
+    return;
+  }
+  let html='';
+  NODES.forEach(n=>{
+    const path=getPath(step.prev,n);
+    const d=step.dist[n];
+    if(n===SRC) return;
+    html+=`<div class="path-row">`;
+    if(path.length){
+      path.forEach((nd,i)=>{
+        html+=`<span class="path-node">${nd}</span>`;
+        if(i<path.length-1) html+=`<span class="path-arr">→</span>`;
+      });
+      html+=`<span style="font-size:12px;color:var(--color-text-tertiary);margin-left:4px">(cost: ${d})</span>`;
+    } else {
+      html+=`<span style="font-size:13px;color:var(--color-text-tertiary)">${n}: unreachable</span>`;
+    }
+    html+='</div>';
+  });
+  out.innerHTML=html;
+}
+
+function render(){
+  const step=STEPS[stepIdx];
+  drawGraph(step);
+  renderDistGrid(step);
+  renderQueue(step);
+  document.getElementById('step-box').innerHTML=step.msg;
+  document.getElementById('step-counter').textContent=`Step ${stepIdx} of ${STEPS.length-1}`;
+  renderPaths(step);
+}
+
+function nextStep(){ if(stepIdx<STEPS.length-1){ stepIdx++; render(); } }
+function prevStep(){ if(stepIdx>0){ stepIdx--; render(); } }
+function runAll(){ stepIdx=STEPS.length-1; render(); }
+function resetAlgo(){ stepIdx=0; render(); }
+
+window.addEventListener('load',()=>render());
+window.addEventListener('resize',()=>drawGraph(STEPS[stepIdx]));
+</script>

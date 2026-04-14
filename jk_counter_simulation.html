@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JK Flip-Flop Counter Simulator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap');
+
+  :root {
+    --bg: #0a0e1a;
+    --panel: #0f1628;
+    --border: #1e3a5f;
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #39ff14;
+    --high: #39ff14;
+    --low: #1a3a1a;
+    --wire-high: #39ff14;
+    --wire-low: #1e3a5f;
+    --clk: #ff6b35;
+    --text: #c8d8e8;
+    --dim: #4a6a8a;
+    --chip: #0d1f3c;
+    --chip-border: #2a5080;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Exo 2', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+  header {
+    text-align: center;
+    padding: 24px 0 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+
+  header h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(0,212,255,0.5);
+    letter-spacing: 4px;
+  }
+
+  header p {
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--dim);
+    font-size: 0.85rem;
+    margin-top: 6px;
+    letter-spacing: 2px;
+  }
+
+  /* Tab nav */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+    background: var(--panel);
+    padding: 6px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 10px 16px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--dim);
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.2s;
+  }
+
+  .tab-btn.active {
+    background: rgba(0,212,255,0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+    text-shadow: 0 0 10px rgba(0,212,255,0.5);
+  }
+
+  .tab-btn:hover:not(.active) { color: var(--text); border-color: var(--border); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Layout */
+  .sim-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 16px;
+  }
+
+  .circuit-area {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .circuit-area::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.015) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+  }
+
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 3px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* SVG canvas */
+  svg.circuit {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Right panel */
+  .right-panel { display: flex; flex-direction: column; gap: 16px; }
+
+  /* Controls */
+  .ctrl-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .ctrl-group { margin-bottom: 14px; }
+
+  .ctrl-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--dim);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .btn {
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 1px;
+  }
+
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { border-color: var(--accent2); color: var(--accent2); }
+  .btn.primary:hover { background: rgba(255,107,53,0.15); }
+  .btn.danger { border-color: #ff4444; color: #ff4444; }
+  .btn.danger:hover { background: rgba(255,68,68,0.1); }
+  .btn.success { border-color: var(--high); color: var(--high); }
+
+  .btn-full { width: 100%; }
+
+  /* Speed slider */
+  .slider-row { display: flex; align-items: center; gap: 10px; }
+  input[type=range] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px;
+    background: var(--accent);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(0,212,255,0.5);
+  }
+
+  /* State display */
+  .state-display {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .ff-states { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+
+  .ff-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+
+  .ff-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    color: var(--dim);
+    width: 28px;
+    letter-spacing: 1px;
+  }
+
+  .ff-q, .ff-qb {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    width: 28px;
+    text-align: center;
+    padding: 2px 6px;
+    border-radius: 3px;
+    transition: all 0.15s;
+  }
+
+  .ff-q.hi, .ff-qb.lo { color: var(--high); background: rgba(57,255,20,0.1); }
+  .ff-q.lo, .ff-qb.hi { color: var(--dim); background: rgba(0,0,0,0.2); }
+
+  .ff-label { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--dim); }
+
+  /* Count display */
+  .count-big {
+    text-align: center;
+    padding: 12px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-bottom: 10px;
+  }
+
+  .count-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.2rem;
+    color: var(--accent3);
+    text-shadow: 0 0 20px rgba(57,255,20,0.6);
+    display: block;
+    line-height: 1;
+  }
+
+  .count-bin {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--dim);
+    margin-top: 4px;
+    letter-spacing: 6px;
+  }
+
+  /* Truth table */
+  .truth-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+  }
+
+  th {
+    padding: 6px 8px;
+    background: rgba(0,212,255,0.08);
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+    letter-spacing: 1px;
+  }
+
+  td {
+    padding: 5px 8px;
+    text-align: center;
+    color: var(--dim);
+    border-bottom: 1px solid rgba(30,58,95,0.4);
+    transition: all 0.15s;
+  }
+
+  tr.current-row td { color: var(--accent3); background: rgba(57,255,20,0.06); }
+  tr.current-row { box-shadow: inset 2px 0 0 var(--accent3); }
+
+  /* Timing diagram */
+  .timing-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 16px;
+  }
+
+  .timing-canvas { width: 100%; display: block; margin-top: 10px; }
+
+  /* JK table */
+  .jk-table-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 16px;
+  }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* Status bar */
+  .status-bar {
+    margin-top: 16px;
+    padding: 8px 14px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--dim);
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .status-indicator {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--dim);
+    transition: background 0.15s;
+  }
+  .status-indicator.run { background: var(--high); box-shadow: 0 0 8px var(--high); animation: pulse 1s infinite; }
+
+  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.4 } }
+
+  /* Logisim chip style */
+  .chip-body { fill: var(--chip); stroke: var(--chip-border); stroke-width: 1.5; }
+  .chip-label { fill: var(--accent); font-family: 'Orbitron',monospace; font-size: 10px; letter-spacing: 1px; }
+  .chip-pin-label { fill: var(--dim); font-family: 'Share Tech Mono',monospace; font-size: 9px; }
+  .wire { stroke-width: 2; stroke-linecap: round; fill: none; transition: stroke 0.15s; }
+  .wire.hi { stroke: var(--wire-high); filter: drop-shadow(0 0 3px rgba(57,255,20,0.7)); }
+  .wire.lo { stroke: var(--wire-low); }
+  .wire.clk { stroke: var(--clk); }
+  .node { transition: fill 0.15s; }
+  .node.hi { fill: var(--wire-high); filter: drop-shadow(0 0 4px rgba(57,255,20,0.8)); }
+  .node.lo { fill: var(--wire-low); }
+  .led { transition: all 0.15s; }
+  .led.hi { fill: var(--high); filter: drop-shadow(0 0 6px rgba(57,255,20,0.9)); }
+  .led.lo { fill: #111; stroke: #333; }
+  .bubble { fill: var(--bg); stroke: var(--chip-border); stroke-width: 1.5; }
+
+  .info-box {
+    background: rgba(0,212,255,0.05);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 12px;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .info-box strong { color: var(--accent); }
+  .info-box code {
+    background: rgba(0,0,0,0.4);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--accent3);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>JK COUNTER SIMULATOR</h1>
+    <p>LOGISIM-STYLE · SYNCHRONOUS &amp; ASYNCHRONOUS · MOD-N ANALYSIS</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('async')">ASYNC (RIPPLE)</button>
+    <button class="tab-btn" onclick="switchTab('sync')">SYNCHRONOUS</button>
+    <button class="tab-btn" onclick="switchTab('mod')">MOD-N COUNTER</button>
+    <button class="tab-btn" onclick="switchTab('theory')">THEORY & TABLES</button>
+  </div>
+
+  <!-- ===== ASYNC TAB ===== -->
+  <div id="tab-async" class="tab-content active">
+    <div class="sim-layout">
+      <div>
+        <div class="circuit-area">
+          <div class="section-title">4-BIT ASYNCHRONOUS (RIPPLE) COUNTER — JK FLIP-FLOPS</div>
+          <svg class="circuit" viewBox="0 0 860 280" id="async-svg">
+            <!-- CLK source -->
+            <rect x="10" y="110" width="50" height="34" rx="4" class="chip-body"/>
+            <text x="35" y="131" text-anchor="middle" class="chip-label" font-size="8">CLK</text>
+
+            <!-- FF A (Q0 - LSB) -->
+            <rect x="100" y="70" width="90" height="110" rx="6" class="chip-body"/>
+            <text x="145" y="88" text-anchor="middle" class="chip-label">JK-FF</text>
+            <text x="145" y="102" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="8">FF-A (Q0)</text>
+            <text x="105" y="118" class="chip-pin-label">J</text>
+            <text x="105" y="135" class="chip-pin-label">CLK</text>
+            <text x="105" y="152" class="chip-pin-label">K</text>
+            <text x="172" y="118" class="chip-pin-label">Q</text>
+            <text x="164" y="152" class="chip-pin-label">Q̄</text>
+            <!-- J=K=1 tie -->
+            <line x1="97" y1="113" x2="88" y2="113" class="wire hi" id="a-j-wire"/>
+            <line x1="88" y1="113" x2="88" y2="158" class="wire hi" id="a-jk-tie"/>
+            <line x1="88" y1="158" x2="97" y2="158" class="wire hi" id="a-k-wire"/>
+            <circle cx="88" cy="136" r="3" class="node hi"/>
+            <text x="80" y="125" fill="#39ff14" font-family="Share Tech Mono" font-size="8">1</text>
+            <text x="80" y="140" fill="#39ff14" font-family="Share Tech Mono" font-size="8">1</text>
+            <!-- CLK input to FF-A -->
+            <line x1="60" y1="127" x2="97" y2="135" class="wire clk" id="clk-a-wire"/>
+            <!-- Q output -->
+            <line x1="190" y1="113" x2="230" y2="113" class="wire lo" id="a-q-wire"/>
+            <!-- Qbar output -->
+            <line x1="190" y1="148" x2="210" y2="148" class="wire lo" id="a-qb-wire"/>
+            <!-- LED A -->
+            <circle cx="210" cy="60" r="10" class="led lo" id="led-a"/>
+            <text x="210" y="46" text-anchor="middle" fill="#4a6a8a" font-family="Orbitron" font-size="8">Q0</text>
+            <line x1="210" y1="113" x2="210" y2="70" class="wire lo" id="led-a-wire"/>
+
+            <!-- FF B (Q1) -->
+            <rect x="270" y="70" width="90" height="110" rx="6" class="chip-body"/>
+            <text x="315" y="88" text-anchor="middle" class="chip-label">JK-FF</text>
+            <text x="315" y="102" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="8">FF-B (Q1)</text>
+            <text x="275" y="118" class="chip-pin-label">J</text>
+            <text x="275" y="135" class="chip-pin-label">CLK</text>
+            <text x="275" y="152" class="chip-pin-label">K</text>
+            <text x="342" y="118" class="chip-pin-label">Q</text>
+            <text x="334" y="152" class="chip-pin-label">Q̄</text>
+            <!-- J=K=1 -->
+            <line x1="267" y1="113" x2="258" y2="113" class="wire hi"/>
+            <line x1="258" y1="113" x2="258" y2="158" class="wire hi"/>
+            <line x1="258" y1="158" x2="267" y2="158" class="wire hi"/>
+            <circle cx="258" cy="136" r="3" class="node hi"/>
+            <text x="250" y="125" fill="#39ff14" font-family="Share Tech Mono" font-size="8">1</text>
+            <text x="250" y="140" fill="#39ff14" font-family="Share Tech Mono" font-size="8">1</text>
+            <!-- CLK from Q-not of A (ripple) -->
+            <line x1="210" y1="148" x2="258" y2="148" class="wire lo" id="b-clk-wire"/>
+            <line x1="258" y1="148" x2="267" y2="135" class="wire lo" id="b-clk-wire2"/>
+            <circle cx="230" cy="113" r="3" class="node lo" id="a-q-node"/>
+            <!-- Q output B -->
+            <line x1="360" y1="113" x2="400" y2="113" class="wire lo" id="b-q-wire"/>
+            <line x1="360" y1="148" x2="380" y2="148" class="wire lo" id="b-qb-wire"/>
+            <!-- LED B -->
+            <circle cx="380" cy="60" r="10" class="led lo" id="led-b"/>
+            <text x="380" y="46" text-anchor="middle" fill="#4a6a8a" font-family="Orbitron" font-size="8">Q1</text>
+            <line x1="380" y1="113" x2="380" y2="70" class="wire lo" id="led-b-wire"/>
+
+            <!-- FF C (Q2) -->
+            <rect x="440" y="70" width="90" height="110" rx="6" class="chip-body"/>
+            <text x="485" y="88" text-anchor="middle" class="chip-label">JK-FF</text>
+            <text x="485" y="102" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="8">FF-C (Q2)</text>
+            <text x="445" y="118" class="chip-pin-label">J</text>
+            <text x="445" y="135" class="chip-pin-label">CLK</text>
+            <text x="445" y="152" class="chip-pin-label">K</text>
+            <text x="512" y="118" class="chip-pin-label">Q</text>
+            <text x="504" y="152" class="chip-pin-label">Q̄</text>
+            <line x1="437" y1="113" x2="428" y2="113" class="wire hi"/>
+            <line x1="428" y1="113" x2="428" y2="158" class="wire hi"/>
+            <line x1="428" y1="158" x2="437" y2="158" class="wire hi"/>
+            <circle cx="428" cy="136" r="3" class="node hi"/>
+            <text x="420" y="125" fill="#39ff14" font-family="Share Tech Mono" font-size="8">1</text>
+            <text x="420" y="140" fill="#39ff14" font-family="Share Tech Mono" font-size="8">1</text>
+            <!-- CLK from Qbar of B -->
+            <line x1="380" y1="148" x2="428" y2="148" class="wire lo" id="c-clk-wire"/>
+            <line x1="428" y1="148" x2="437" y2="135" class="wire lo" id="c-clk-wire2"/>
+            <circle cx="400" cy="113" r="3" class="node lo" id="b-q-node"/>
+            <!-- Q output C -->
+            <line x1="530" y1="113" x2="570" y2="113" class="wire lo" id="c-q-wire"/>
+            <line x1="530" y1="148" x2="550" y2="148" class="wire lo" id="c-qb-wire"/>
+            <!-- LED C -->
+            <circle cx="550" cy="60" r="10" class="led lo" id="led-c"/>
+            <text x="550" y="46" text-anchor="middle" fill="#4a6a8a" font-family="Orbitron" font-size="8">Q2</text>
+            <line x1="550" y1="113" x2="550" y2="70" class="wire lo" id="led-c-wire"/>
+
+            <!-- FF D (Q3 - MSB) -->
+            <rect x="610" y="70" width="90" height="110" rx="6" class="chip-body"/>
+            <text x="655" y="88" text-anchor="middle" class="chip-label">JK-FF</text>
+            <text x="655" y="102" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="8">FF-D (Q3)</text>
+            <text x="615" y="118" class="chip-pin-label">J</text>
+            <text x="615" y="135" class="chip-pin-label">CLK</text>
+            <text x="615" y="152" class="chip-pin-label">K</text>
+            <text x="682" y="118" class="chip-pin-label">Q</text>
+            <text x="674" y="152" class="chip-pin-label">Q̄</text>
+            <line x1="607" y1="113" x2="598" y2="113" class="wire hi"/>
+            <line x1="598" y1="113" x2="598" y2="158" class="wire hi"/>
+            <line x1="598" y1="158" x2="607" y2="158" class="wire hi"/>
+            <circle cx="598" cy="136" r="3" class="node hi"/>
+            <text x="590" y="125" fill="#39ff14" font-family="Share Tech Mono" font-size="8">1</text>
+            <text x="590" y="140" fill="#39ff14" font-family="Share Tech Mono" font-size="8">1</text>
+            <!-- CLK from Qbar of C -->
+            <line x1="550" y1="148" x2="598" y2="148" class="wire lo" id="d-clk-wire"/>
+            <line x1="598" y1="148" x2="607" y2="135" class="wire lo" id="d-clk-wire2"/>
+            <circle cx="570" cy="113" r="3" class="node lo" id="c-q-node"/>
+            <!-- Q output D -->
+            <line x1="700" y1="113" x2="730" y2="113" class="wire lo" id="d-q-wire"/>
+            <!-- LED D -->
+            <circle cx="740" cy="60" r="10" class="led lo" id="led-d"/>
+            <text x="740" y="46" text-anchor="middle" fill="#4a6a8a" font-family="Orbitron" font-size="8">Q3</text>
+            <line x1="740" y1="113" x2="740" y2="70" class="wire lo" id="led-d-wire"/>
+            <circle cx="730" cy="113" r="3" class="node lo" id="d-q-node"/>
+
+            <!-- Binary output display -->
+            <rect x="760" y="95" width="85" height="48" rx="4" fill="rgba(0,0,0,0.5)" stroke="#1e3a5f"/>
+            <text x="802" y="110" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="7">OUTPUT</text>
+            <text x="802" y="128" text-anchor="middle" class="chip-label" font-size="14" id="async-bin-display">0000</text>
+            <text x="802" y="142" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="7">(DEC: 0)</text>
+
+            <!-- Propagation delay arrows for async -->
+            <text x="145" y="215" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="7">↑CLK</text>
+            <text x="315" y="215" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="7">↑Q̄A</text>
+            <text x="485" y="215" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="7">↑Q̄B</text>
+            <text x="655" y="215" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="7">↑Q̄C</text>
+            <line x1="145" y1="205" x2="315" y2="205" stroke="#ff6b35" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+            <line x1="315" y1="205" x2="485" y2="205" stroke="#ff6b35" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+            <line x1="485" y1="205" x2="655" y2="205" stroke="#ff6b35" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+            <text x="430" y="235" text-anchor="middle" fill="#ff6b35" font-family="Share Tech Mono" font-size="8">← RIPPLE PROPAGATION DELAY →</text>
+
+            <defs>
+              <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="#ff6b35"/>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+        <!-- Timing diagram -->
+        <div class="timing-panel">
+          <div class="section-title">TIMING DIAGRAM</div>
+          <canvas class="timing-canvas" id="async-timing" height="140"></canvas>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div class="ctrl-panel">
+          <div class="section-title" style="font-size:0.65rem">CONTROLS</div>
+          <div class="ctrl-group">
+            <span class="ctrl-label">CLOCK CONTROL</span>
+            <div class="btn-row">
+              <button class="btn primary btn-full" onclick="clockStep('async')">▶ CLOCK PULSE</button>
+            </div>
+            <div class="btn-row" style="margin-top:6px">
+              <button class="btn success" id="async-run-btn" onclick="toggleRun('async')">⏵ AUTO RUN</button>
+              <button class="btn danger" onclick="resetCounter('async')">⏹ RESET</button>
+            </div>
+          </div>
+          <div class="ctrl-group">
+            <span class="ctrl-label">SPEED</span>
+            <div class="slider-row">
+              <span style="font-family:Share Tech Mono;font-size:0.7rem;color:var(--dim)">SLOW</span>
+              <input type="range" id="async-speed" min="1" max="10" value="4">
+              <span style="font-family:Share Tech Mono;font-size:0.7rem;color:var(--dim)">FAST</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="state-display">
+          <div class="section-title" style="font-size:0.65rem">FLIP-FLOP STATES</div>
+          <div class="count-big">
+            <span class="count-num" id="async-count">0</span>
+            <div class="count-bin" id="async-binstr">0 0 0 0</div>
+          </div>
+          <div class="ff-states">
+            <div class="ff-row">
+              <span class="ff-name">FF-D</span>
+              <span class="ff-q lo" id="async-ffd-q">0</span>
+              <span class="ff-label">Q3</span>
+              <span class="ff-qb hi" id="async-ffd-qb">1</span>
+              <span class="ff-label">Q̄3</span>
+            </div>
+            <div class="ff-row">
+              <span class="ff-name">FF-C</span>
+              <span class="ff-q lo" id="async-ffc-q">0</span>
+              <span class="ff-label">Q2</span>
+              <span class="ff-qb hi" id="async-ffc-qb">1</span>
+              <span class="ff-label">Q̄2</span>
+            </div>
+            <div class="ff-row">
+              <span class="ff-name">FF-B</span>
+              <span class="ff-q lo" id="async-ffb-q">0</span>
+              <span class="ff-label">Q1</span>
+              <span class="ff-qb hi" id="async-ffb-qb">1</span>
+              <span class="ff-label">Q̄1</span>
+            </div>
+            <div class="ff-row">
+              <span class="ff-name">FF-A</span>
+              <span class="ff-q lo" id="async-ffa-q">0</span>
+              <span class="ff-label">Q0</span>
+              <span class="ff-qb hi" id="async-ffa-qb">1</span>
+              <span class="ff-label">Q̄0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="truth-panel">
+          <div class="section-title" style="font-size:0.65rem">COUNT SEQUENCE (MOD-16)</div>
+          <table id="async-table">
+            <tr><th>CLK</th><th>Q3</th><th>Q2</th><th>Q1</th><th>Q0</th><th>DEC</th></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>Asynchronous (Ripple) Counter:</strong> Each JK flip-flop has <code>J=K=1</code> (Toggle mode). FF-A is clocked by the external CLK. Each subsequent FF is clocked by the <strong>complemented output (Q̄)</strong> of the previous FF — triggering on the <em>falling edge</em> of Q, which is the <em>rising edge</em> of Q̄. This creates a ripple effect: <code>CLK→Q̄A→Q̄B→Q̄C</code>. Disadvantage: <strong>propagation delay</strong> accumulates across stages (tpd × N).
+    </div>
+  </div>
+
+  <!-- ===== SYNC TAB ===== -->
+  <div id="tab-sync" class="tab-content">
+    <div class="sim-layout">
+      <div>
+        <div class="circuit-area">
+          <div class="section-title">4-BIT SYNCHRONOUS COUNTER — JK FLIP-FLOPS</div>
+          <svg class="circuit" viewBox="0 0 860 300" id="sync-svg">
+            <!-- CLK bus -->
+            <line x1="10" y1="240" x2="840" y2="240" stroke="#ff6b35" stroke-width="1.5" stroke-dasharray="6,3"/>
+            <text x="20" y="255" fill="#ff6b35" font-family="Share Tech Mono" font-size="8">CLK BUS</text>
+
+            <!-- CLK drops to each FF -->
+            <line x1="145" y1="240" x2="145" y2="188" stroke="#ff6b35" stroke-width="1.5" stroke-dasharray="4,2" id="s-clk-a"/>
+            <line x1="315" y1="240" x2="315" y2="188" stroke="#ff6b35" stroke-width="1.5" stroke-dasharray="4,2" id="s-clk-b"/>
+            <line x1="485" y1="240" x2="485" y2="188" stroke="#ff6b35" stroke-width="1.5" stroke-dasharray="4,2" id="s-clk-c"/>
+            <line x1="655" y1="240" x2="655" y2="188" stroke="#ff6b35" stroke-width="1.5" stroke-dasharray="4,2" id="s-clk-d"/>
+
+            <!-- FF A -->
+            <rect x="100" y="70" width="90" height="120" rx="6" class="chip-body"/>
+            <text x="145" y="88" text-anchor="middle" class="chip-label">JK-FF</text>
+            <text x="145" y="102" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="8">FF-A (Q0)</text>
+            <text x="105" y="122" class="chip-pin-label">J</text>
+            <text x="105" y="140" class="chip-pin-label">CLK</text>
+            <text x="105" y="158" class="chip-pin-label">K</text>
+            <text x="172" y="122" class="chip-pin-label">Q</text>
+            <text x="164" y="158" class="chip-pin-label">Q̄</text>
+            <line x1="97" y1="117" x2="85" y2="117" class="wire hi"/>
+            <line x1="85" y1="117" x2="85" y2="165" class="wire hi"/>
+            <line x1="85" y1="165" x2="97" y2="165" class="wire hi"/>
+            <circle cx="85" cy="141" r="3" class="node hi"/>
+            <text x="76" y="130" fill="#39ff14" font-family="Share Tech Mono" font-size="8">1</text>
+            <text x="76" y="145" fill="#39ff14" font-family="Share Tech Mono" font-size="8">1</text>
+            <line x1="190" y1="117" x2="230" y2="117" class="wire lo" id="sa-q-wire"/>
+            <line x1="190" y1="155" x2="210" y2="155" class="wire lo" id="sa-qb-wire"/>
+            <circle cx="210" cy="60" r="10" class="led lo" id="sled-a"/>
+            <text x="210" y="46" text-anchor="middle" fill="#4a6a8a" font-family="Orbitron" font-size="8">Q0</text>
+            <line x1="210" y1="117" x2="210" y2="70" class="wire lo" id="sled-a-wire"/>
+
+            <!-- AND gate for FF-B: J=K=Q0 -->
+            <text x="240" y="112" fill="#4a6a8a" font-family="Share Tech Mono" font-size="7">AND</text>
+            <rect x="232" y="114" width="28" height="14" rx="3" fill="none" stroke="#2a5080" stroke-width="1"/>
+            <line x1="232" y1="121" x2="227" y2="121" class="wire lo" id="s-and1-in"/>
+            <text x="248" y="123" text-anchor="middle" fill="#00d4ff" font-family="Share Tech Mono" font-size="7">=Q0</text>
+            <line x1="260" y1="121" x2="270" y2="121" class="wire lo" id="s-and1-out"/>
+
+            <!-- FF B -->
+            <rect x="270" y="70" width="90" height="120" rx="6" class="chip-body"/>
+            <text x="315" y="88" text-anchor="middle" class="chip-label">JK-FF</text>
+            <text x="315" y="102" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="8">FF-B (Q1)</text>
+            <text x="275" y="122" class="chip-pin-label">J</text>
+            <text x="275" y="140" class="chip-pin-label">CLK</text>
+            <text x="275" y="158" class="chip-pin-label">K</text>
+            <text x="342" y="122" class="chip-pin-label">Q</text>
+            <text x="334" y="158" class="chip-pin-label">Q̄</text>
+            <line x1="267" y1="117" x2="260" y2="117" class="wire lo" id="sb-j-wire"/>
+            <line x1="260" y1="117" x2="260" y2="163" class="wire lo" id="sb-jk-tie"/>
+            <line x1="260" y1="163" x2="267" y2="163" class="wire lo" id="sb-k-wire"/>
+            <circle cx="260" cy="140" r="3" class="node lo" id="sb-jk-node"/>
+            <text x="253" y="132" fill="#4a6a8a" font-family="Share Tech Mono" font-size="7">Q0</text>
+            <line x1="360" y1="117" x2="400" y2="117" class="wire lo" id="sb-q-wire"/>
+            <circle cx="380" cy="60" r="10" class="led lo" id="sled-b"/>
+            <text x="380" y="46" text-anchor="middle" fill="#4a6a8a" font-family="Orbitron" font-size="8">Q1</text>
+            <line x1="380" y1="117" x2="380" y2="70" class="wire lo" id="sled-b-wire"/>
+
+            <!-- AND gate for FF-C: J=K=Q0·Q1 -->
+            <text x="408" y="112" fill="#4a6a8a" font-family="Share Tech Mono" font-size="7">AND</text>
+            <rect x="400" y="114" width="28" height="14" rx="3" fill="none" stroke="#2a5080" stroke-width="1"/>
+            <text x="414" y="123" text-anchor="middle" fill="#00d4ff" font-family="Share Tech Mono" font-size="7">Q0·Q1</text>
+            <line x1="400" y1="121" x2="395" y2="121" class="wire lo" id="s-and2-in"/>
+            <line x1="428" y1="121" x2="438" y2="121" class="wire lo" id="s-and2-out"/>
+
+            <!-- FF C -->
+            <rect x="440" y="70" width="90" height="120" rx="6" class="chip-body"/>
+            <text x="485" y="88" text-anchor="middle" class="chip-label">JK-FF</text>
+            <text x="485" y="102" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="8">FF-C (Q2)</text>
+            <text x="445" y="122" class="chip-pin-label">J</text>
+            <text x="445" y="140" class="chip-pin-label">CLK</text>
+            <text x="445" y="158" class="chip-pin-label">K</text>
+            <text x="512" y="122" class="chip-pin-label">Q</text>
+            <text x="504" y="158" class="chip-pin-label">Q̄</text>
+            <line x1="437" y1="117" x2="428" y2="117" class="wire lo" id="sc-j-wire"/>
+            <line x1="428" y1="117" x2="428" y2="163" class="wire lo" id="sc-jk-tie"/>
+            <line x1="428" y1="163" x2="437" y2="163" class="wire lo" id="sc-k-wire"/>
+            <circle cx="428" cy="140" r="3" class="node lo" id="sc-jk-node"/>
+            <text x="418" y="132" fill="#4a6a8a" font-family="Share Tech Mono" font-size="7">Q0Q1</text>
+            <line x1="530" y1="117" x2="570" y2="117" class="wire lo" id="sc-q-wire"/>
+            <circle cx="550" cy="60" r="10" class="led lo" id="sled-c"/>
+            <text x="550" y="46" text-anchor="middle" fill="#4a6a8a" font-family="Orbitron" font-size="8">Q2</text>
+            <line x1="550" y1="117" x2="550" y2="70" class="wire lo" id="sled-c-wire"/>
+
+            <!-- AND gate for FF-D: J=K=Q0·Q1·Q2 -->
+            <text x="574" y="112" fill="#4a6a8a" font-family="Share Tech Mono" font-size="7">AND</text>
+            <rect x="568" y="114" width="28" height="14" rx="3" fill="none" stroke="#2a5080" stroke-width="1"/>
+            <text x="582" y="123" text-anchor="middle" fill="#00d4ff" font-family="Share Tech Mono" font-size="7">Q0-2</text>
+            <line x1="568" y1="121" x2="563" y2="121" class="wire lo" id="s-and3-in"/>
+            <line x1="596" y1="121" x2="606" y2="121" class="wire lo" id="s-and3-out"/>
+
+            <!-- FF D -->
+            <rect x="610" y="70" width="90" height="120" rx="6" class="chip-body"/>
+            <text x="655" y="88" text-anchor="middle" class="chip-label">JK-FF</text>
+            <text x="655" y="102" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="8">FF-D (Q3)</text>
+            <text x="615" y="122" class="chip-pin-label">J</text>
+            <text x="615" y="140" class="chip-pin-label">CLK</text>
+            <text x="615" y="158" class="chip-pin-label">K</text>
+            <text x="682" y="122" class="chip-pin-label">Q</text>
+            <text x="674" y="158" class="chip-pin-label">Q̄</text>
+            <line x1="607" y1="117" x2="596" y2="117" class="wire lo" id="sd-j-wire"/>
+            <line x1="596" y1="117" x2="596" y2="163" class="wire lo" id="sd-jk-tie"/>
+            <line x1="596" y1="163" x2="607" y2="163" class="wire lo" id="sd-k-wire"/>
+            <circle cx="596" cy="140" r="3" class="node lo" id="sd-jk-node"/>
+            <text x="583" y="132" fill="#4a6a8a" font-family="Share Tech Mono" font-size="7">Q0-2</text>
+            <line x1="700" y1="117" x2="730" y2="117" class="wire lo" id="sd-q-wire"/>
+            <circle cx="740" cy="60" r="10" class="led lo" id="sled-d"/>
+            <text x="740" y="46" text-anchor="middle" fill="#4a6a8a" font-family="Orbitron" font-size="8">Q3</text>
+            <line x1="740" y1="117" x2="740" y2="70" class="wire lo" id="sled-d-wire"/>
+            <circle cx="730" cy="117" r="3" class="node lo" id="sd-q-node"/>
+
+            <!-- Output display -->
+            <rect x="760" y="95" width="85" height="55" rx="4" fill="rgba(0,0,0,0.5)" stroke="#1e3a5f"/>
+            <text x="802" y="110" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="7">OUTPUT</text>
+            <text x="802" y="130" text-anchor="middle" class="chip-label" font-size="14" id="sync-bin-display">0000</text>
+            <text x="802" y="145" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="7">(DEC: 0)</text>
+
+            <!-- Simultaneous CLK annotation -->
+            <text x="430" y="270" text-anchor="middle" fill="#ff6b35" font-family="Share Tech Mono" font-size="9">ALL FFs CLOCKED SIMULTANEOUSLY — NO RIPPLE DELAY</text>
+          </svg>
+        </div>
+        <div class="timing-panel">
+          <div class="section-title">TIMING DIAGRAM</div>
+          <canvas class="timing-canvas" id="sync-timing" height="140"></canvas>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div class="ctrl-panel">
+          <div class="section-title" style="font-size:0.65rem">CONTROLS</div>
+          <div class="ctrl-group">
+            <span class="ctrl-label">CLOCK CONTROL</span>
+            <div class="btn-row">
+              <button class="btn primary btn-full" onclick="clockStep('sync')">▶ CLOCK PULSE</button>
+            </div>
+            <div class="btn-row" style="margin-top:6px">
+              <button class="btn success" id="sync-run-btn" onclick="toggleRun('sync')">⏵ AUTO RUN</button>
+              <button class="btn danger" onclick="resetCounter('sync')">⏹ RESET</button>
+            </div>
+          </div>
+          <div class="ctrl-group">
+            <span class="ctrl-label">SPEED</span>
+            <div class="slider-row">
+              <span style="font-family:Share Tech Mono;font-size:0.7rem;color:var(--dim)">SLOW</span>
+              <input type="range" id="sync-speed" min="1" max="10" value="4">
+              <span style="font-family:Share Tech Mono;font-size:0.7rem;color:var(--dim)">FAST</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="state-display">
+          <div class="section-title" style="font-size:0.65rem">FLIP-FLOP STATES</div>
+          <div class="count-big">
+            <span class="count-num" id="sync-count">0</span>
+            <div class="count-bin" id="sync-binstr">0 0 0 0</div>
+          </div>
+          <div class="ff-states">
+            <div class="ff-row">
+              <span class="ff-name">FF-D</span>
+              <span class="ff-q lo" id="sync-ffd-q">0</span>
+              <span class="ff-label">Q3</span>
+              <span class="ff-qb hi" id="sync-ffd-qb">1</span>
+              <span class="ff-label">Q̄3</span>
+            </div>
+            <div class="ff-row">
+              <span class="ff-name">FF-C</span>
+              <span class="ff-q lo" id="sync-ffc-q">0</span>
+              <span class="ff-label">Q2</span>
+              <span class="ff-qb hi" id="sync-ffc-qb">1</span>
+              <span class="ff-label">Q̄2</span>
+            </div>
+            <div class="ff-row">
+              <span class="ff-name">FF-B</span>
+              <span class="ff-q lo" id="sync-ffb-q">0</span>
+              <span class="ff-label">Q1</span>
+              <span class="ff-qb hi" id="sync-ffb-qb">1</span>
+              <span class="ff-label">Q̄1</span>
+            </div>
+            <div class="ff-row">
+              <span class="ff-name">FF-A</span>
+              <span class="ff-q lo" id="sync-ffa-q">0</span>
+              <span class="ff-label">Q0</span>
+              <span class="ff-qb hi" id="sync-ffa-qb">1</span>
+              <span class="ff-label">Q̄0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="truth-panel">
+          <div class="section-title" style="font-size:0.65rem">COUNT SEQUENCE (MOD-16)</div>
+          <table id="sync-table">
+            <tr><th>CLK</th><th>Q3</th><th>Q2</th><th>Q1</th><th>Q0</th><th>DEC</th></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>Synchronous Counter:</strong> All FFs share the <strong>same CLK</strong> (no ripple delay). Toggle conditions: <code>JA=KA=1</code>, <code>JB=KB=Q0</code>, <code>JC=KC=Q0·Q1</code>, <code>JD=KD=Q0·Q1·Q2</code>. Each FF toggles only when <em>all lower-order outputs are HIGH</em> — achieved via AND gates. Advantage: <strong>no propagation delay</strong>; all bits switch simultaneously. Speed = single FF delay regardless of bit-width.
+    </div>
+  </div>
+
+  <!-- ===== MOD TAB ===== -->
+  <div id="tab-mod" class="tab-content">
+    <div class="sim-layout">
+      <div>
+        <div class="circuit-area">
+          <div class="section-title">MOD-N COUNTER — NAND GATE RESET FEEDBACK</div>
+          <svg class="circuit" viewBox="0 0 860 260" id="mod-svg">
+            <!-- Base counter (reuse async style, 3 FFs for mod-8) -->
+            <rect x="100" y="60" width="90" height="110" rx="6" class="chip-body"/>
+            <text x="145" y="78" text-anchor="middle" class="chip-label">JK-FF</text>
+            <text x="145" y="92" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="8">FF-A (Q0)</text>
+            <text x="105" y="110" class="chip-pin-label">J</text>
+            <text x="105" y="127" class="chip-pin-label">CLK</text>
+            <text x="105" y="144" class="chip-pin-label">K</text>
+            <text x="172" y="110" class="chip-pin-label">Q</text>
+            <text x="164" y="144" class="chip-pin-label">Q̄</text>
+            <text x="105" y="162" class="chip-pin-label">CLR</text>
+            <line x1="97" y1="105" x2="88" y2="105" class="wire hi"/>
+            <line x1="88" y1="105" x2="88" y2="150" class="wire hi"/>
+            <line x1="88" y1="150" x2="97" y2="150" class="wire hi"/>
+            <circle cx="88" cy="128" r="3" class="node hi"/>
+            <line x1="10" y1="115" x2="97" y2="125" class="wire clk"/>
+            <rect x="10" y="108" width="40" height="20" rx="3" class="chip-body"/>
+            <text x="30" y="121" text-anchor="middle" class="chip-label" font-size="7">CLK</text>
+            <line x1="190" y1="105" x2="240" y2="105" class="wire lo" id="ma-q-wire"/>
+            <line x1="190" y1="140" x2="220" y2="140" class="wire lo" id="ma-qb-wire"/>
+            <!-- CLR line -->
+            <line x1="97" y1="158" x2="75" y2="158" class="wire hi" id="ma-clr-wire"/>
+            <circle cx="220" cy="62" r="10" class="led lo" id="mled-a"/>
+            <text x="220" y="47" text-anchor="middle" fill="#4a6a8a" font-family="Orbitron" font-size="8">Q0</text>
+            <line x1="220" y1="105" x2="220" y2="72" class="wire lo" id="mled-a-wire"/>
+
+            <rect x="290" y="60" width="90" height="110" rx="6" class="chip-body"/>
+            <text x="335" y="78" text-anchor="middle" class="chip-label">JK-FF</text>
+            <text x="335" y="92" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="8">FF-B (Q1)</text>
+            <text x="295" y="110" class="chip-pin-label">J</text>
+            <text x="295" y="127" class="chip-pin-label">CLK</text>
+            <text x="295" y="144" class="chip-pin-label">K</text>
+            <text x="362" y="110" class="chip-pin-label">Q</text>
+            <text x="354" y="144" class="chip-pin-label">Q̄</text>
+            <text x="295" y="162" class="chip-pin-label">CLR</text>
+            <line x1="287" y1="105" x2="278" y2="105" class="wire hi"/>
+            <line x1="278" y1="105" x2="278" y2="150" class="wire hi"/>
+            <line x1="278" y1="150" x2="287" y2="150" class="wire hi"/>
+            <circle cx="278" cy="128" r="3" class="node hi"/>
+            <line x1="220" y1="140" x2="278" y2="140" class="wire lo" id="mb-clk-wire"/>
+            <line x1="278" y1="140" x2="287" y2="127" class="wire lo" id="mb-clk2"/>
+            <line x1="380" y1="105" x2="430" y2="105" class="wire lo" id="mb-q-wire"/>
+            <line x1="380" y1="140" x2="410" y2="140" class="wire lo" id="mb-qb-wire"/>
+            <line x1="287" y1="158" x2="265" y2="158" class="wire hi" id="mb-clr-wire"/>
+            <circle cx="410" cy="62" r="10" class="led lo" id="mled-b"/>
+            <text x="410" y="47" text-anchor="middle" fill="#4a6a8a" font-family="Orbitron" font-size="8">Q1</text>
+            <line x1="410" y1="105" x2="410" y2="72" class="wire lo" id="mled-b-wire"/>
+
+            <rect x="480" y="60" width="90" height="110" rx="6" class="chip-body"/>
+            <text x="525" y="78" text-anchor="middle" class="chip-label">JK-FF</text>
+            <text x="525" y="92" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="8">FF-C (Q2)</text>
+            <text x="485" y="110" class="chip-pin-label">J</text>
+            <text x="485" y="127" class="chip-pin-label">CLK</text>
+            <text x="485" y="144" class="chip-pin-label">K</text>
+            <text x="552" y="110" class="chip-pin-label">Q</text>
+            <text x="544" y="144" class="chip-pin-label">Q̄</text>
+            <text x="485" y="162" class="chip-pin-label">CLR</text>
+            <line x1="477" y1="105" x2="468" y2="105" class="wire hi"/>
+            <line x1="468" y1="105" x2="468" y2="150" class="wire hi"/>
+            <line x1="468" y1="150" x2="477" y2="150" class="wire hi"/>
+            <circle cx="468" cy="128" r="3" class="node hi"/>
+            <line x1="410" y1="140" x2="468" y2="140" class="wire lo" id="mc-clk-wire"/>
+            <line x1="468" y1="140" x2="477" y2="127" class="wire lo" id="mc-clk2"/>
+            <line x1="570" y1="105" x2="620" y2="105" class="wire lo" id="mc-q-wire"/>
+            <line x1="477" y1="158" x2="455" y2="158" class="wire hi" id="mc-clr-wire"/>
+            <circle cx="600" cy="62" r="10" class="led lo" id="mled-c"/>
+            <text x="600" y="47" text-anchor="middle" fill="#4a6a8a" font-family="Orbitron" font-size="8">Q2</text>
+            <line x1="600" y1="105" x2="600" y2="72" class="wire lo" id="mled-c-wire"/>
+
+            <!-- NAND gate reset logic -->
+            <rect x="640" y="90" width="60" height="40" rx="6" fill="rgba(255,107,53,0.1)" stroke="#ff6b35" stroke-width="1.5"/>
+            <text x="670" y="107" text-anchor="middle" fill="#ff6b35" font-family="Orbitron" font-size="8">NAND</text>
+            <text x="670" y="120" text-anchor="middle" fill="#ff6b35" font-family="Share Tech Mono" font-size="7">RESET</text>
+            <!-- NAND inputs come from selected Qs based on MOD -->
+            <line x1="620" y1="100" x2="640" y2="100" class="wire lo" id="nand-in1"/>
+            <line x1="430" y1="100" x2="640" y2="100" class="wire lo" id="nand-feed" stroke-dasharray="4,3"/>
+            <!-- NAND output feeds CLR -->
+            <line x1="700" y1="110" x2="750" y2="110" class="wire hi" id="nand-out"/>
+            <line x1="750" y1="110" x2="750" y2="175" class="wire hi" id="clr-bus"/>
+            <line x1="750" y1="175" x2="75" y2="175" class="wire hi" id="clr-bus2"/>
+            <line x1="75" y1="175" x2="75" y2="158" class="wire hi" id="clr-a"/>
+            <line x1="265" y1="175" x2="265" y2="158" class="wire hi" id="clr-b"/>
+            <line x1="455" y1="175" x2="455" y2="158" class="wire hi" id="clr-c"/>
+            <circle cx="265" cy="175" r="3" class="node hi"/>
+            <circle cx="455" cy="175" r="3" class="node hi"/>
+
+            <!-- MOD selector display -->
+            <rect x="760" y="80" width="85" height="65" rx="4" fill="rgba(255,107,53,0.05)" stroke="#ff6b35"/>
+            <text x="802" y="95" text-anchor="middle" fill="#ff6b35" font-family="Share Tech Mono" font-size="7">MOD</text>
+            <text x="802" y="118" text-anchor="middle" fill="#ff6b35" font-family="Orbitron" font-size="20" font-weight="900" id="mod-display">6</text>
+            <text x="802" y="136" text-anchor="middle" fill="#4a6a8a" font-family="Share Tech Mono" font-size="7">COUNTER</text>
+
+            <text x="430" y="215" text-anchor="middle" fill="#ff6b35" font-family="Share Tech Mono" font-size="8">NAND GATE DETECTS TARGET COUNT → RESETS ALL FFs TO 0000</text>
+          </svg>
+        </div>
+        <div class="timing-panel">
+          <div class="section-title">TIMING DIAGRAM</div>
+          <canvas class="timing-canvas" id="mod-timing" height="140"></canvas>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div class="ctrl-panel">
+          <div class="section-title" style="font-size:0.65rem">MOD SELECTOR</div>
+          <div class="ctrl-group">
+            <span class="ctrl-label">SELECT MOD VALUE</span>
+            <div class="btn-row" style="flex-wrap:wrap">
+              <button class="btn" onclick="setMod(2)">MOD-2</button>
+              <button class="btn" onclick="setMod(3)">MOD-3</button>
+              <button class="btn active" onclick="setMod(5)">MOD-5</button>
+              <button class="btn" onclick="setMod(6)">MOD-6</button>
+              <button class="btn" onclick="setMod(7)">MOD-7</button>
+              <button class="btn" onclick="setMod(8)">MOD-8</button>
+              <button class="btn" onclick="setMod(10)">MOD-10</button>
+              <button class="btn" onclick="setMod(12)">MOD-12</button>
+            </div>
+          </div>
+          <div class="ctrl-group">
+            <span class="ctrl-label">CLOCK CONTROL</span>
+            <div class="btn-row">
+              <button class="btn primary btn-full" onclick="clockStep('mod')">▶ CLOCK PULSE</button>
+            </div>
+            <div class="btn-row" style="margin-top:6px">
+              <button class="btn success" id="mod-run-btn" onclick="toggleRun('mod')">⏵ AUTO RUN</button>
+              <button class="btn danger" onclick="resetCounter('mod')">⏹ RESET</button>
+            </div>
+          </div>
+          <div class="ctrl-group">
+            <span class="ctrl-label">SPEED</span>
+            <div class="slider-row">
+              <span style="font-family:Share Tech Mono;font-size:0.7rem;color:var(--dim)">SLOW</span>
+              <input type="range" id="mod-speed" min="1" max="10" value="4">
+              <span style="font-family:Share Tech Mono;font-size:0.7rem;color:var(--dim)">FAST</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="state-display">
+          <div class="section-title" style="font-size:0.65rem">CURRENT STATE</div>
+          <div class="count-big">
+            <span class="count-num" id="mod-count">0</span>
+            <div class="count-bin" id="mod-binstr">0 0 0 0</div>
+          </div>
+          <div style="text-align:center;font-family:Share Tech Mono;font-size:0.7rem;color:var(--accent2);margin:8px 0">
+            MOD = <span id="mod-val-display">5</span> &nbsp;|&nbsp; RESETS AT <span id="mod-reset-at">5</span>
+          </div>
+          <div class="ff-states">
+            <div class="ff-row"><span class="ff-name">Q3</span><span class="ff-q lo" id="mod-ffd-q">0</span></div>
+            <div class="ff-row"><span class="ff-name">Q2</span><span class="ff-q lo" id="mod-ffc-q">0</span></div>
+            <div class="ff-row"><span class="ff-name">Q1</span><span class="ff-q lo" id="mod-ffb-q">0</span></div>
+            <div class="ff-row"><span class="ff-name">Q0</span><span class="ff-q lo" id="mod-ffa-q">0</span></div>
+          </div>
+        </div>
+
+        <div class="truth-panel">
+          <div class="section-title" style="font-size:0.65rem">MOD SEQUENCE</div>
+          <table id="mod-table">
+            <tr><th>CLK</th><th>Q3</th><th>Q2</th><th>Q1</th><th>Q0</th><th>DEC</th></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>Mod-N Counter:</strong> A standard counter with <strong>NAND-gate feedback</strong> on the CLR (Clear) inputs. When the count reaches <em>N</em>, the NAND gate detects specific Q outputs HIGH and immediately forces <code>CLR=0</code>, resetting all FFs. This produces a count of <code>0 → N-1 → 0</code>. The reset state <em>N</em> appears only as a <strong>glitch</strong> (very briefly) before being reset. Number of FFs required: <code>n = ⌈log₂(N)⌉</code>.
+    </div>
+  </div>
+
+  <!-- ===== THEORY TAB ===== -->
+  <div id="tab-theory" class="tab-content">
+    <div class="two-col">
+      <div>
+        <div class="jk-table-panel">
+          <div class="section-title">JK FLIP-FLOP TRUTH TABLE</div>
+          <table>
+            <tr><th>J</th><th>K</th><th>CLK</th><th>Q (next)</th><th>Action</th></tr>
+            <tr><td>0</td><td>0</td><td>↑</td><td>Q (no change)</td><td style="color:#4a6a8a">HOLD</td></tr>
+            <tr><td>0</td><td>1</td><td>↑</td><td>0</td><td style="color:#ff4444">RESET</td></tr>
+            <tr><td>1</td><td>0</td><td>↑</td><td>1</td><td style="color:#39ff14">SET</td></tr>
+            <tr><td>1</td><td>1</td><td>↑</td><td>Q̄ (toggle)</td><td style="color:#00d4ff">TOGGLE</td></tr>
+          </table>
+          <div class="info-box" style="margin-top:10px">
+            In counters, <code>J=K=1</code> keeps the FF in <strong>Toggle mode</strong> — it flips state on every active clock edge.
+          </div>
+        </div>
+
+        <div class="jk-table-panel" style="margin-top:14px">
+          <div class="section-title">SYNCHRONOUS COUNTER EXCITATION</div>
+          <table>
+            <tr><th>FF</th><th>J</th><th>K</th><th>Toggle Condition</th></tr>
+            <tr><td style="color:#00d4ff">FF-A (Q0)</td><td>1</td><td>1</td><td>Always toggles</td></tr>
+            <tr><td style="color:#00d4ff">FF-B (Q1)</td><td>Q0</td><td>Q0</td><td>When Q0=1</td></tr>
+            <tr><td style="color:#00d4ff">FF-C (Q2)</td><td>Q0·Q1</td><td>Q0·Q1</td><td>When Q0=Q1=1</td></tr>
+            <tr><td style="color:#00d4ff">FF-D (Q3)</td><td>Q0·Q1·Q2</td><td>Q0·Q1·Q2</td><td>When Q0=Q1=Q2=1</td></tr>
+          </table>
+        </div>
+
+        <div class="jk-table-panel" style="margin-top:14px">
+          <div class="section-title">ASYNC vs SYNC COMPARISON</div>
+          <table>
+            <tr><th>Feature</th><th>Async</th><th>Sync</th></tr>
+            <tr><td>CLK source</td><td style="color:#ff6b35">Ripple (Q̄→CLK)</td><td style="color:#39ff14">Common CLK bus</td></tr>
+            <tr><td>Propagation delay</td><td style="color:#ff4444">N × tpd</td><td style="color:#39ff14">1 × tpd</td></tr>
+            <tr><td>Speed</td><td style="color:#ff4444">Slower</td><td style="color:#39ff14">Faster</td></tr>
+            <tr><td>Circuit complexity</td><td style="color:#39ff14">Simple</td><td style="color:#ff6b35">AND gates needed</td></tr>
+            <tr><td>Glitches</td><td style="color:#ff4444">Yes (ripple)</td><td style="color:#39ff14">None</td></tr>
+            <tr><td>Power</td><td style="color:#39ff14">Lower</td><td style="color:#ff6b35">Higher</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <div class="jk-table-panel">
+          <div class="section-title">4-BIT COUNT SEQUENCE</div>
+          <table>
+            <tr><th>CLK</th><th>Q3</th><th>Q2</th><th>Q1</th><th>Q0</th><th>DEC</th></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+            <tr><td>2</td><td>0</td><td>0</td><td>1</td><td>0</td><td>2</td></tr>
+            <tr><td>3</td><td>0</td><td>0</td><td>1</td><td>1</td><td>3</td></tr>
+            <tr><td>4</td><td>0</td><td>1</td><td>0</td><td>0</td><td>4</td></tr>
+            <tr><td>5</td><td>0</td><td>1</td><td>0</td><td>1</td><td>5</td></tr>
+            <tr><td>6</td><td>0</td><td>1</td><td>1</td><td>0</td><td>6</td></tr>
+            <tr><td>7</td><td>0</td><td>1</td><td>1</td><td>1</td><td>7</td></tr>
+            <tr><td>8</td><td>1</td><td>0</td><td>0</td><td>0</td><td>8</td></tr>
+            <tr><td>9</td><td>1</td><td>0</td><td>0</td><td>1</td><td>9</td></tr>
+            <tr><td>10</td><td>1</td><td>0</td><td>1</td><td>0</td><td>10</td></tr>
+            <tr><td>11</td><td>1</td><td>0</td><td>1</td><td>1</td><td>11</td></tr>
+            <tr><td>12</td><td>1</td><td>1</td><td>0</td><td>0</td><td>12</td></tr>
+            <tr><td>13</td><td>1</td><td>1</td><td>0</td><td>1</td><td>13</td></tr>
+            <tr><td>14</td><td>1</td><td>1</td><td>1</td><td>0</td><td>14</td></tr>
+            <tr><td>15</td><td>1</td><td>1</td><td>1</td><td>1</td><td>15</td></tr>
+            <tr><td>16→0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          </table>
+        </div>
+
+        <div class="jk-table-panel" style="margin-top:14px">
+          <div class="section-title">MOD-N NAND FEEDBACK</div>
+          <table>
+            <tr><th>MOD</th><th>FFs</th><th>NAND Inputs</th><th>Reset at</th></tr>
+            <tr><td>MOD-2</td><td>1</td><td>Q0</td><td>2</td></tr>
+            <tr><td>MOD-3</td><td>2</td><td>Q1, Q0</td><td>3 (011)</td></tr>
+            <tr><td>MOD-5</td><td>3</td><td>Q2, Q0</td><td>5 (101)</td></tr>
+            <tr><td>MOD-6</td><td>3</td><td>Q2, Q1</td><td>6 (110)</td></tr>
+            <tr><td>MOD-7</td><td>3</td><td>Q2, Q1, Q0</td><td>7 (111)</td></tr>
+            <tr><td>MOD-10</td><td>4</td><td>Q3, Q1</td><td>10 (1010)</td></tr>
+            <tr><td>MOD-12</td><td>4</td><td>Q3, Q2</td><td>12 (1100)</td></tr>
+          </table>
+          <div class="info-box" style="margin-top:10px">
+            <strong>Design rule:</strong> Identify the binary representation of N. Apply NAND to the bits that are <code>1</code> in that representation. Output of NAND drives the active-low <code>CLR</code> of all FFs.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <div class="status-indicator" id="status-dot"></div>
+    <span id="status-text" style="font-family:Share Tech Mono;font-size:0.7rem;color:var(--dim)">IDLE — PRESS CLOCK PULSE OR AUTO RUN</span>
+    <span style="margin-left:auto;color:var(--dim)">CLK EDGES: <span id="clk-edge-count" style="color:var(--accent)">0</span></span>
+  </div>
+</div>
+
+<script>
+// ===== STATE =====
+const state = {
+  async: { count: 0, running: false, timer: null, history: [], clkEdges: 0 },
+  sync:  { count: 0, running: false, timer: null, history: [], clkEdges: 0 },
+  mod:   { count: 0, running: false, timer: null, history: [], clkEdges: 0, modN: 5 }
+};
+
+let currentTab = 'async';
+let globalEdges = 0;
+
+// ===== INIT TABLES =====
+function buildTable(id, mod) {
+  const tbl = document.getElementById(id);
+  // clear existing rows except header
+  while (tbl.rows.length > 1) tbl.deleteRow(1);
+  const steps = mod || 16;
+  for (let i = 0; i < steps; i++) {
+    const b = i.toString(2).padStart(4, '0');
+    const tr = tbl.insertRow();
+    tr.id = id + '-row-' + i;
+    [i, ...b.split(''), i].forEach((v, ci) => {
+      const td = tr.insertCell();
+      td.textContent = v;
+    });
+  }
+}
+
+buildTable('async-table', 16);
+buildTable('sync-table', 16);
+
+function buildModTable(modN) {
+  const tbl = document.getElementById('mod-table');
+  while (tbl.rows.length > 1) tbl.deleteRow(1);
+  for (let i = 0; i < modN; i++) {
+    const b = i.toString(2).padStart(4, '0');
+    const tr = tbl.insertRow();
+    tr.id = 'mod-table-row-' + i;
+    [i, ...b.split(''), i].forEach(v => {
+      const td = tr.insertCell();
+      td.textContent = v;
+    });
+  }
+}
+buildModTable(5);
+
+// ===== WIRE/LED UPDATES =====
+function setWire(id, high) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('hi', 'lo');
+  el.classList.add(high ? 'hi' : 'lo');
+}
+
+function setLed(id, high) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('hi', 'lo');
+  el.classList.add(high ? 'hi' : 'lo');
+}
+
+function setNode(id, high) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('hi', 'lo');
+  el.classList.add(high ? 'hi' : 'lo');
+}
+
+function setSvgText(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+
+function setQDisplay(prefix, bits) {
+  // bits: [Q0, Q1, Q2, Q3]
+  const names = ['ffa', 'ffb', 'ffc', 'ffd'];
+  bits.forEach((b, i) => {
+    const qEl = document.getElementById(prefix + '-' + names[i] + '-q');
+    const qbEl = document.getElementById(prefix + '-' + names[i] + '-qb');
+    if (qEl) { qEl.textContent = b; qEl.className = 'ff-q ' + (b ? 'hi' : 'lo'); }
+    if (qbEl) { qbEl.textContent = b ? 0 : 1; qbEl.className = 'ff-qb ' + (b ? 'lo' : 'hi'); }
+  });
+}
+
+// ===== ASYNC COUNTER UPDATE =====
+function updateAsyncViz(count) {
+  const b = count;
+  const q0 = (b>>0)&1, q1=(b>>1)&1, q2=(b>>2)&1, q3=(b>>3)&1;
+  // LEDs
+  setLed('led-a', q0); setLed('led-b', q1); setLed('led-c', q2); setLed('led-d', q3);
+  // Q wires
+  setWire('a-q-wire', q0); setWire('b-q-wire', q1); setWire('c-q-wire', q2); setWire('d-q-wire', q3);
+  // Qbar wires (clk inputs to next FF)
+  setWire('a-qb-wire', !q0); setWire('b-qb-wire', !q1); setWire('c-qb-wire', !q2);
+  setWire('b-clk-wire', !q0); setWire('b-clk-wire2', !q0);
+  setWire('c-clk-wire', !q1); setWire('c-clk-wire2', !q1);
+  setWire('d-clk-wire', !q2); setWire('d-clk-wire2', !q2);
+  // Nodes
+  setNode('a-q-node', q0); setNode('b-q-node', q1); setNode('c-q-node', q2); setNode('d-q-node', q3);
+  // LED wires
+  setWire('led-a-wire', q0); setWire('led-b-wire', q1); setWire('led-c-wire', q2); setWire('led-d-wire', q3);
+  // Display
+  const bin = count.toString(2).padStart(4,'0');
+  setSvgText('async-bin-display', bin + ' (' + count + ')');
+  // Panel
+  document.getElementById('async-count').textContent = count;
+  document.getElementById('async-binstr').textContent = bin.split('').join(' ');
+  setQDisplay('async', [q0,q1,q2,q3]);
+  // Table
+  document.querySelectorAll('[id^="async-table-row-"]').forEach(r => r.classList.remove('current-row'));
+  const row = document.getElementById('async-table-row-' + count);
+  if (row) row.classList.add('current-row');
+}
+
+// ===== SYNC COUNTER UPDATE =====
+function updateSyncViz(count) {
+  const q0=(count>>0)&1, q1=(count>>1)&1, q2=(count>>2)&1, q3=(count>>3)&1;
+  setLed('sled-a', q0); setLed('sled-b', q1); setLed('sled-c', q2); setLed('sled-d', q3);
+  setWire('sa-q-wire', q0); setWire('sb-q-wire', q1); setWire('sc-q-wire', q2); setWire('sd-q-wire', q3);
+  setWire('sled-a-wire', q0); setWire('sled-b-wire', q1); setWire('sled-c-wire', q2); setWire('sled-d-wire', q3);
+  // AND gate inputs/outputs
+  const and1 = q0; const and2 = q0&q1; const and3 = q0&q1&q2;
+  setWire('s-and1-in', and1); setWire('s-and1-out', and1);
+  setWire('sb-j-wire', and1); setWire('sb-jk-tie', and1); setWire('sb-k-wire', and1);
+  setNode('sb-jk-node', and1);
+  setWire('s-and2-in', and2); setWire('s-and2-out', and2);
+  setWire('sc-j-wire', and2); setWire('sc-jk-tie', and2); setWire('sc-k-wire', and2);
+  setNode('sc-jk-node', and2);
+  setWire('s-and3-in', and3); setWire('s-and3-out', and3);
+  setWire('sd-j-wire', and3); setWire('sd-jk-tie', and3); setWire('sd-k-wire', and3);
+  setNode('sd-jk-node', and3);
+  const bin = count.toString(2).padStart(4,'0');
+  setSvgText('sync-bin-display', bin + ' (' + count + ')');
+  document.getElementById('sync-count').textContent = count;
+  document.getElementById('sync-binstr').textContent = bin.split('').join(' ');
+  setQDisplay('sync', [q0,q1,q2,q3]);
+  document.querySelectorAll('[id^="sync-table-row-"]').forEach(r => r.classList.remove('current-row'));
+  const row = document.getElementById('sync-table-row-' + count);
+  if (row) row.classList.add('current-row');
+}
+
+// ===== MOD COUNTER UPDATE =====
+function updateModViz(count, modN) {
+  const q0=(count>>0)&1, q1=(count>>1)&1, q2=(count>>2)&1, q3=(count>>3)&1;
+  setLed('mled-a', q0); setLed('mled-b', q1); setLed('mled-c', q2);
+  setWire('ma-q-wire', q0); setWire('mb-q-wire', q1); setWire('mc-q-wire', q2);
+  setWire('mled-a-wire', q0); setWire('mled-b-wire', q1); setWire('mled-c-wire', q2);
+  setWire('ma-qb-wire', !q0); setWire('mb-qb-wire', !q1);
+  setWire('mb-clk-wire', !q0); setWire('mb-clk2', !q0);
+  setWire('mc-clk-wire', !q1); setWire('mc-clk2', !q1);
+  const bin = count.toString(2).padStart(4,'0');
+  setSvgText('mod-display', modN);
+  document.getElementById('mod-count').textContent = count;
+  document.getElementById('mod-binstr').textContent = bin.split('').join(' ');
+  document.getElementById('mod-ffa-q').textContent = q0;
+  document.getElementById('mod-ffb-q').textContent = q1;
+  document.getElementById('mod-ffc-q').textContent = q2;
+  document.getElementById('mod-ffd-q').textContent = q3;
+  ['mod-ffa-q','mod-ffb-q','mod-ffc-q','mod-ffd-q'].forEach((id,i) => {
+    const v = [q0,q1,q2,q3][i];
+    const el = document.getElementById(id);
+    if (el) el.className = 'ff-q ' + (v ? 'hi' : 'lo');
+  });
+  document.querySelectorAll('[id^="mod-table-row-"]').forEach(r => r.classList.remove('current-row'));
+  const row = document.getElementById('mod-table-row-' + count);
+  if (row) row.classList.add('current-row');
+}
+
+// ===== CLOCK STEP =====
+function clockStep(type) {
+  const s = state[type];
+  s.clkEdges++;
+  globalEdges++;
+  document.getElementById('clk-edge-count').textContent = globalEdges;
+  document.getElementById('status-dot').className = 'status-indicator run';
+
+  if (type === 'mod') {
+    s.count = (s.count + 1) % s.modN;
+    s.history.push(s.count);
+    updateModViz(s.count, s.modN);
+  } else {
+    s.count = (s.count + 1) % 16;
+    s.history.push(s.count);
+    if (type === 'async') updateAsyncViz(s.count);
+    else updateSyncViz(s.count);
+  }
+
+  if (s.history.length > 40) s.history.shift();
+  drawTiming(type);
+
+  setTimeout(() => {
+    document.getElementById('status-dot').className = 'status-indicator';
+  }, 150);
+
+  setStatus(type === 'mod' ?
+    `MOD-${s.modN} COUNT: ${s.count} → BINARY: ${s.count.toString(2).padStart(4,'0')}` :
+    `${type.toUpperCase()} COUNT: ${s.count} → BINARY: ${s.count.toString(2).padStart(4,'0')}`);
+}
+
+function resetCounter(type) {
+  const s = state[type];
+  if (s.running) toggleRun(type);
+  s.count = 0; s.history = [];
+  if (type === 'async') updateAsyncViz(0);
+  else if (type === 'sync') updateSyncViz(0);
+  else updateModViz(0, s.modN);
+  drawTiming(type);
+  setStatus('RESET — COUNTER CLEARED TO 0000');
+}
+
+// ===== AUTO RUN =====
+function toggleRun(type) {
+  const s = state[type];
+  s.running = !s.running;
+  const btn = document.getElementById(type + '-run-btn');
+  const dot = document.getElementById('status-dot');
+
+  if (s.running) {
+    btn.textContent = '⏸ PAUSE';
+    dot.className = 'status-indicator run';
+    const run = () => {
+      if (!s.running) return;
+      clockStep(type);
+      const spd = parseInt(document.getElementById(type + '-speed').value);
+      const delay = Math.round(1200 / spd);
+      s.timer = setTimeout(run, delay);
+    };
+    run();
+  } else {
+    btn.textContent = '⏵ AUTO RUN';
+    dot.className = 'status-indicator';
+    clearTimeout(s.timer);
+  }
+}
+
+// ===== MOD SELECTOR =====
+function setMod(n) {
+  state.mod.modN = n;
+  state.mod.count = 0;
+  state.mod.history = [];
+  document.getElementById('mod-val-display').textContent = n;
+  document.getElementById('mod-reset-at').textContent = n;
+  buildModTable(n);
+  updateModViz(0, n);
+  drawTiming('mod');
+
+  document.querySelectorAll('#tab-mod .btn').forEach(b => {
+    b.classList.remove('active');
+    if (b.textContent === 'MOD-'+n) b.classList.add('active');
+  });
+  setStatus(`MOD-${n} counter selected — ${Math.ceil(Math.log2(n+1))} flip-flops required`);
+}
+
+// ===== TIMING DIAGRAM =====
+function drawTiming(type) {
+  const canvasId = type + '-timing';
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth * window.devicePixelRatio || canvas.clientWidth;
+  canvas.height = 140 * (window.devicePixelRatio || 1);
+  ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+  const W = canvas.clientWidth, H = 140;
+
+  ctx.fillStyle = '#0a0e1a';
+  ctx.fillRect(0, 0, W, H);
+
+  const s = state[type];
+  const hist = s.history;
+  if (hist.length < 2) {
+    ctx.fillStyle = '#1e3a5f';
+    ctx.font = '11px Share Tech Mono';
+    ctx.fillText('CLOCK PULSES WILL APPEAR HERE', 20, 70);
+    return;
+  }
+
+  const signals = ['CLK','Q0','Q1','Q2','Q3'];
+  const rowH = 22, padTop = 15, padLeft = 36;
+  const availW = W - padLeft - 10;
+  const steps = Math.min(hist.length, Math.floor(availW / 14));
+  const startIdx = Math.max(0, hist.length - steps);
+  const sliced = hist.slice(startIdx);
+  const stepW = availW / (sliced.length + 1);
+
+  signals.forEach((label, si) => {
+    const y = padTop + si * rowH;
+    ctx.fillStyle = si === 0 ? '#ff6b35' : ['#39ff14','#39ff14','#39ff14','#39ff14'][si-1];
+    ctx.font = '8px Share Tech Mono';
+    ctx.fillText(label, 2, y + rowH * 0.6);
+
+    ctx.strokeStyle = si === 0 ? '#ff6b35' : '#39ff14';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+
+    const getVal = (cnt, bit) => {
+      if (bit === -1) return 1; // CLK
+      return (cnt >> bit) & 1;
+    };
+
+    for (let i = 0; i < sliced.length; i++) {
+      const cnt = sliced[i];
+      const prevCnt = i > 0 ? sliced[i-1] : 0;
+      const bit = si - 1; // -1 = CLK
+      let curVal, prevVal;
+
+      if (si === 0) { // CLK
+        curVal = 0; prevVal = 1; // draw falling at each step
+        const x = padLeft + i * stepW;
+        const yHi = y + 2, yLo = y + rowH - 4;
+        if (i === 0) {
+          ctx.moveTo(x, yLo);
+          ctx.lineTo(x + stepW*0.4, yLo);
+          ctx.lineTo(x + stepW*0.4, yHi);
+          ctx.lineTo(x + stepW*0.8, yHi);
+          ctx.lineTo(x + stepW*0.8, yLo);
+          ctx.lineTo(x + stepW, yLo);
+        } else {
+          ctx.lineTo(x + stepW*0.4, yLo);
+          ctx.lineTo(x + stepW*0.4, yHi);
+          ctx.lineTo(x + stepW*0.8, yHi);
+          ctx.lineTo(x + stepW*0.8, yLo);
+          ctx.lineTo(x + stepW, yLo);
+        }
+      } else {
+        curVal = (cnt >> bit) & 1;
+        prevVal = (prevCnt >> bit) & 1;
+        const x = padLeft + i * stepW;
+        const yHi = y + 2, yLo = y + rowH - 4;
+        const yC = curVal ? yHi : yLo;
+        const yP = prevVal ? yHi : yLo;
+        if (i === 0) { ctx.moveTo(x, yC); }
+        if (yP !== yC) {
+          ctx.lineTo(x, yP);
+          ctx.lineTo(x, yC);
+        }
+        ctx.lineTo(x + stepW, yC);
+      }
+    }
+    ctx.stroke();
+  });
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(30,58,95,0.5)';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= sliced.length; i++) {
+    const x = padLeft + i * stepW;
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, H);
+    ctx.stroke();
+  }
+}
+
+// ===== TAB SWITCHING =====
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    if (['async','sync','mod','theory'][i] === tab) b.classList.add('active');
+  });
+
+  setTimeout(() => {
+    if (tab !== 'theory') drawTiming(tab);
+  }, 50);
+}
+
+function setStatus(msg) {
+  document.getElementById('status-text').textContent = msg;
+}
+
+// ===== INIT =====
+updateAsyncViz(0);
+updateSyncViz(0);
+updateModViz(0, 5);
+
+// Handle resize
+window.addEventListener('resize', () => {
+  if (currentTab !== 'theory') setTimeout(() => drawTiming(currentTab), 100);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+
+<h2 class="sr-only">Interactive modular inverse calculator using the Extended Euclidean Algorithm</h2>
+<style>
+  .mi-wrap { padding: 1.5rem 0; font-family: var(--font-sans); }
+  .mi-inputs { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .mi-field { display: flex; flex-direction: column; gap: 6px; }
+  .mi-field label { font-size: 13px; color: var(--color-text-secondary); }
+  .mi-field input { width: 90px; }
+  .mi-result { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+  .mi-result .val { font-size: 28px; font-weight: 500; color: var(--color-text-primary); }
+  .mi-result .sub { font-size: 13px; color: var(--color-text-secondary); margin-top: 4px; }
+  .mi-error { color: var(--color-text-danger); font-size: 14px; margin-bottom: 1rem; }
+  .steps-title { font-size: 14px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 10px; letter-spacing: 0.04em; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; font-weight: 500; font-size: 13px; color: var(--color-text-secondary); border-bottom: 0.5px solid var(--color-border-tertiary); padding: 6px 10px; }
+  td { padding: 8px 10px; border-bottom: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); font-variant-numeric: tabular-nums; }
+  tr:last-child td { border-bottom: none; background: var(--color-background-secondary); font-weight: 500; }
+  .verify { margin-top: 1rem; font-size: 14px; color: var(--color-text-secondary); }
+  .verify span { color: var(--color-text-success); font-weight: 500; }
+  .no-inv { color: var(--color-text-danger); font-size: 14px; }
+</style>
+
+<div class="mi-wrap">
+  <div class="mi-inputs">
+    <div class="mi-field">
+      <label for="aval">a (number)</label>
+      <input type="number" id="aval" value="3" min="1">
+    </div>
+    <div class="mi-field">
+      <label for="mval">m (modulus)</label>
+      <input type="number" id="mval" value="7" min="2">
+    </div>
+    <button onclick="compute()" style="height:36px; padding: 0 20px;">Compute ↗</button>
+  </div>
+
+  <div id="result-box"></div>
+  <div id="steps-box"></div>
+</div>
+
+<script>
+function extEuclid(a, b) {
+  const rows = [];
+  let [old_r, r] = [a, b];
+  let [old_s, s] = [1, 0];
+  let [old_t, t] = [0, 1];
+  while (r !== 0) {
+    const q = Math.floor(old_r / r);
+    rows.push({ q, r: old_r, s: old_s, t: old_t });
+    [old_r, r] = [r, old_r - q * r];
+    [old_s, s] = [s, old_s - q * s];
+    [old_t, t] = [t, old_t - q * t];
+  }
+  rows.push({ q: '-', r: old_r, s: old_s, t: old_t });
+  return { gcd: old_r, x: old_s, y: old_t, rows };
+}
+
+function compute() {
+  const a = parseInt(document.getElementById('aval').value);
+  const m = parseInt(document.getElementById('mval').value);
+  const rb = document.getElementById('result-box');
+  const sb = document.getElementById('steps-box');
+
+  if (isNaN(a) || isNaN(m) || a < 1 || m < 2) {
+    rb.innerHTML = '<p class="mi-error">Enter valid values: a ≥ 1 and m ≥ 2.</p>';
+    sb.innerHTML = '';
+    return;
+  }
+
+  const { gcd, x, rows } = extEuclid(a % m === 0 ? a : a, m);
+
+  if (gcd !== 1) {
+    rb.innerHTML = `<p class="no-inv">No modular inverse exists — gcd(${a}, ${m}) = ${gcd} ≠ 1.<br>
+      The inverse of <em>a</em> mod <em>m</em> exists only when gcd(a, m) = 1.</p>`;
+    sb.innerHTML = '';
+    return;
+  }
+
+  const inv = ((x % m) + m) % m;
+
+  rb.innerHTML = `
+    <div class="mi-result">
+      <div class="val">${a}<sup style="font-size:16px">−1</sup> mod ${m} = ${inv}</div>
+      <div class="sub">Because ${a} × ${inv} = ${a * inv} ≡ 1 (mod ${m})</div>
+    </div>`;
+
+  let rowsHtml = rows.map((row, i) => {
+    const last = i === rows.length - 1;
+    return `<tr>
+      <td>${last ? '—' : row.q}</td>
+      <td>${row.r}</td>
+      <td>${row.s}</td>
+      <td>${row.t}</td>
+    </tr>`;
+  }).join('');
+
+  sb.innerHTML = `
+    <div class="steps-title">Extended Euclidean steps — solving ${a}·x + ${m}·y = gcd</div>
+    <table>
+      <thead><tr><th>Quotient</th><th>Remainder</th><th>x coeff</th><th>y coeff</th></tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+    <p class="verify">
+      Verification: ${a} × ${inv} mod ${m} = ${(a * inv) % m}
+      <span>✓ confirmed</span>
+    </p>`;
+}
+
+compute();
+</script>

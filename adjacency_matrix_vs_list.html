@@ -1,0 +1,434 @@
+
+<h2 class="sr-only">Interactive explainer: adjacency matrix vs adjacency list — click graph nodes to see both representations update live</h2>
+<style>
+*{box-sizing:border-box}
+.w{padding:1.5rem 0;font-family:var(--font-sans)}
+.sec{margin-bottom:1.75rem}
+hr.dv{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.5rem 0}
+.lbl{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem}
+.card-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:.6rem}
+canvas{display:block;width:100%;height:200px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);cursor:pointer}
+.matrix-wrap{overflow-x:auto}
+table.mx{border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums;width:100%}
+table.mx th,table.mx td{width:32px;height:32px;text-align:center;vertical-align:middle;border:0.5px solid var(--color-border-tertiary)}
+table.mx th{background:var(--color-background-secondary);color:var(--color-text-secondary);font-weight:500}
+table.mx td{color:var(--color-text-primary);font-weight:500;transition:background .2s,color .2s}
+td.one{background:#EEEDFE;color:#3C3489}
+td.hl-row{background:#f5f4ff}
+td.hl-col{background:#f5f4ff}
+td.hl-rc{background:#EEEDFE;color:#3C3489}
+.list-item{display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px}
+.list-item:last-child{border:none}
+.list-node{min-width:28px;height:28px;border-radius:50%;background:#EEEDFE;color:#3C3489;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:13px;flex-shrink:0}
+.list-node.hl{background:#534AB7;color:#fff}
+.list-arrow{color:var(--color-text-tertiary);font-size:13px;padding-top:5px;flex-shrink:0}
+.list-neighbors{display:flex;gap:6px;flex-wrap:wrap;padding-top:3px}
+.list-nb{padding:2px 10px;border-radius:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);font-size:12px;font-weight:500;color:var(--color-text-primary);transition:background .2s,color .2s}
+.list-nb.hl{background:#1D9E75;color:#fff;border-color:#1D9E75}
+.info-bar{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.6rem 1rem;font-size:13px;color:var(--color-text-secondary);margin-top:.75rem;min-height:42px;line-height:1.6}
+.info-bar span{color:var(--color-text-primary);font-weight:500}
+.sbar{display:flex;gap:0;border-radius:var(--border-radius-md);overflow:hidden;border:0.5px solid var(--color-border-tertiary);margin-bottom:1rem}
+.sbtn{flex:1;padding:7px 8px;font-size:12px;font-weight:500;color:var(--color-text-secondary);background:var(--color-background-secondary);border:none;cursor:pointer;border-right:0.5px solid var(--color-border-tertiary);text-align:center;transition:background .15s,color .15s}
+.sbtn:last-child{border-right:none}
+.sbtn.on{background:#EEEDFE;color:#3C3489}
+.cmp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:8px}
+.cmp-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.75rem 1rem}
+.cmp-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:.4rem}
+.cmp-body{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.op-good{color:#0F6E56;font-weight:500}
+.op-bad{color:#993C1D;font-weight:500}
+.code-block{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.75rem 1rem;font-family:var(--font-mono),monospace;font-size:12px;color:var(--color-text-primary);line-height:1.7;margin:.5rem 0;white-space:pre}
+.kw{color:#534AB7;font-weight:500}
+.cm{color:var(--color-text-tertiary)}
+.st{color:#0F6E56}
+</style>
+
+<div class="w">
+
+<div class="sec">
+  <div class="lbl">Click any node — watch both representations update live</div>
+  <canvas id="gc"></canvas>
+  <div class="info-bar" id="info-bar">Click a node to highlight its row/column in the matrix and its neighbors in the list.</div>
+</div>
+
+<div class="row2">
+  <div>
+    <div class="lbl">Adjacency matrix</div>
+    <div class="card">
+      <div class="card-title">A[i][j] = 1 if edge exists, else 0</div>
+      <div class="matrix-wrap"><table class="mx" id="mx-table"></table></div>
+    </div>
+  </div>
+  <div>
+    <div class="lbl">Adjacency list</div>
+    <div class="card">
+      <div class="card-title">Each node stores its neighbors</div>
+      <div id="adj-list"></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<div class="sec">
+  <div class="lbl">Try different graph types</div>
+  <div class="sbar">
+    <button class="sbtn on" onclick="loadGraph(0)">Simple (5 nodes)</button>
+    <button class="sbtn" onclick="loadGraph(1)">Directed</button>
+    <button class="sbtn" onclick="loadGraph(2)">Dense (6 nodes)</button>
+    <button class="sbtn" onclick="loadGraph(3)">Sparse (7 nodes)</button>
+  </div>
+  <div class="lbl" style="margin-top:.5rem">Space used — matrix vs list</div>
+  <div class="cmp-grid" id="space-cards"></div>
+</div>
+
+<hr class="dv">
+
+<div class="sec">
+  <div class="lbl">Python implementation</div>
+  <div class="sbar" id="code-tabs">
+    <button class="sbtn on" onclick="showCode(0)">Matrix</button>
+    <button class="sbtn" onclick="showCode(1)">List</button>
+    <button class="sbtn" onclick="showCode(2)">Operations</button>
+  </div>
+  <div id="code-out"></div>
+</div>
+
+<hr class="dv">
+
+<div class="sec">
+  <div class="lbl">When to use which?</div>
+  <div class="cmp-grid">
+    <div class="cmp-card">
+      <div class="cmp-title">Adjacency matrix</div>
+      <div class="cmp-body">
+        <div><span class="op-good">Fast:</span> check if edge (u,v) exists — O(1)</div>
+        <div><span class="op-good">Fast:</span> add or remove an edge — O(1)</div>
+        <div><span class="op-bad">Slow:</span> find all neighbors — O(V)</div>
+        <div><span class="op-bad">Wastes space:</span> O(V²) always, even if few edges</div>
+        <div style="margin-top:.4rem">Best for: <strong style="color:var(--color-text-primary)">dense graphs, small V, quick edge lookup</strong></div>
+      </div>
+    </div>
+    <div class="cmp-card">
+      <div class="cmp-title">Adjacency list</div>
+      <div class="cmp-body">
+        <div><span class="op-good">Space-efficient:</span> O(V + E) only</div>
+        <div><span class="op-good">Fast:</span> iterate neighbors — O(degree)</div>
+        <div><span class="op-bad">Slower:</span> check if edge exists — O(degree)</div>
+        <div><span class="op-bad">Harder:</span> to remove specific edge</div>
+        <div style="margin-top:.4rem">Best for: <strong style="color:var(--color-text-primary)">sparse graphs, large V, traversals</strong></div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:1rem;display:flex;gap:8px;flex-wrap:wrap">
+    <button onclick="sendPrompt('explain BFS and DFS graph traversal from basic')">BFS & DFS traversal ↗</button>
+    <button onclick="sendPrompt('explain Dijkstra shortest path algorithm with example')">Dijkstra algorithm ↗</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const GRAPHS = [
+  {
+    name:'Simple undirected (5 nodes)',
+    nodes:['A','B','C','D','E'],
+    edges:[['A','B'],['A','C'],['B','C'],['B','D'],['C','E'],['D','E']],
+    directed:false,
+    pos:[{x:.5,y:.12},{x:.18,y:.45},{x:.82,y:.45},{x:.3,y:.85},{x:.7,y:.85}]
+  },
+  {
+    name:'Directed (4 nodes)',
+    nodes:['A','B','C','D'],
+    edges:[['A','B'],['A','C'],['B','D'],['C','D'],['D','A']],
+    directed:true,
+    pos:[{x:.5,y:.1},{x:.15,y:.55},{x:.85,y:.55},{x:.5,y:.88}]
+  },
+  {
+    name:'Dense (6 nodes)',
+    nodes:['A','B','C','D','E','F'],
+    edges:[['A','B'],['A','C'],['A','D'],['B','C'],['B','E'],['C','D'],['C','F'],['D','E'],['D','F'],['E','F']],
+    directed:false,
+    pos:[{x:.5,y:.08},{x:.15,y:.35},{x:.85,y:.35},{x:.15,y:.72},{x:.85,y:.72},{x:.5,y:.92}]
+  },
+  {
+    name:'Sparse (7 nodes)',
+    nodes:['A','B','C','D','E','F','G'],
+    edges:[['A','B'],['B','C'],['C','D'],['D','E'],['E','F'],['F','G']],
+    directed:false,
+    pos:[{x:.1,y:.5},{x:.25,y:.2},{x:.4,y:.5},{x:.55,y:.8},{x:.65,y:.4},{x:.78,y:.15},{x:.92,y:.5}]
+  }
+];
+
+let gIdx=0, sel=null;
+
+function buildAdj(g){
+  const adj={};
+  g.nodes.forEach(n=>adj[n]=[]);
+  g.edges.forEach(([u,v])=>{
+    adj[u].push(v);
+    if(!g.directed) adj[v].push(u);
+  });
+  return adj;
+}
+
+function buildMatrix(g){
+  const n=g.nodes.length;
+  const m=Array.from({length:n},()=>Array(n).fill(0));
+  const idx={};
+  g.nodes.forEach((nd,i)=>idx[nd]=i);
+  g.edges.forEach(([u,v])=>{
+    m[idx[u]][idx[v]]=1;
+    if(!g.directed) m[idx[v]][idx[u]]=1;
+  });
+  return {m,idx};
+}
+
+function drawGraph(){
+  const g=GRAPHS[gIdx];
+  const cv=document.getElementById('gc');
+  const W=cv.offsetWidth, H=cv.offsetHeight;
+  cv.width=W*devicePixelRatio; cv.height=H*devicePixelRatio;
+  const ctx=cv.getContext('2d');
+  ctx.scale(devicePixelRatio,devicePixelRatio);
+
+  const pos=g.pos.map(p=>({x:p.x*W,y:p.y*H}));
+  const ni={};
+  g.nodes.forEach((n,i)=>ni[n]=i);
+  const adj=buildAdj(g);
+
+  const selNeighbors=sel?adj[sel]:[];
+
+  g.edges.forEach(([u,v])=>{
+    const p1=pos[ni[u]],p2=pos[ni[v]];
+    const isHl=(u===sel||v===sel);
+    ctx.beginPath();
+    ctx.moveTo(p1.x,p1.y);
+    if(g.directed){
+      const dx=p2.x-p1.x,dy=p2.y-p1.y,len=Math.hypot(dx,dy);
+      const ux=dx/len,uy=dy/len,r=20;
+      const ex=p2.x-ux*r,ey=p2.y-uy*r;
+      ctx.lineTo(ex,ey);
+    } else {
+      ctx.lineTo(p2.x,p2.y);
+    }
+    ctx.strokeStyle=isHl?'#1D9E75':'#B4B2A9';
+    ctx.lineWidth=isHl?2.5:1.2;
+    ctx.stroke();
+    if(g.directed){
+      const dx=p2.x-p1.x,dy=p2.y-p1.y,len=Math.hypot(dx,dy);
+      const ux=dx/len,uy=dy/len,r=20;
+      const ex=p2.x-ux*r,ey=p2.y-uy*r;
+      ctx.beginPath();
+      ctx.moveTo(ex,ey);
+      ctx.lineTo(ex-ux*8+uy*5,ey-uy*8-ux*5);
+      ctx.lineTo(ex-ux*8-uy*5,ey-uy*8+ux*5);
+      ctx.closePath();
+      ctx.fillStyle=isHl?'#1D9E75':'#B4B2A9';
+      ctx.fill();
+    }
+  });
+
+  g.nodes.forEach((n,i)=>{
+    const p=pos[i];
+    const isSel=n===sel;
+    const isNb=selNeighbors.includes(n);
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,20,0,Math.PI*2);
+    ctx.fillStyle=isSel?'#534AB7':isNb?'#1D9E75':'#EEEDFE';
+    ctx.fill();
+    ctx.strokeStyle=isSel?'#3C3489':isNb?'#0F6E56':'#7F77DD';
+    ctx.lineWidth=1.5;
+    ctx.stroke();
+    ctx.fillStyle=isSel?'#fff':isNb?'#fff':'#3C3489';
+    ctx.font='bold 13px sans-serif';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillText(n,p.x,p.y);
+  });
+}
+
+function renderMatrix(){
+  const g=GRAPHS[gIdx];
+  const {m,idx}=buildMatrix(g);
+  const n=g.nodes;
+  const selI=sel?idx[sel]:-1;
+  let html=`<thead><tr><th></th>${n.map(nd=>`<th>${nd}</th>`).join('')}</tr></thead><tbody>`;
+  m.forEach((row,i)=>{
+    const isSelRow=(i===selI);
+    html+=`<tr><th>${n[i]}</th>`;
+    row.forEach((v,j)=>{
+      const isSelCol=(j===selI);
+      let cls='';
+      if(i===selI&&j===selI) cls='hl-rc';
+      else if(i===selI||j===selI) cls=v?'one':'hl-col';
+      else if(v) cls='one';
+      html+=`<td class="${cls}">${v}</td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</tbody>';
+  document.getElementById('mx-table').innerHTML=html;
+}
+
+function renderList(){
+  const g=GRAPHS[gIdx];
+  const adj=buildAdj(g);
+  const selNeighbors=sel?adj[sel]:[];
+  let html='';
+  g.nodes.forEach(n=>{
+    const isSel=n===sel;
+    const nbs=adj[n];
+    html+=`<div class="list-item">
+      <div class="list-node${isSel?' hl':''}">${n}</div>
+      <div class="list-arrow">→</div>
+      <div class="list-neighbors">`;
+    if(nbs.length===0){
+      html+=`<span style="font-size:12px;color:var(--color-text-tertiary)">(none)</span>`;
+    } else {
+      nbs.forEach(nb=>{
+        const isNb=isSel;
+        html+=`<span class="list-nb${isNb?' hl':''}">${nb}</span>`;
+      });
+    }
+    html+=`</div></div>`;
+  });
+  document.getElementById('adj-list').innerHTML=html;
+}
+
+function renderSpaceCards(){
+  const g=GRAPHS[gIdx];
+  const V=g.nodes.length,E=g.edges.length;
+  const matrixCells=V*V;
+  const listEntries=g.directed?E:E*2;
+  document.getElementById('space-cards').innerHTML=`
+    <div class="cmp-card">
+      <div class="cmp-title">Matrix space: O(V²)</div>
+      <div class="cmp-body">V=${V}, so <strong style="color:#534AB7">${V}×${V} = ${matrixCells} cells</strong> always stored, regardless of how many edges.</div>
+    </div>
+    <div class="cmp-card">
+      <div class="cmp-title">List space: O(V + E)</div>
+      <div class="cmp-body">V=${V} nodes + ${listEntries} neighbor entries = <strong style="color:#1D9E75">${V+listEntries} total</strong>. Only actual edges stored.</div>
+    </div>
+    <div class="cmp-card">
+      <div class="cmp-title">Density</div>
+      <div class="cmp-body">Actual edges: <strong style="color:var(--color-text-primary)">${E}</strong>. Max possible: ${Math.round(V*(V-1)/2)}. Fill ratio: <strong style="color:var(--color-text-primary)">${Math.round(E/(V*(V-1)/2)*100)}%</strong>. ${E/(V*(V-1)/2)>0.5?'Dense → matrix preferred.':'Sparse → list preferred.'}</div>
+    </div>`;
+}
+
+function infoBar(){
+  const g=GRAPHS[gIdx];
+  const adj=buildAdj(g);
+  if(!sel){
+    document.getElementById('info-bar').innerHTML='Click a node to highlight its row/column in the matrix and its neighbors in the list.';
+    return;
+  }
+  const nb=adj[sel];
+  const {idx}=buildMatrix(g);
+  const i=idx[sel];
+  document.getElementById('info-bar').innerHTML=
+    `Node <span>${sel}</span> (index ${i}) — neighbors: <span>${nb.length===0?'none':nb.join(', ')}</span>. In matrix: row ${i} and column ${i} are highlighted. In list: node ${sel}'s entry is shown.`;
+}
+
+const CODES=[
+`<span class="kw">class</span> AdjMatrix:
+    <span class="kw">def</span> <span class="st">__init__</span>(self, vertices):
+        self.V = vertices
+        <span class="cm"># V×V grid of zeros</span>
+        self.mat = [[0]*V <span class="kw">for</span> _ <span class="kw">in</span> range(V)]
+
+    <span class="kw">def</span> <span class="st">add_edge</span>(self, u, v, directed=False):
+        self.mat[u][v] = 1          <span class="cm"># O(1)</span>
+        <span class="kw">if not</span> directed:
+            self.mat[v][u] = 1      <span class="cm"># undirected: both ways</span>
+
+    <span class="kw">def</span> <span class="st">has_edge</span>(self, u, v):
+        <span class="kw">return</span> self.mat[u][v] == 1  <span class="cm"># O(1) — direct lookup</span>
+
+    <span class="kw">def</span> <span class="st">neighbors</span>(self, u):
+        <span class="cm"># O(V) — must scan whole row</span>
+        <span class="kw">return</span> [v <span class="kw">for</span> v <span class="kw">in</span> range(self.V) <span class="kw">if</span> self.mat[u][v]]`,
+
+`<span class="kw">from</span> collections <span class="kw">import</span> defaultdict
+
+<span class="kw">class</span> AdjList:
+    <span class="kw">def</span> <span class="st">__init__</span>(self):
+        <span class="cm"># Each node → list of neighbors</span>
+        self.adj = defaultdict(list)
+
+    <span class="kw">def</span> <span class="st">add_edge</span>(self, u, v, directed=False):
+        self.adj[u].append(v)       <span class="cm"># O(1)</span>
+        <span class="kw">if not</span> directed:
+            self.adj[v].append(u)   <span class="cm"># undirected: both ways</span>
+
+    <span class="kw">def</span> <span class="st">has_edge</span>(self, u, v):
+        <span class="cm"># O(degree(u)) — scan neighbor list</span>
+        <span class="kw">return</span> v <span class="kw">in</span> self.adj[u]
+
+    <span class="kw">def</span> <span class="st">neighbors</span>(self, u):
+        <span class="kw">return</span> self.adj[u]          <span class="cm"># O(1) — already a list</span>`,
+
+`<span class="cm"># Build a graph and try operations</span>
+g = AdjList()
+g.add_edge(<span class="st">'A'</span>, <span class="st">'B'</span>)
+g.add_edge(<span class="st">'A'</span>, <span class="st">'C'</span>)
+g.add_edge(<span class="st">'B'</span>, <span class="st">'D'</span>)
+
+<span class="cm"># Check adjacency</span>
+print(g.has_edge(<span class="st">'A'</span>, <span class="st">'B'</span>))    <span class="cm"># True</span>
+print(g.has_edge(<span class="st">'A'</span>, <span class="st">'D'</span>))    <span class="cm"># False</span>
+
+<span class="cm"># Get all neighbors of A</span>
+print(g.neighbors(<span class="st">'A'</span>))         <span class="cm"># ['B', 'C']</span>
+
+<span class="cm"># BFS using adjacency list</span>
+<span class="kw">from</span> collections <span class="kw">import</span> deque
+<span class="kw">def</span> <span class="st">bfs</span>(graph, start):
+    visited, queue = {start}, deque([start])
+    <span class="kw">while</span> queue:
+        node = queue.popleft()
+        print(node, end=<span class="st">' '</span>)
+        <span class="kw">for</span> nb <span class="kw">in</span> graph.neighbors(node):
+            <span class="kw">if</span> nb <span class="kw">not in</span> visited:
+                visited.add(nb)
+                queue.append(nb)`
+];
+
+function showCode(i){
+  document.querySelectorAll('#code-tabs .sbtn').forEach((b,j)=>b.classList.toggle('on',j===i));
+  document.getElementById('code-out').innerHTML=`<div class="code-block">${CODES[i]}</div>`;
+}
+
+function loadGraph(i){
+  gIdx=i; sel=null;
+  document.querySelectorAll('.sbar:first-of-type .sbtn').forEach((b,j)=>b.classList.toggle('on',j===i));
+  render();
+}
+
+function render(){
+  drawGraph();
+  renderMatrix();
+  renderList();
+  renderSpaceCards();
+  infoBar();
+}
+
+document.getElementById('gc').addEventListener('click',function(e){
+  const g=GRAPHS[gIdx];
+  const r=this.getBoundingClientRect();
+  const mx=e.clientX-r.left, my=e.clientY-r.top;
+  const W=this.offsetWidth, H=this.offsetHeight;
+  let hit=null;
+  g.nodes.forEach((n,i)=>{
+    const px=g.pos[i].x*W, py=g.pos[i].y*H;
+    if(Math.hypot(mx-px,my-py)<22) hit=n;
+  });
+  sel=(hit===sel)?null:hit;
+  render();
+});
+
+window.addEventListener('load',()=>{ render(); showCode(0); });
+window.addEventListener('resize',()=>{ drawGraph(); });
+</script>

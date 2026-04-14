@@ -1,0 +1,219 @@
+
+<h2 class="sr-only">মডুলার কনগ্রুয়েন্স বাংলায় ইন্টারেক্টিভ ব্যাখ্যা</h2>
+<style>
+  body, * { box-sizing: border-box; }
+  .wrap { padding: 1.5rem 0; font-family: var(--font-sans); }
+  .section { margin-bottom: 2rem; }
+  .label { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 6px; }
+  .formula-box {
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem 1.25rem;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .explain { font-size: 14px; color: var(--color-text-secondary); line-height: 1.7; margin-bottom: 1rem; }
+  .clock-area { display: flex; justify-content: center; margin: 1rem 0; }
+  .prop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 10px; margin-top: 1rem; }
+  .prop-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: .85rem 1rem;
+  }
+  .prop-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+  .prop-math { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; font-variant-numeric: tabular-nums; }
+  .prop-bn { font-size: 12px; color: var(--color-text-tertiary); line-height: 1.5; }
+  .controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+  .ctrl-group { display: flex; flex-direction: column; gap: 5px; }
+  .ctrl-group label { font-size: 13px; color: var(--color-text-secondary); }
+  .result-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: .75rem; }
+  .badge {
+    padding: 5px 14px;
+    border-radius: var(--border-radius-md);
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .badge-yes { background: var(--color-background-success); color: var(--color-text-success); }
+  .badge-no  { background: var(--color-background-danger);  color: var(--color-text-danger);  }
+  .divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 1.5rem 0; }
+</style>
+
+<div class="wrap">
+
+  <div class="section">
+    <div class="formula-box">a ≡ b (mod m)</div>
+    <div class="explain">
+      এর মানে: <strong style="color:var(--color-text-primary)">a</strong> এবং <strong style="color:var(--color-text-primary)">b</strong>-কে <strong style="color:var(--color-text-primary)">m</strong> দিয়ে ভাগ করলে একই ভাগশেষ পাওয়া যায়।<br>
+      অথবা সহজভাবে: <strong style="color:var(--color-text-primary)">(a − b)</strong> সংখ্যাটি <strong style="color:var(--color-text-primary)">m</strong> দ্বারা বিভাজ্য।
+    </div>
+    <div class="explain" style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1rem;">
+      উদাহরণ: <strong style="color:var(--color-text-primary)">17 ≡ 5 (mod 6)</strong><br>
+      কারণ 17 ÷ 6 = ভাগশেষ <strong style="color:var(--color-text-primary)">5</strong>, এবং 5 ÷ 6 = ভাগশেষ <strong style="color:var(--color-text-primary)">5</strong> — একই!<br>
+      আবার (17 − 5) = 12, এবং 12 ÷ 6 = <strong style="color:var(--color-text-primary)">বিভাজ্য</strong> ✓
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <div class="label">ঘড়ির উদাহরণ — mod 12</div>
+    <div class="explain">ঘড়িতে ১২টার পর আবার ১ থেকে শুরু হয়। তাই <strong style="color:var(--color-text-primary)">13 ≡ 1 (mod 12)</strong>, <strong style="color:var(--color-text-primary)">25 ≡ 1 (mod 12)</strong>।</div>
+    <div class="clock-area">
+      <svg width="220" height="220" viewBox="0 0 220 220">
+        <circle cx="110" cy="110" r="100" fill="var(--color-background-secondary)" stroke="var(--color-border-secondary)" stroke-width="1"/>
+        <circle cx="110" cy="110" r="4" fill="var(--color-text-secondary)"/>
+        <g id="clock-nums"></g>
+        <g id="clock-dots"></g>
+        <line id="clock-hand" x1="110" y1="110" x2="110" y2="28" stroke="#534AB7" stroke-width="2.5" stroke-linecap="round"/>
+        <circle id="clock-tip" cx="110" cy="28" r="5" fill="#534AB7"/>
+      </svg>
+    </div>
+    <div class="controls">
+      <div class="ctrl-group">
+        <label>সংখ্যা (a)</label>
+        <input type="number" id="clock-a" value="17" min="0" max="99" style="width:80px" oninput="updateClock()">
+      </div>
+    </div>
+    <div id="clock-result" class="explain"></div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <div class="label">নিজে পরীক্ষা করো</div>
+    <div class="controls">
+      <div class="ctrl-group">
+        <label>a</label>
+        <input type="number" id="va" value="38" style="width:80px" oninput="checkCong()">
+      </div>
+      <div class="ctrl-group">
+        <label>b</label>
+        <input type="number" id="vb" value="14" style="width:80px" oninput="checkCong()">
+      </div>
+      <div class="ctrl-group">
+        <label>m (মডুলাস)</label>
+        <input type="number" id="vm" value="12" min="2" style="width:80px" oninput="checkCong()">
+      </div>
+    </div>
+    <div id="cong-result" class="result-row"></div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <div class="label">কনগ্রুয়েন্সের গুণধর্ম</div>
+    <div class="prop-grid">
+      <div class="prop-card">
+        <div class="prop-name">স্বতঃসম (Reflexive)</div>
+        <div class="prop-math">a ≡ a (mod m)</div>
+        <div class="prop-bn">যেকোনো সংখ্যা নিজের সাথে কনগ্রুয়েন্ট।</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-name">প্রতিসম (Symmetric)</div>
+        <div class="prop-math">a ≡ b ⟹ b ≡ a</div>
+        <div class="prop-bn">a ≡ b হলে b ≡ a-ও সত্য।</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-name">ক্রমিক (Transitive)</div>
+        <div class="prop-math">a≡b, b≡c ⟹ a≡c</div>
+        <div class="prop-bn">a≡b এবং b≡c হলে a≡c সত্য।</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-name">যোগ সামঞ্জস্য</div>
+        <div class="prop-math">(a+b) mod m</div>
+        <div class="prop-bn">যোগফলের ভাগশেষ = আলাদা ভাগশেষের যোগফল।</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-name">গুণ সামঞ্জস্য</div>
+        <div class="prop-math">(a×b) mod m</div>
+        <div class="prop-bn">গুণফলের ভাগশেষ = আলাদা ভাগশেষের গুণফল।</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function drawClock() {
+  const g = document.getElementById('clock-nums');
+  g.innerHTML = '';
+  for (let h = 1; h <= 12; h++) {
+    const angle = (h / 12) * 2 * Math.PI - Math.PI / 2;
+    const x = 110 + 82 * Math.cos(angle);
+    const y = 110 + 82 * Math.sin(angle);
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x', x.toFixed(1));
+    t.setAttribute('y', y.toFixed(1));
+    t.setAttribute('text-anchor','middle');
+    t.setAttribute('dominant-baseline','central');
+    t.setAttribute('font-size','13');
+    t.setAttribute('fill','var(--color-text-secondary)');
+    t.textContent = h;
+    g.appendChild(t);
+  }
+}
+
+function updateClock() {
+  const a = parseInt(document.getElementById('clock-a').value) || 0;
+  const m = 12;
+  const rem = ((a % m) + m) % m;
+  const hour = rem === 0 ? 12 : rem;
+  const angle = (hour / 12) * 2 * Math.PI - Math.PI / 2;
+  const hx = 110 + 72 * Math.cos(angle);
+  const hy = 110 + 72 * Math.sin(angle);
+  document.getElementById('clock-hand').setAttribute('x2', hx.toFixed(1));
+  document.getElementById('clock-hand').setAttribute('y2', hy.toFixed(1));
+  document.getElementById('clock-tip').setAttribute('cx', hx.toFixed(1));
+  document.getElementById('clock-tip').setAttribute('cy', hy.toFixed(1));
+
+  const dg = document.getElementById('clock-dots');
+  dg.innerHTML = '';
+  for (let h = 1; h <= 12; h++) {
+    if (h === hour) continue;
+    const ang = (h / 12) * 2 * Math.PI - Math.PI / 2;
+    const cx = 110 + 62 * Math.cos(ang);
+    const cy = 110 + 62 * Math.sin(ang);
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx', cx.toFixed(1)); c.setAttribute('cy', cy.toFixed(1));
+    c.setAttribute('r','3'); c.setAttribute('fill','var(--color-border-secondary)');
+    dg.appendChild(c);
+  }
+  const hAng = (hour / 12) * 2 * Math.PI - Math.PI / 2;
+  const hcx = 110 + 62 * Math.cos(hAng);
+  const hcy = 110 + 62 * Math.sin(hAng);
+  const hc = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  hc.setAttribute('cx', hcx.toFixed(1)); hc.setAttribute('cy', hcy.toFixed(1));
+  hc.setAttribute('r','5'); hc.setAttribute('fill','#534AB7');
+  dg.appendChild(hc);
+
+  document.getElementById('clock-result').innerHTML =
+    `<strong style="color:var(--color-text-primary)">${a} mod 12 = ${rem}</strong> — ঘড়িতে ${hour}টার অবস্থানে।<br>
+     তাই <strong style="color:var(--color-text-primary)">${a} ≡ ${rem} (mod 12)</strong>`;
+}
+
+function checkCong() {
+  const a = parseInt(document.getElementById('va').value);
+  const b = parseInt(document.getElementById('vb').value);
+  const m = parseInt(document.getElementById('vm').value) || 1;
+  if (isNaN(a) || isNaN(b)) { document.getElementById('cong-result').innerHTML = ''; return; }
+  const ra = ((a % m) + m) % m;
+  const rb = ((b % m) + m) % m;
+  const ok = ra === rb;
+  const diff = Math.abs(a - b);
+  document.getElementById('cong-result').innerHTML = `
+    <span class="badge ${ok ? 'badge-yes' : 'badge-no'}">${ok ? 'হ্যাঁ, কনগ্রুয়েন্ট ✓' : 'না, কনগ্রুয়েন্ট নয় ✗'}</span>
+    <span style="font-size:13px;color:var(--color-text-secondary);align-self:center">
+      ${a} mod ${m} = ${ra} &nbsp;|&nbsp; ${b} mod ${m} = ${rb}<br>
+      (${a} − ${b}) = ${a-b} → ${m} দ্বারা ${diff % m === 0 ? 'বিভাজ্য' : 'বিভাজ্য নয়'}
+    </span>`;
+}
+
+drawClock();
+updateClock();
+checkCong();
+</script>

@@ -1,0 +1,224 @@
+
+<h2 class="sr-only">মডুলার ইনভার্স বাংলায় ধাপে ধাপে ব্যাখ্যা ও ইন্টারেক্টিভ ক্যালকুলেটর</h2>
+<style>
+  *{box-sizing:border-box}
+  .w{padding:1.5rem 0;font-family:var(--font-sans)}
+  .sec{margin-bottom:2rem}
+  .lbl{font-size:13px;color:var(--color-text-secondary);margin-bottom:8px}
+  .bigbox{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;text-align:center;font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:1rem}
+  .explain{font-size:14px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:.75rem}
+  .hl{color:#534AB7;font-weight:500}
+  .hl2{color:#0F6E56;font-weight:500}
+  .hl3{color:#854F0B;font-weight:500}
+  .card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:10px}
+  hr.dv{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.5rem 0}
+  .sbar{display:flex;gap:0;margin-bottom:1.25rem;border-radius:var(--border-radius-md);overflow:hidden;border:0.5px solid var(--color-border-tertiary)}
+  .sbtn{flex:1;padding:8px 4px;font-size:12px;font-weight:500;color:var(--color-text-secondary);background:var(--color-background-secondary);border:none;cursor:pointer;border-right:0.5px solid var(--color-border-tertiary);transition:background .15s,color .15s;text-align:center}
+  .sbtn:last-child{border-right:none}
+  .sbtn.on{background:#EEEDFE;color:#3C3489}
+  .spanel{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1.5rem;min-height:170px}
+  .stitle{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.75rem}
+  .math{font-size:15px;font-weight:500;color:var(--color-text-primary);margin:.4rem 0}
+  .tbl{width:100%;font-size:13px;border-collapse:collapse}
+  .tbl td{padding:6px 8px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+  .tbl tr:last-child td{border:none;background:var(--color-background-primary);font-weight:500}
+  .tbl th{font-size:12px;font-weight:500;color:var(--color-text-secondary);text-align:left;padding:5px 8px;border-bottom:0.5px solid var(--color-border-secondary)}
+  .ansbox{background:#EEEDFE;border-radius:var(--border-radius-lg);padding:1rem 1.25rem;text-align:center;margin:.75rem 0}
+  .ansnum{font-size:34px;font-weight:500;color:#3C3489}
+  .anssub{font-size:13px;color:#534AB7;margin-top:3px}
+  .ctrl{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:1rem}
+  .fld{display:flex;flex-direction:column;gap:4px}
+  .fld label{font-size:12px;color:var(--color-text-secondary)}
+  .fld input{width:80px}
+  .bdg{padding:4px 12px;border-radius:var(--border-radius-md);font-size:12px;font-weight:500}
+  .ok{background:#E1F5EE;color:#085041}
+  .no{background:#FCEBEB;color:#791F1F}
+  .warn{background:#FAEEDA;color:#633806}
+  .vrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:.75rem}
+  .analogbox{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;display:flex;gap:1rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap}
+  .aitem{text-align:center;flex:1;min-width:80px}
+  .aval{font-size:20px;font-weight:500;color:var(--color-text-primary)}
+  .asub{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+  .adiv{font-size:22px;color:var(--color-text-tertiary);align-self:center}
+</style>
+
+<div class="w">
+
+  <div class="sec">
+    <div class="bigbox">a × x ≡ 1 (mod m)</div>
+    <div class="explain">
+      <span class="hl">a</span>-এর মডুলার ইনভার্স হলো সেই সংখ্যা <span class="hl">x</span>, যেটিকে <span class="hl">a</span>-এর সাথে গুণ করলে
+      <span class="hl">m</span> দিয়ে ভাগ করার পর ভাগশেষ <span class="hl">১</span> হয়।<br>
+      সংক্ষেপে: <span class="hl">x = a⁻¹ (mod m)</span>
+    </div>
+
+    <div class="analogbox">
+      <div class="aitem"><div class="aval">3</div><div class="asub">সাধারণ সংখ্যা</div></div>
+      <div class="adiv">×</div>
+      <div class="aitem"><div class="aval">⅓</div><div class="asub">ইনভার্স (সাধারণ)</div></div>
+      <div class="adiv">=</div>
+      <div class="aitem"><div class="aval">1</div><div class="asub">গুণফল</div></div>
+    </div>
+    <div class="analogbox">
+      <div class="aitem"><div class="aval" style="color:#534AB7">3</div><div class="asub">মড সংখ্যা</div></div>
+      <div class="adiv">×</div>
+      <div class="aitem"><div class="aval" style="color:#534AB7">5</div><div class="asub">মডুলার ইনভার্স<br>(mod 7)</div></div>
+      <div class="adiv">≡</div>
+      <div class="aitem"><div class="aval" style="color:#0F6E56">1</div><div class="asub">(mod 7)</div></div>
+    </div>
+    <div class="explain" style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1rem;">
+      সাধারণ গণিতে ৩-এর ইনভার্স ⅓ (ভগ্নাংশ) — কিন্তু মডুলার গণিতে ভগ্নাংশ নেই।
+      তাই <span class="hl">3⁻¹ mod 7 = 5</span>, কারণ 3 × 5 = 15 = 14+1 ≡ 1 (mod 7)।
+    </div>
+  </div>
+
+  <hr class="dv">
+
+  <div class="sec">
+    <div class="lbl">কখন ইনভার্স থাকে?</div>
+    <div class="card">
+      <div class="explain" style="margin:0">
+        <span class="hl">a</span>-এর মডুলার ইনভার্স তখনই বিদ্যমান, যখন <span class="hl">gcd(a, m) = 1</span> — অর্থাৎ <span class="hl">a</span> এবং <span class="hl">m</span> পরস্পর সহমৌলিক।<br><br>
+        উদাহরণ: <span class="hl2">gcd(3, 7) = 1</span> → ইনভার্স আছে ✓<br>
+        উদাহরণ: <span style="color:#A32D2D;font-weight:500">gcd(4, 8) = 4 ≠ 1</span> → ইনভার্স নেই ✗
+      </div>
+    </div>
+  </div>
+
+  <hr class="dv">
+
+  <div class="sec">
+    <div class="lbl">Extended Euclidean পদ্ধতি — ধাপে ধাপে (a=3, m=7)</div>
+    <div class="sbar">
+      <button class="sbtn on" onclick="ss(0)">ধাপ ১</button>
+      <button class="sbtn" onclick="ss(1)">ধাপ ২</button>
+      <button class="sbtn" onclick="ss(2)">ধাপ ৩</button>
+      <button class="sbtn" onclick="ss(3)">ধাপ ৪</button>
+      <button class="sbtn" onclick="ss(4)">উত্তর</button>
+    </div>
+    <div class="spanel" id="spanel"></div>
+  </div>
+
+  <hr class="dv">
+
+  <div class="sec">
+    <div class="lbl">নিজে হিসাব করো</div>
+    <div class="ctrl">
+      <div class="fld"><label>a (সংখ্যা)</label><input type="number" id="ia" value="3" min="1" oninput="calc()"></div>
+      <div class="fld"><label>m (মডুলাস)</label><input type="number" id="im" value="7" min="2" oninput="calc()"></div>
+      <button onclick="calc()" style="height:36px;padding:0 16px">হিসাব করো</button>
+    </div>
+    <div id="out"></div>
+    <div style="margin-top:1rem;display:flex;gap:8px;flex-wrap:wrap">
+      <button onclick="sendPrompt('মডুলার ইনভার্স RSA ক্রিপ্টোগ্রাফিতে কীভাবে ব্যবহার হয়?')">RSA-তে ব্যবহার ↗</button>
+      <button onclick="sendPrompt('Fermat little theorem দিয়ে মডুলার ইনভার্স বের করা ব্যাখ্যা করো')">Fermat পদ্ধতি ↗</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const steps=[
+  {t:"ধাপ ১ — সমস্যা লেখো এবং Extended Euclidean শুরু করো",b:`
+    <div class="explain">আমরা খুঁজছি <span class="hl">x</span> যেন <span class="hl">3x ≡ 1 (mod 7)</span>।</div>
+    <div class="explain">Bézout's Identity বলে: <span class="hl">3·x + 7·y = gcd(3,7) = 1</span> হলে, <span class="hl">x</span>-ই হবে আমাদের ইনভার্স।</div>
+    <div class="explain">তাই আমরা <span class="hl2">Extended Euclidean Algorithm</span> চালাই — এটি gcd বের করার সাথে সাথে <span class="hl">x</span> ও <span class="hl">y</span>-ও বের করে।</div>
+    <div class="math">প্রথম ভাগ: <span class="hl">7 = 2 × 3 + 1</span></div>`
+  },
+  {t:"ধাপ ২ — টেবিল পূরণ করো",b:`
+    <div class="explain">প্রতিটি সারিতে ভাগফল, ভাগশেষ, এবং দুটি গুণক (x, y) ট্র্যাক করি:</div>
+    <table class="tbl">
+      <thead><tr><th>ভাগফল (q)</th><th>ভাগশেষ (r)</th><th>x গুণক</th><th>y গুণক</th></tr></thead>
+      <tbody>
+        <tr><td>—</td><td>7 (শুরু m)</td><td>0</td><td>1</td></tr>
+        <tr><td>—</td><td>3 (শুরু a)</td><td>1</td><td>0</td></tr>
+        <tr><td>2</td><td>1</td><td style="color:#534AB7;font-weight:500">−2</td><td>1</td></tr>
+        <tr><td>3</td><td>0 (শেষ)</td><td>3</td><td>−1</td></tr>
+      </tbody>
+    </table>
+    <div class="explain" style="margin-top:.75rem">শেষ অশূন্য ভাগশেষ হলো <span class="hl2">gcd = 1</span> — তার মানে ইনভার্স বিদ্যমান।</div>`
+  },
+  {t:"ধাপ ৩ — x গুণক পড়ো",b:`
+    <div class="explain">শেষ অশূন্য সারিতে x গুণক = <span class="hl">−2</span>।</div>
+    <div class="explain">এর মানে: <span class="hl">3 × (−2) + 7 × 1 = −6 + 7 = 1</span> — Bézout's Identity পূরণ হলো!</div>
+    <div class="math" style="background:var(--color-background-primary);padding:.6rem 1rem;border-radius:var(--border-radius-md)">
+      3 × <span style="color:#A32D2D;font-weight:500">(−2)</span> ≡ 1 (mod 7)
+    </div>
+    <div class="explain" style="margin-top:.75rem">কিন্তু −2 ঋণাত্মক! মডুলার গণিতে ঋণাত্মক সংখ্যা রাখা যায় না।</div>`
+  },
+  {t:"ধাপ ৪ — ধনাত্মক করো",b:`
+    <div class="explain">ঋণাত্মক x-কে ধনাত্মক করতে <span class="hl">m যোগ করি</span>:</div>
+    <div class="math"><span class="hl">x = (−2 + 7) mod 7 = 5</span></div>
+    <div class="explain">যাচাই: <span class="hl2">3 × 5 = 15 = 14 + 1 ≡ 1 (mod 7)</span> ✓</div>
+    <div class="explain" style="background:var(--color-background-primary);padding:.6rem 1rem;border-radius:var(--border-radius-md)">
+      সাধারণ নিয়ম: যদি x ঋণাত্মক হয়, তাহলে <span class="hl">x = x + m</span> করো।
+    </div>`
+  },
+  {t:"উত্তর — চূড়ান্ত সমাধান",b:`
+    <div class="ansbox"><div class="ansnum">3⁻¹ mod 7 = 5</div><div class="anssub">কারণ 3 × 5 = 15 ≡ 1 (mod 7)</div></div>
+    <div class="explain">পরের ইনভার্সগুলো: <span class="hl">5, 12, 19, 26...</span> (প্রতিবার 7 যোগ করলে পাবে) — কিন্তু আমরা সবসময় সবচেয়ে ছোটটি নিই।</div>
+    <div class="explain" style="background:var(--color-background-primary);padding:.6rem 1rem;border-radius:var(--border-radius-md)">
+      <span class="hl">সারসংক্ষেপ:</span> Extended Euclidean → x গুণক নাও → ধনাত্মক করো → এটাই ইনভার্স।
+    </div>`
+  }
+];
+
+let cur=0;
+function ss(i){
+  cur=i;
+  document.querySelectorAll('.sbtn').forEach((b,j)=>b.classList.toggle('on',j===i));
+  document.getElementById('spanel').innerHTML=`<div class="stitle">${steps[i].t}</div>${steps[i].b}`;
+}
+ss(0);
+
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b]}return a}
+
+function extEuclid(a,b){
+  const rows=[];
+  let [or,r]=[a,b],[os,s]=[1,0],[ot,t]=[0,1];
+  while(r!==0){
+    const q=Math.floor(or/r);
+    rows.push({q,r:or,s:os,t:ot});
+    [or,r]=[r,or-q*r];
+    [os,s]=[s,os-q*s];
+    [ot,t]=[t,ot-q*t];
+  }
+  rows.push({q:'—',r:or,s:os,t:ot});
+  return{gcd:or,x:os,rows};
+}
+
+function calc(){
+  const a=parseInt(document.getElementById('ia').value)||0;
+  const m=parseInt(document.getElementById('im').value)||1;
+  const out=document.getElementById('out');
+  if(a<1||m<2){out.innerHTML='<div style="font-size:13px;color:var(--color-text-danger);margin-top:.5rem">a ≥ 1 এবং m ≥ 2 হতে হবে।</div>';return}
+  const g=gcd(a,m);
+  if(g!==1){
+    out.innerHTML=`<div class="card"><div class="explain" style="margin:0;color:var(--color-text-danger)">
+      ইনভার্স বিদ্যমান নয়!<br>
+      gcd(${a}, ${m}) = ${g} ≠ 1 — তাই ${a} এবং ${m} সহমৌলিক নয়।<br>
+      মডুলার ইনভার্স শুধুমাত্র তখনই থাকে যখন gcd = 1।
+    </div></div>`;
+    return;
+  }
+  const {x,rows}=extEuclid(a,m);
+  const inv=((x%m)+m)%m;
+  const rowsHtml=rows.map((r,i)=>{
+    const last=i===rows.length-1;
+    return`<tr><td>${r.q}</td><td>${r.r}</td><td style="${last?'color:#534AB7;font-weight:500':''}">${r.s}</td><td>${r.t}</td></tr>`;
+  }).join('');
+  out.innerHTML=`
+    <div style="overflow-x:auto;margin-bottom:.75rem">
+      <table class="tbl" style="min-width:300px">
+        <thead><tr><th>ভাগফল</th><th>ভাগশেষ</th><th>x গুণক</th><th>y গুণক</th></tr></thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+    </div>
+    ${x<0?`<div class="explain">x গুণক = ${x} (ঋণাত্মক) → ধনাত্মক করি: ${x} + ${m} = <span class="hl">${inv}</span></div>`:''}
+    <div class="ansbox"><div class="ansnum">${a}⁻¹ mod ${m} = ${inv}</div><div class="anssub">কারণ ${a} × ${inv} = ${a*inv} ≡ 1 (mod ${m})</div></div>
+    <div class="vrow">
+      <span class="bdg ok">${a} × ${inv} mod ${m} = ${(a*inv)%m} ✓ যাচাই হলো</span>
+    </div>`;
+}
+calc();
+</script>
