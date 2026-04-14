@@ -3,177 +3,243 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Educational Math & CS Notes</title>
-  <style>
-    :root {
-      color-scheme: light;
-      --bg: #0f172a;
-      --bg-2: #111827;
-      --panel: rgba(15, 23, 42, 0.72);
-      --panel-border: rgba(148, 163, 184, 0.18);
-      --text: #e5eefb;
-      --muted: #9fb0c8;
-      --accent: #38bdf8;
-      --accent-2: #22c55e;
-      --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
-    }
-
-    * { box-sizing: border-box; }
-    html, body { margin: 0; min-height: 100%; }
-    body {
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(56, 189, 248, 0.24), transparent 30%),
-        radial-gradient(circle at top right, rgba(34, 197, 94, 0.18), transparent 28%),
-        linear-gradient(180deg, #020617 0%, var(--bg) 45%, var(--bg-2) 100%);
-    }
-
-    .wrap {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 48px 20px 60px;
-    }
-
-    .hero {
-      display: grid;
-      gap: 18px;
-      padding: 36px;
-      border: 1px solid var(--panel-border);
-      border-radius: 28px;
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.7));
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      width: fit-content;
-      padding: 8px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(56, 189, 248, 0.28);
-      background: rgba(56, 189, 248, 0.08);
-      color: #c8f1ff;
-      font-size: 0.9rem;
-      letter-spacing: 0.02em;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(2.4rem, 5vw, 4.8rem);
-      line-height: 0.95;
-      max-width: 11ch;
-    }
-
-    .lede {
-      margin: 0;
-      max-width: 65ch;
-      font-size: 1.05rem;
-      line-height: 1.7;
-      color: var(--muted);
-    }
-
-    .grid {
-      margin-top: 28px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 16px;
-    }
-
-    .card {
-      display: block;
-      padding: 20px;
-      border-radius: 22px;
-      text-decoration: none;
-      color: inherit;
-      border: 1px solid var(--panel-border);
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.82), rgba(17, 24, 39, 0.74));
-      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
-      min-height: 160px;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(56, 189, 248, 0.45);
-      box-shadow: 0 18px 36px rgba(2, 6, 23, 0.35);
-    }
-
-    .card h2 {
-      margin: 0 0 10px;
-      font-size: 1.2rem;
-    }
-
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .meta {
-      margin-top: 22px;
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .meta a {
-      color: #bceaff;
-      text-decoration: none;
-    }
-
-    .meta a:hover { text-decoration: underline; }
-  </style>
+  <meta name="description" content="Rayhan Labs is a personal learning platform for Math, Physics, and Computer Science.">
+  <title>Rayhan Labs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="wrap">
-    <section class="hero">
-      <div class="eyebrow">Free GitHub Pages hosting</div>
-      <h1>Math and Computer Science notes.</h1>
-      <p class="lede">
-        This site collects interactive explainers and calculators for graph theory, modular arithmetic,
-        congruence, CRT, and digital logic. Open any topic below.
-      </p>
+  <header class="site-header" id="home">
+    <nav class="nav container" aria-label="Primary">
+      <a class="brand" href="#home" aria-label="Rayhan Labs home">
+        <span class="brand-mark">RL</span>
+        <span>Rayhan Labs</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-nav-toggle>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span class="sr-only">Open menu</span>
+      </button>
+
+      <div class="nav-links" id="nav-links" data-nav-links>
+        <a href="#home">Home</a>
+        <a href="#topics">Topics</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a class="btn btn-primary btn-small" href="#topics">Start Learning</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero section section-hero">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="container hero-layout reveal">
+        <div class="hero-copy">
+          <div class="eyebrow">Personal learning platform</div>
+          <h1>Learn Smarter. Understand Deeper.</h1>
+          <p class="lead">Interactive lessons on Math, Physics, and Computer Science.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="#topics">Explore Topics</a>
+            <a class="btn btn-secondary" href="#roadmap">View Roadmap</a>
+          </div>
+          <div class="hero-pills">
+            <span>Math</span>
+            <span>Physics</span>
+            <span>CSE</span>
+          </div>
+        </div>
+
+        <div class="hero-panel glass-card reveal">
+          <div class="panel-header">
+            <span class="panel-dot"></span>
+            <span>Weekly learning pulse</span>
+          </div>
+          <div class="panel-grid">
+            <div>
+              <strong>12</strong>
+              <span>Topics</span>
+            </div>
+            <div>
+              <strong>3</strong>
+              <span>Core subjects</span>
+            </div>
+            <div>
+              <strong>∞</strong>
+              <span>Practice ideas</span>
+            </div>
+          </div>
+          <div class="mini-chart" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <p class="panel-caption">Focused learning paths with visual explainers and simple tools.</p>
+        </div>
+      </div>
     </section>
 
-    <section class="grid" aria-label="Available pages">
-      <a class="card" href="graph_theory_from_basics.html">
-        <h2>Graph Theory Basics</h2>
-        <p>An introduction to graph concepts, notation, and common problem-solving ideas.</p>
-      </a>
-      <a class="card" href="dijkstra_interactive.html">
-        <h2>Dijkstra Interactive</h2>
-        <p>Step through shortest-path computation with an interactive visual explanation.</p>
-      </a>
-      <a class="card" href="adjacency_matrix_vs_list.html">
-        <h2>Adjacency Matrix vs List</h2>
-        <p>Compare the two graph representations and see when each one is useful.</p>
-      </a>
-      <a class="card" href="modular_inverse_calculator.html">
-        <h2>Modular Inverse Calculator</h2>
-        <p>Compute modular inverses quickly from the browser.</p>
-      </a>
-      <a class="card" href="modular_inverse_bangla.html">
-        <h2>Modular Inverse Explainer</h2>
-        <p>Bangla explanation of modular inverse and related number-theory ideas.</p>
-      </a>
-      <a class="card" href="congruence_bangla_explainer.html">
-        <h2>Congruence Explainer</h2>
-        <p>Clear Bangla notes on congruence relations and examples.</p>
-      </a>
-      <a class="card" href="crt_bangla_explainer.html">
-        <h2>CRT Explainer</h2>
-        <p>Bangla walkthrough of the Chinese Remainder Theorem.</p>
-      </a>
-      <a class="card" href="jk_counter_simulation.html">
-        <h2>JK Counter Simulation</h2>
-        <p>Explore a digital logic simulation of the JK counter.</p>
-      </a>
+    <section class="section" id="topics">
+      <div class="container">
+        <div class="section-heading reveal">
+          <p class="section-kicker">Topics</p>
+          <h2>Explore the core subjects.</h2>
+          <p>Clean, focused content designed to make difficult ideas easier to retain.</p>
+        </div>
+
+        <div class="topic-grid">
+          <article class="topic-card glass-card reveal">
+            <div class="topic-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19h16" />
+                <path d="M6 17l4-8 4 6 4-10" />
+              </svg>
+            </div>
+            <h3>Math</h3>
+            <p>Number theory, algebra, graphs, and problem-solving frameworks explained simply.</p>
+            <a class="btn btn-secondary btn-small topic-button" href="graph_theory_from_basics.html">Explore</a>
+          </article>
+
+          <article class="topic-card glass-card reveal">
+            <div class="topic-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v4" />
+                <path d="M5 20h14" />
+                <path d="M7 20c0-4 2-7 5-7s5 3 5 7" />
+                <path d="M9 9a3 3 0 0 1 6 0" />
+              </svg>
+            </div>
+            <h3>Physics</h3>
+            <p>Concept-first notes on motion, energy, and scientific intuition.</p>
+            <a class="btn btn-secondary btn-small topic-button" href="#contact">Explore</a>
+          </article>
+
+          <article class="topic-card glass-card reveal">
+            <div class="topic-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 5h16v14H4z" />
+                <path d="M8 9l-2 3 2 3" />
+                <path d="M16 9l2 3-2 3" />
+                <path d="M12 8l-1 8" />
+              </svg>
+            </div>
+            <h3>Computer Science</h3>
+            <p>Algorithms, data structures, and digital logic through interactive examples.</p>
+            <a class="btn btn-secondary btn-small topic-button" href="dijkstra_interactive.html">Explore</a>
+          </article>
+        </div>
+
+        <div class="lesson-links reveal">
+          <a href="modular_inverse_calculator.html">Modular inverse calculator</a>
+          <a href="congruence_bangla_explainer.html">Congruence explainer</a>
+          <a href="crt_bangla_explainer.html">CRT explainer</a>
+          <a href="jk_counter_simulation.html">JK counter simulation</a>
+          <a href="adjacency_matrix_vs_list.html">Adjacency matrix vs list</a>
+        </div>
+      </div>
     </section>
 
-    <p class="meta">
-      If GitHub Pages still shows an old 404 page, wait a minute and refresh the live site:
-      <a href="https://ray37han.github.io/educational-website/">ray37han.github.io/educational-website</a>.
-    </p>
+    <section class="section section-alt" id="roadmap">
+      <div class="container preview-layout">
+        <div class="section-heading reveal">
+          <p class="section-kicker">Interactive Learning Experience</p>
+          <h2>Switch the preview instantly.</h2>
+          <p>Use the controls to swap between a formula, a code snippet, and a graph sketch.</p>
+        </div>
+
+        <div class="preview-card glass-card reveal">
+          <div class="preview-tabs" role="tablist" aria-label="Preview selector">
+            <button class="preview-tab is-active" type="button" data-preview="formula">Formula</button>
+            <button class="preview-tab" type="button" data-preview="code">Code</button>
+            <button class="preview-tab" type="button" data-preview="graph">Graph</button>
+          </div>
+          <div class="preview-window" aria-live="polite">
+            <pre class="preview-content is-visible" data-panel="formula">F = ma
+
+Force equals mass times acceleration.</pre>
+            <pre class="preview-content" data-panel="code">function gcd(a, b) {
+  return b === 0 ? a : gcd(b, a % b);
+}</pre>
+            <div class="preview-content graph-canvas" data-panel="graph">
+              <span class="node n1"></span>
+              <span class="node n2"></span>
+              <span class="node n3"></span>
+              <span class="node n4"></span>
+              <span class="edge e1"></span>
+              <span class="edge e2"></span>
+              <span class="edge e3"></span>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-small preview-action" type="button" data-preview-action>Change Preview</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container about-layout">
+        <div class="about-copy reveal">
+          <p class="section-kicker">About</p>
+          <h2>Hi, I'm Rayhan, a CSE student sharing my learning journey.</h2>
+          <p>
+            I build concise study notes and interactive explainers to make technical subjects easier to understand.
+            The goal is simple: keep the content clean, practical, and fast to scan.
+          </p>
+          <p>
+            Future lessons can expand into more Math, Physics, and Computer Science topics without changing the core experience.
+          </p>
+        </div>
+
+        <div class="about-portrait glass-card reveal">
+          <img
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 320'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop stop-color='%234F46E5'/%3E%3Cstop offset='1' stop-color='%2338BDF8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='320' height='320' rx='40' fill='url(%23g)'/%3E%3Ccircle cx='160' cy='122' r='58' fill='rgba(255,255,255,0.9)'/%3E%3Cpath d='M76 274c14-46 51-72 84-72s70 26 84 72' fill='rgba(255,255,255,0.9)'/%3E%3C/svg%3E"
+            alt="Stylized profile illustration placeholder"
+          >
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta-section" id="contact">
+      <div class="container cta-card glass-card reveal">
+        <p class="section-kicker">Start now</p>
+        <h2>Start your journey today.</h2>
+        <p>Browse the lessons and continue building a focused, durable understanding of the fundamentals.</p>
+        <a class="btn btn-primary" href="#topics">Browse Topics</a>
+      </div>
+    </section>
   </main>
+
+  <footer class="site-footer">
+    <div class="container footer-layout">
+      <div>
+        <a class="brand footer-brand" href="#home">
+          <span class="brand-mark">RL</span>
+          <span>Rayhan Labs</span>
+        </a>
+        <p>Math, Physics, and CSE learning notes built for clarity.</p>
+      </div>
+
+      <div class="footer-links">
+        <a href="#home">Home</a>
+        <a href="#topics">Topics</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </div>
+
+      <div class="social-links" aria-label="Social links">
+        <a href="https://github.com/" target="_blank" rel="noreferrer" aria-label="GitHub">GH</a>
+        <a href="https://facebook.com/" target="_blank" rel="noreferrer" aria-label="Facebook">FB</a>
+        <a href="https://linkedin.com/" target="_blank" rel="noreferrer" aria-label="LinkedIn">IN</a>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <span>© 2026 Rayhan Labs.</span>
+      <span>Built with HTML, CSS, and vanilla JavaScript.</span>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
