@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>মহাকর্ষ ও অভিকর্ষ - HSC পদার্থবিজ্ঞান (একাদশ-দ্বাদশ শ্রেণি)</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Kalpurush', 'Noto Sans Bengali', Arial, sans-serif;
+  line-height: 1.8;
+  color: #2c3e50;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 40px 30px;
+  text-align: center;
+}
+.header h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header p {
+  font-size: 1.2em;
+  opacity: 0.9;
+}
+.content {
+  padding: 40px 30px;
+}
+.section {
+  margin-bottom: 40px;
+  padding: 25px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 5px solid #667eea;
+}
+.section h2 {
+  color: #667eea;
+  font-size: 2em;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e0e0e0;
+}
+.section h3 {
+  color: #764ba2;
+  font-size: 1.5em;
+  margin: 25px 0 15px 0;
+}
+.section h4 {
+  color: #555;
+  font-size: 1.2em;
+  margin: 20px 0 10px 0;
+}
+.formula-box {
+  background: #fff3cd;
+  border: 2px solid #ffc107;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  font-family: 'Times New Roman', serif;
+}
+.formula-box strong {
+  color: #d63031;
+  font-size: 1.3em;
+}
+.important {
+  background: #d4edda;
+  border-left: 4px solid #28a745;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 5px;
+}
+.note {
+  background: #cce5ff;
+  border-left: 4px solid #004085;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 5px;
+}
+.example {
+  background: #f8d7da;
+  border-left: 4px solid #dc3545;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 5px;
+}
+.simulation {
+  background: white;
+  border: 3px solid #667eea;
+  border-radius: 12px;
+  padding: 25px;
+  margin: 25px 0;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.simulation h3 {
+  color: #667eea;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.control-panel {
+  background: #f1f3f5;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+.control-group {
+  margin: 15px 0;
+}
+.control-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #495057;
+}
+.control-group input[type="range"] {
+  width: 100%;
+  height: 8px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+}
+.control-group input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #667eea;
+  cursor: pointer;
+}
+.canvas-container {
+  background: #000;
+  border-radius: 8px;
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+canvas {
+  border-radius: 8px;
+  max-width: 100%;
+}
+.output-box {
+  background: #e9ecef;
+  padding: 15px;
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  margin: 15px 0;
+}
+.btn {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: all 0.3s;
+  margin: 5px;
+}
+.btn:hover {
+  background: #764ba2;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+ul, ol {
+  margin-left: 30px;
+  margin-top: 10px;
+}
+li {
+  margin: 8px 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background: white;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+th {
+  background: #667eea;
+  color: white;
+}
+tr:nth-child(even) {
+  background: #f8f9fa;
+}
+.toc {
+  background: #e7f3ff;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+.toc h3 {
+  color: #004085;
+  margin-bottom: 15px;
+}
+.toc ul {
+  list-style: none;
+  margin-left: 0;
+}
+.toc li {
+  padding: 5px 0;
+}
+.toc a {
+  color: #0056b3;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.toc a:hover {
+  color: #667eea;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>🌍 মহাকর্ষ ও অভিকর্ষ 🌍</h1>
+    <p>HSC পদার্থবিজ্ঞান - একাদশ ও দ্বাদশ শ্রেণি</p>
+  </div>
+
+  <div class="content">
+    
+    <!-- Table of Contents -->
+    <div class="toc">
+      <h3>📚 সূচিপত্র</h3>
+      <ul>
+        <li><a href="#intro">১. ভূমিকা</a></li>
+        <li><a href="#newton-law">২. নিউটনের মহাকর্ষ সূত্র</a></li>
+        <li><a href="#gravitational-constant">৩. সার্বজনীন মহাকর্ষীয় ধ্রুবক (G)</a></li>
+        <li><a href="#acceleration">৪. অভিকর্ষজ ত্বরণ (g)</a></li>
+        <li><a href="#variation">৫. g এর পরিবর্তন</a></li>
+        <li><a href="#field">৬. মহাকর্ষীয় ক্ষেত্র</a></li>
+        <li><a href="#potential">৭. মহাকর্ষীয় বিভব</a></li>
+        <li><a href="#escape">৮. মুক্তি বেগ</a></li>
+        <li><a href="#satellite">৯. কৃত্রিম উপগ্রহ</a></li>
+        <li><a href="#kepler">১০. কেপলারের সূত্র</a></li>
+        <li><a href="#problems">১১. সমস্যা সমাধান</a></li>
+      </ul>
+    </div>
+
+    <!-- Section 1: Introduction -->
+    <div class="section" id="intro">
+      <h2>১. ভূমিকা - মহাকর্ষ ও অভিকর্ষ কী?</h2>
+      
+      <h3>মহাকর্ষ (Gravitation)</h3>
+      <p>মহাবিশ্বের যেকোনো দুটি বস্তুর মধ্যে পারস্পরিক আকর্ষণ বলকে <strong>মহাকর্ষ বল</strong> বলে। এটি একটি সার্বজনীন বল যা প্রকৃতির চারটি মৌলিক বলের একটি।</p>
+      
+      <h3>অভিকর্ষ (Gravity)</h3>
+      <p>পৃথিবী তার কেন্দ্রের দিকে যেকোনো বস্তুকে যে আকর্ষণ বলে টানে তাকে <strong>অভিকর্ষ বল</strong> বলে। এটি মহাকর্ষ বলের একটি বিশেষ রূপ।</p>
+
+      <div class="important">
+        <strong>⚡ মনে রাখুন:</strong>
+        <ul>
+          <li>মহাকর্ষ = যেকোনো দুটি বস্তুর মধ্যে আকর্ষণ</li>
+          <li>অভিকর্ষ = পৃথিবীর আকর্ষণ বল</li>
+          <li>মহাকর্ষ বল সবসময় আকর্ষণমূলক, কখনো বিকর্ষণমূলক নয়</li>
+          <li>এটি দূরত্বের বর্গের ব্যস্তানুপাতিক</li>
+        </ul>
+      </div>
+
+      <h3>প্রকৃতির চারটি মৌলিক বল</h3>
+      <ol>
+        <li><strong>মহাকর্ষ বল (Gravitational Force)</strong> - সবচেয়ে দুর্বল কিন্তু দূরপাল্লার</li>
+        <li><strong>তড়িৎ-চৌম্বক বল (Electromagnetic Force)</strong> - আহিত কণার মধ্যে</li>
+        <li><strong>দুর্বল নিউক্লিয় বল (Weak Nuclear Force)</strong> - তেজস্ক্রিয় ক্ষয়</li>
+        <li><strong>সবল নিউক্লিয় বল (Strong Nuclear Force)</strong> - নিউক্লিয়াসকে বেঁধে রাখে</li>
+      </ol>
+
+      <div class="note">
+        <strong>📝 তথ্য:</strong> মহাকর্ষ বল তড়িৎ-চৌম্বক বলের তুলনায় 10³⁶ গুণ দুর্বল এবং সবল নিউক্লিয় বলের তুলনায় 10³⁸ গুণ দুর্বল।
+      </div>
+    </div>
+
+    <!-- Section 2: Newton's Law -->
+    <div class="section" id="newton-law">
+      <h2>২. নিউটনের মহাকর্ষ সূত্র</h2>
+      
+      <h3>সূত্রের বিবৃতি</h3>
+      <p>মহাবিশ্বের প্রতিটি বস্তুকণা একে অপরকে নিজেদের ভরের গুণফলের সমানুপাতিক এবং তাদের মধ্যবর্তী দূরত্বের বর্গের ব্যস্তানুপাতিক বলে আকর্ষণ করে। এই বল দুই বস্তুর কেন্দ্র সংযোগকারী সরলরেখা বরাবর ক্রিয়া করে।</p>
+
+      <div class="formula-box">
+        <strong>F = G × (m₁ × m₂) / r²</strong>
+        <p>যেখানে:</p>
+        <ul>
+          <li><strong>F</strong> = মহাকর্ষ বল (নিউটন)</li>
+          <li><strong>G</strong> = সার্বজনীন মহাকর্ষীয় ধ্রুবক = 6.67 × 10⁻¹¹ N·m²/kg²</li>
+          <li><strong>m₁, m₂</strong> = দুটি বস্তুর ভর (কিলোগ্রাম)</li>
+          <li><strong>r</strong> = দুটি বস্তুর কেন্দ্রের মধ্যবর্তী দূরত্ব (মিটার)</li>
+        </ul>
+      </div>
+
+      <h3>মহাকর্ষ বলের বৈশিষ্ট্য</h3>
+      <ol>
+        <li><strong>সার্বজনীন:</strong> মহাবিশ্বের সকল বস্তুর মধ্যে ক্রিয়াশীল</li>
+        <li><strong>কেন্দ্রমুখী বল:</strong> দুটি বস্তুর কেন্দ্র সংযোগকারী রেখা বরাবর</li>
+        <li><strong>আকর্ষণমূলক:</strong> সবসময় আকর্ষণ, কখনো বিকর্ষণ নয়</li>
+        <li><strong>রক্ষণশীল বল:</strong> কৃত কাজ পথ-নিরপেক্ষ</li>
+        <li><strong>দূর্বল বল:</strong> অন্যান্য মৌলিক বলের তুলনায় অত্যন্ত দুর্বল</li>
+        <li><strong>মাধ্যম নিরপেক্ষ:</strong> মাধ্যমের উপর নির্ভর করে না</li>
+        <li><strong>ক্রিয়া-প্রতিক্রিয়া:</strong> নিউটনের তৃতীয় সূত্র মেনে চলে</li>
+      </ol>
+
+      <div class="important">
+        <strong>⚠️ গুরুত্বপূর্ণ সীমাবদ্ধতা:</strong>
+        <ul>
+          <li>বস্তুদুটি অবশ্যই বিন্দুভর বা গোলাকার হতে হবে</li>
+          <li>অতি ক্ষুদ্র দূরত্বে (10⁻⁹ মিটারের কম) প্রযোজ্য নয়</li>
+          <li>অতি উচ্চ মহাকর্ষীয় ক্ষেত্রে (ব্ল্যাক হোল) সংশোধন প্রয়োজন</li>
+        </ul>
+      </div>
+
+      <h3>ভেক্টর রূপ</h3>
+      <div class="formula-box">
+        <strong>F⃗₁₂ = -G × (m₁ × m₂) / r² × r̂₁₂</strong>
+        <p>ঋণাত্মক চিহ্ন নির্দেশ করে বলটি আকর্ষণমূলক (বিপরীত দিকে)</p>
+      </div>
+    </div>
+
+    <!-- Simulation 1: Newton's Law -->
+    <div class="simulation">
+      <h3>🎯 ইন্টারেক্টিভ সিমুলেশন: নিউটনের মহাকর্ষ সূত্র</h3>
+      <div class="control-panel">
+        <div class="control-group">
+          <label>বস্তু ১ এর ভর (m₁): <span id="mass1-val">5 × 10²⁰ kg</span></label>
+          <input type="range" id="mass1" min="1" max="50" value="5" step="1">
+        </div>
+        <div class="control-group">
+          <label>বস্তু ২ এর ভর (m₂): <span id="mass2-val">8 × 10²⁰ kg</span></label>
+          <input type="range" id="mass2" min="1" max="50" value="8" step="1">
+        </div>
+        <div class="control-group">
+          <label>দূরত্ব (r): <span id="dist-val">10 km</span></label>
+          <input type="range" id="distance" min="1" max="100" value="10" step="1">
+        </div>
+      </div>
+      <div class="canvas-container">
+        <canvas id="gravityCanvas" width="800" height="400"></canvas>
+      </div>
+      <div class="output-box" id="gravity-output">
+        মহাকর্ষ বল = ... নিউটন
+      </div>
+    </div>
+
+    <!-- Section 3: Gravitational Constant -->
+    <div class="section" id="gravitational-constant">
+      <h2>৩. সার্বজনীন মহাকর্ষীয় ধ্রুবক (G)</h2>
+      
+      <h3>মান ও একক</h3>
+      <div class="formula-box">
+        <strong>G = 6.67430 × 10⁻¹¹ N·m²/kg²</strong>
+        <p>বা, G = 6.67430 × 10⁻¹¹ m³/(kg·s²)</p>
+      </div>
+
+      <h3>G এর বৈশিষ্ট্য</h3>
+      <ul>
+        <li>এটি একটি সার্বজনীন ধ্রুবক - সমগ্র মহাবিশ্বে একই মান</li>
+        <li>স্থান, কাল, তাপমাত্রা বা মাধ্যমের উপর নির্ভর করে না</li>
+        <li>বস্তুর আকার, আকৃতি বা ভরের উপর নির্ভর করে না</li>
+        <li>মাত্রা: [M⁻¹L³T⁻²]</li>
+      </ul>
+
+      <h3>G এর পরিমাপ: ক্যাভেন্ডিশ পরীক্ষা (1798)</h3>
+      <p>হেনরি ক্যাভেন্ডিশ প্রথম G এর মান নির্ণয় করেন একটি টর্শন ব্যালান্স ব্যবহার করে।</p>
+
+      <h4>পরীক্ষার বর্ণনা:</h4>
+      <ol>
+        <li>একটি হালকা রডের দুই প্রান্তে দুটি ছোট সীসার গোলক (m) স্থাপন করা হয়</li>
+        <li>রডটি একটি সূক্ষ্ম তারের সাহায্যে ঝুলানো হয়</li>
+        <li>দুটি বড় সীসার গোলক (M) ছোট গোলকের কাছে আনা হয়</li>
+        <li>মহাকর্ষ বলের কারণে রডটি ঘুরে যায় এবং তার পেঁচানো হয়</li>
+        <li>পেঁচানোর কোণ থেকে মহাকর্ষ বল এবং তারপর G নির্ণয় করা হয়</li>
+      </ol>
+
+      <div class="formula-box">
+        <strong>G = (2πθL²r²) / (Mm × T²)</strong>
+        <p>যেখানে:</p>
+        <ul>
+          <li>θ = পেঁচানোর কোণ</li>
+          <li>L = রডের দৈর্ঘ্য</li>
+          <li>r = গোলকদের মধ্যবর্তী দূরত্ব</li>
+          <li>T = দোলনের পর্যায়কাল</li>
+        </ul>
+      </div>
+
+      <div class="note">
+        <strong>📝 ঐতিহাসিক তথ্য:</strong> ক্যাভেন্ডিশকে বলা হয় "যিনি পৃথিবীকে ওজন করেছেন" কারণ G জানা থাকলে পৃথিবীর ভর নির্ণয় করা যায়।
+      </div>
+
+      <h3>G এর ভৌত তাৎপর্য</h3>
+      <p><strong>G</strong> এর সংখ্যাগত মান হলো দুটি 1 kg ভরের বস্তুর মধ্যে 1 m দূরত্বে উৎপন্ন মহাকর্ষ বল।</p>
+
+      <div class="example">
+        <strong>উদাহরণ:</strong> দুটি 1 kg ভরের বস্তু 1 m দূরত্বে রাখলে তাদের মধ্যে মহাকর্ষ বল হবে:
+        <p>F = G × (1 × 1) / 1² = 6.67 × 10⁻¹¹ N</p>
+        <p>এটি অত্যন্ত ক্ষুদ্র - একটি মশার ওজনের প্রায় 10 মিলিয়ন ভাগের এক ভাগ!</p>
+      </div>
+    </div>
+
+    <!-- Section 4: Acceleration due to Gravity -->
+    <div class="section" id="acceleration">
+      <h2>৪. অভিকর্ষজ ত্বরণ (g)</h2>
+      
+      <h3>সংজ্ঞা</h3>
+      <p>পৃথিবীর মহাকর্ষীয় আকর্ষণের ফলে কোনো বস্তুর যে ত্বরণ সৃষ্টি হয় তাকে <strong>অভিকর্ষজ ত্বরণ</strong> বলে। একে 'g' দ্বারা প্রকাশ করা হয়।</p>
+
+      <h3>g এর মান নির্ণয়</h3>
+      <div class="formula-box">
+        <strong>g = GM/R²</strong>
+        <p>যেখানে:</p>
+        <ul>
+          <li><strong>G</strong> = 6.67 × 10⁻¹¹ N·m²/kg²</li>
+          <li><strong>M</strong> = পৃথিবীর ভর = 5.97 × 10²⁴ kg</li>
+          <li><strong>R</strong> = পৃথিবীর ব্যাসার্ধ = 6.37 × 10⁶ m</li>
+        </ul>
+        <p><strong>g ≈ 9.8 m/s² (পৃথিবীর পৃষ্ঠে)</strong></p>
+      </div>
+
+      <h3>নিগমন</h3>
+      <p>যদি m ভরের একটি বস্তু পৃথিবীর পৃষ্ঠে থাকে, তাহলে পৃথিবী কর্তৃক আকৃষ্ট বল:</p>
+      <div class="formula-box">
+        <p>F = GMm/R²  ... (নিউটনের মহাকর্ষ সূত্র থেকে)</p>
+        <p>F = mg  ... (নিউটনের দ্বিতীয় সূত্র থেকে)</p>
+        <p>∴ mg = GMm/R²</p>
+        <p><strong>∴ g = GM/R²</strong></p>
+      </div>
+
+      <h3>g এর বৈশিষ্ট্য</h3>
+      <ul>
+        <li>g একটি ভেক্টর রাশি, দিক পৃথিবীর কেন্দ্রের দিকে</li>
+        <li>g এর মান বস্তুর ভরের উপর নির্ভর করে না</li>
+        <li>বিভিন্ন স্থানে g এর মান ভিন্ন হয়</li>
+        <li>মুক্তভাবে পড়ন্ত সকল বস্তুর ত্বরণ একই (বায়ুর বাধা উপেক্ষা করে)</li>
+      </ul>
+
+      <h3>বিভিন্ন মহাজাগতিক বস্তুতে g এর মান</h3>
+      <table>
+        <tr>
+          <th>মহাজাগতিক বস্তু</th>
+          <th>g (m/s²)</th>
+          <th>পৃথিবীর তুলনায়</th>
+        </tr>
+        <tr>
+          <td>পৃথিবী</td>
+          <td>9.8</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>চাঁদ</td>
+          <td>1.62</td>
+          <td>≈ 1/6</td>
+        </tr>
+        <tr>
+          <td>সূর্য</td>
+          <td>274</td>
+          <td>≈ 28</td>
+        </tr>
+        <tr>
+          <td>মঙ্গল</td>
+          <td>3.71</td>
+          <td>≈ 0.38</td>
+        </tr>
+        <tr>
+          <td>বৃহস্পতি</td>
+          <td>24.79</td>
+          <td>≈ 2.53</td>
+        </tr>
+        <tr>
+          <td>বুধ</td>
+          <td>3.70</td>
+          <td>≈ 0.38</td>
+        </tr>
+      </table>
+
+      <div class="important">
+        <strong>⚡ মনে রাখুন:</strong> চাঁদে একজন মানুষের ওজন পৃথিবীর ওজনের প্রায় 1/6 ভাগ হবে কিন্তু ভর একই থাকবে।
+      </div>
+
+      <h3>পৃথিবীর ভর ও গড় ঘনত্ব নির্ণয়</h3>
+      <div class="formula-box">
+        <p><strong>পৃথিবীর ভর:</strong> M = gR²/G</p>
+        <p>M = (9.8 × (6.37 × 10⁶)²) / (6.67 × 10⁻¹¹)</p>
+        <p>M ≈ 5.97 × 10²⁴ kg</p>
+        <br>
+        <p><strong>পৃথিবীর গড় ঘনত্ব:</strong> ρ = M/V = M / (4πR³/3)</p>
+        <p>ρ = 3g / (4πGR)</p>
+        <p>ρ ≈ 5500 kg/m³ বা 5.5 g/cm³</p>
+      </div>
+    </div>
+
+    <!-- Simulation 2: Free Fall -->
+    <div class="simulation">
+      <h3>🎯 সিমুলেশন: মুক্তভাবে পতন</h3>
+      <div class="control-panel">
+        <div class="control-group">
+          <label>গ্রহ নির্বাচন করুন:</label>
+          <select id="planet-select">
+            <option value="9.8">পৃথিবী (g = 9.8 m/s²)</option>
+            <option value="1.62">চাঁদ (g = 1.62 m/s²)</option>
+            <option value="3.71">মঙ্গল (g = 3.71 m/s²)</option>
+            <option value="24.79">বৃহস্পতি (g = 24.79 m/s²)</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label>উচ্চতা: <span id="height-val">100 m</span></label>
+          <input type="range" id="height" min="10" max="500" value="100" step="10">
+        </div>
+        <button class="btn" onclick="startFall()">পতন শুরু করুন</button>
+        <button class="btn" onclick="resetFall()">রিসেট</button>
+      </div>
+      <div class="canvas-container">
+        <canvas id="fallCanvas" width="600" height="500"></canvas>
+      </div>
+      <div class="output-box" id="fall-output">
+        সময় = 0 s | বেগ = 0 m/s | দূরত্ব = 0 m
+      </div>
+    </div>
+
+    <!-- Section 5: Variation of g -->
+    <div class="section" id="variation">
+      <h2>৫. অভিকর্ষজ ত্বরণের পরিবর্তন</h2>
+      
+      <p>অভিকর্ষজ ত্বরণ g এর মান বিভিন্ন কারণে পরিবর্তিত হয়:</p>
+
+      <h3>৫.১ উচ্চতার সাথে g এর পরিবর্তন</h3>
+      <p>পৃথিবীর পৃষ্ঠ থেকে যত উপরে যাওয়া যায়, g এর মান তত কমে যায়।</p>
+
+      <div class="formula-box">
+        <p><strong>g_h = g(1 - 2h/R)</strong> [যখন h << R]</p>
+        <p>বা, <strong>g_h = g × R² / (R + h)²</strong> [সঠিক সূত্র]</p>
+        <p>যেখানে:</p>
+        <ul>
+          <li><strong>g_h</strong> = h উচ্চতায় অভিকর্ষজ ত্বরণ</li>
+          <li><strong>g</strong> = পৃষ্ঠে অভিকর্ষজ ত্বরণ</li>
+          <li><strong>h</strong> = উচ্চতা</li>
+          <li><strong>R</strong> = পৃথিবীর ব্যাসার্ধ</li>
+        </ul>
+      </div>
+
+      <h4>নিগমন:</h4>
+      <p>পৃষ্ঠে: g = GM/R²</p>
+      <p>h উচ্চতায়: g_h = GM/(R+h)²</p>
+      <p>∴ g_h/g = R²/(R+h)² = [R/(R+h)]² = [1/(1+h/R)]²</p>
+      <p>যখন h << R, (1+h/R)⁻² ≈ 1 - 2h/R (দ্বিপদ সূত্র)</p>
+      <p>∴ <strong>g_h = g(1 - 2h/R)</strong></p>
+
+      <div class="example">
+        <strong>উদাহরণ:</strong> পৃথিবীর পৃষ্ঠ থেকে 3200 km উচ্চতায় g এর মান কত? (পৃথিবীর ব্যাসার্ধ 6400 km, g = 9.8 m/s²)
+        <p>সমাধান: g_h = g(1 - 2h/R) = 9.8(1 - 2×3200/6400) = 9.8(1 - 1) = 0 m/s²</p>
+        <p>নোট: এখানে h = R/2, সরল সূত্রের সীমা অতিক্রম করেছে। সঠিক সূত্র ব্যবহার করলে:</p>
+        <p>g_h = g × R² / (R + h)² = 9.8 × (6400)² / (6400 + 3200)² = 9.8 / 2.25 ≈ 4.36 m/s²</p>
+      </div>
+
+      <h3>৫.২ গভীরতার সাথে g এর পরিবর্তন</h3>
+      <p>পৃথিবীর পৃষ্ঠ থেকে যত গভীরে যাওয়া যায়, g এর মান তত কমে যায়। পৃথিবীর কেন্দ্রে g = 0।</p>
+
+      <div class="formula-box">
+        <p><strong>g_d = g(1 - d/R)</strong></p>
+        <p>যেখানে:</p>
+        <ul>
+          <li><strong>g_d</strong> = d গভীরতায় অভিকর্ষজ ত্বরণ</li>
+          <li><strong>d</strong> = পৃষ্ঠ থেকে গভীরতা</li>
+          <li><strong>R</strong> = পৃথিবীর ব্যাসার্ধ</li>
+        </ul>
+        <p>কেন্দ্রে (d = R): g_d = g(1 - R/R) = 0</p>
+      </div>
+
+      <h4>নিগমন:</h4>
+      <p>পৃথিবীর ঘনত্ব সর্বত্র সমান ধরে, d গভীরতায় একটি বস্তুর উপর শুধুমাত্র (R-d) ব্যাসার্ধের গোলকের মহাকর্ষ বল কাজ করবে।</p>
+      <p>এই গোলকের ভর: M' = M × (R-d)³/R³</p>
+      <p>∴ g_d = GM'/(R-d)² = GM(R-d)³/(R³(R-d)²) = GM(R-d)/R³</p>
+      <p>∴ g_d = (GM/R²) × (R-d)/R = g(1 - d/R)</p>
+
+      <div class="important">
+        <strong>⚡ মূল পার্থক্য:</strong>
+        <ul>
+          <li>উচ্চতায়: g কমে যায় (বলের উৎস থেকে দূরে)</li>
+          <li>গভীরতায়: g কমে যায় (কার্যকর ভর কমে যায়)</li>
+          <li>উচ্চতায় হ্রাস দ্রুততর, গভীরতায় রৈখিক</li>
+        </ul>
+      </div>
+
+      <h3>৫.৩ পৃথিবীর আকৃতির জন্য g এর পরিবর্তন</h3>
+      <p>পৃথিবী সম্পূর্ণ গোলাকার নয়, এটি মেরু অঞ্চলে চাপা এবং বিষুব অঞ্চলে স্ফীত। তাই:</p>
+      <ul>
+        <li><strong>মেরুতে:</strong> R সবচেয়ে ছোট → g সবচেয়ে বেশি (g_p ≈ 9.832 m/s²)</li>
+        <li><strong>বিষুবরেখায়:</strong> R সবচেয়ে বড় → g সবচেয়ে কম (g_e ≈ 9.780 m/s²)</li>
+      </ul>
+
+      <h3>৫.৪ পৃথিবীর আহ্নিক গতির জন্য g এর পরিবর্তন</h3>
+      <p>পৃথিবী তার নিজ অক্ষের চারদিকে ঘোরে। এই ঘূর্ণনের ফলে কেন্দ্রমুখী বলের প্রয়োজন হয়, যা আপাত g কমিয়ে দেয়।</p>
+
+      <div class="formula-box">
+        <p><strong>g' = g - Rω²cos²λ</strong></p>
+        <p>যেখানে:</p>
+        <ul>
+          <li><strong>g'</strong> = আপাত অভিকর্ষজ ত্বরণ</li>
+          <li><strong>ω</strong> = পৃথিবীর কৌণিক বেগ = 2π/T = 7.3 × 10⁻⁵ rad/s</li>
+          <li><strong>λ</strong> = অক্ষাংশ</li>
+        </ul>
+        <p><strong>মেরুতে (λ = 90°):</strong> g' = g (কোন প্রভাব নেই)</p>
+        <p><strong>বিষুবরেখায় (λ = 0°):</strong> g' = g - Rω² (সর্বোচ্চ হ্রাস)</p>
+      </div>
+
+      <div class="example">
+        <strong>উদাহরণ:</strong> পৃথিবী যদি ঘুরা বন্ধ করে দেয়, বিষুবরেখায় g এর মান কত হবে?
+        <p>বর্তমানে: g' = g - Rω² ≈ 9.78 m/s²</p>
+        <p>ঘুরা বন্ধ হলে: g = g' + Rω² ≈ 9.78 + 0.034 ≈ 9.814 m/s²</p>
+      </div>
+
+      <h3>সম্মিলিত প্রভাব</h3>
+      <p>বাস্তবে g এর মান নির্ভর করে:</p>
+      <ol>
+        <li>পৃথিবীর আকৃতি (মেরুতে চাপা)</li>
+        <li>পৃথিবীর আহ্নিক গতি</li>
+        <li>স্থানীয় ভূতাত্ত্বিক গঠন (ঘনত্ব)</li>
+        <li>উচ্চতা</li>
+      </ol>
+
+      <div class="important">
+        <strong>📊 বাস্তব মান:</strong>
+        <ul>
+          <li>মেরুতে: g ≈ 9.832 m/s²</li>
+          <li>বিষুবরেখায়: g ≈ 9.780 m/s²</li>
+          <li>45° অক্ষাংশে: g ≈ 9.806 m/s²</li>
+          <li>গড় মান: g ≈ 9.8 m/s² (প্রায় সর্বত্র ব্যবহার্য)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Simulation 3: Variation of g -->
+    <div class="simulation">
+      <h3>🎯 সিমুলেশন: g এর পরিবর্তন</h3>
+      <div class="control-panel">
+        <div class="control-group">
+          <label>উচ্চতা (h): <span id="altitude-val">0 km</span></label>
+          <input type="range" id="altitude" min="0" max="10000" value="0" step="100">
+        </div>
+        <div class="control-group">
+          <label>গভীরতা (d): <span id="depth-val">0 km</span></label>
+          <input type="range" id="depth" min="0" max="6400" value="0" step="100">
+        </div>
+        <div class="control-group">
+          <label>অক্ষাংশ (λ): <span id="latitude-val">0°</span></label>
+          <input type="range" id="latitude" min="0" max="90" value="0" step="5">
+        </div>
+      </div>
+      <div class="canvas-container">
+        <canvas id="variationCanvas" width="800" height="400"></canvas>
+      </div>
+      <div class="output-box" id="variation-output">
+        g = 9.8 m/s²
+      </div>
+    </div>
+
+    <!-- Section 6: Gravitational Field -->
+    <div class="section" id="field">
+      <h2>৬. মহাকর্ষীয় ক্ষেত্র</h2>
+      
+      <h3>সংজ্ঞা</h3>
+      <p>কোনো বস্তুর চারপাশে যে অঞ্চলে অন্য বস্তু মহাকর্ষ বল অনুভব করে তাকে <strong>মহাকর্ষীয় ক্ষেত্র</strong> বলে।</p>
+
+      <h3>মহাকর্ষীয় ক্ষেত্রের তীব্রতা</h3>
+      <p>মহাকর্ষীয় ক্ষেত্রের কোনো বিন্দুতে একক ভরের বস্তুর উপর ক্রিয়াশীল বলকে ঐ বিন্দুতে <strong>মহাকর্ষীয় ক্ষেত্রের তীব্রতা</strong> বলে।</p>
+
+      <div class="formula-box">
+        <p><strong>I = F/m = GM/r²</strong></p>
+        <p>বা, <strong>I = g</strong> (পৃথিবীর পৃষ্ঠে)</p>
+        <p>একক: N/kg বা m/s²</p>
+        <p>মাত্রা: [LT⁻²]</p>
+      </div>
+
+      <h3>বৈশিষ্ট্য</h3>
+      <ul>
+        <li>এটি একটি ভেক্টর রাশি</li>
+        <li>দিক: ভর কেন্দ্রের দিকে (ভর ভেদ করা যায় তবে অভ্যন্তরে দিক বহির্মুখী হয়)</li>
+        <li>মান দূরত্বের বর্গের ব্যস্তানুপাতিক</li>
+        <li>একাধিক ভরের ক্ষেত্রে ভেক্টর যোগফল নিতে হয়</li>
+      </ul>
+
+      <h3>মহাকর্ষীয় ক্ষেত্র রেখা</h3>
+      <ul>
+        <li>ক্ষেত্র রেখা সবসময় ভর কেন্দ্রের দিকে নির্দেশ করে</li>
+        <li>দুটি ক্ষেত্র রেখা কখনো একে অপরকে ছেদ করে না</li>
+        <li>ক্ষেত্র রেখা ঘন হলে ক্ষেত্র শক্তিশালী</li>
+        <li>অসীম দূরত্বে ক্ষেত্র শূন্য</li>
+      </ul>
+
+      <div class="note">
+        <strong>📝 তুলনা:</strong>
+        <ul>
+          <li>মহাকর্ষীয় ক্ষেত্র ≈ তড়িৎ ক্ষেত্র</li>
+          <li>মহাকর্ষীয় ক্ষেত্রের তীব্রতা ≈ তড়িৎ ক্ষেত্রের তীব্রতা</li>
+          <li>পার্থক্য: মহাকর্ষীয় বল সবসময় আকর্ষণমূলক</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Section 7: Gravitational Potential -->
+    <div class="section" id="potential">
+      <h2>৭. মহাকর্ষীয় বিভব</h2>
+      
+      <h3>সংজ্ঞা</h3>
+      <p>মহাকর্ষীয় ক্ষেত্রের কোনো বিন্দুতে একক ভরের বস্তুকে অসীম দূরত্ব থেকে ঐ বিন্দুতে আনতে যে পরিমাণ কাজ করতে হয় তাকে ঐ বিন্দুতে <strong>মহাকর্ষীয় বিভব</strong> বলে।</p>
+
+      <div class="formula-box">
+        <p><strong>V = -GM/r</strong></p>
+        <p>একক: J/kg বা m²/s²</p>
+        <p>মাত্রা: [L²T⁻²]</p>
+      </div>
+
+      <h3>বৈশিষ্ট্য</h3>
+      <ul>
+        <li>এটি একটি স্কেলার রাশি</li>
+        <li>সবসময় ঋণাত্মক (অসীমে শূন্য ধরে)</li>
+        <li>যত কাছে যাওয়া যায়, বিভব তত বেশি ঋণাত্মক</li>
+        <li>পৃথিবীর পৃষ্ঠে: V = -GM/R = -gR</li>
+      </ul>
+
+      <h3>মহাকর্ষীয় বিভব শক্তি</h3>
+      <p>m ভরের বস্তুর মহাকর্ষীয় বিভব শক্তি:</p>
+      <div class="formula-box">
+        <p><strong>U = mV = -GMm/r</strong></p>
+        <p>পৃথিবীর পৃষ্ঠে: U = -GMm/R</p>
+        <p>অসীম দূরত্বে: U = 0</p>
+      </div>
+
+      <h3>বিভব ও ক্ষেত্রের তীব্রতার সম্পর্ক</h3>
+      <div class="formula-box">
+        <p><strong>I = -dV/dr</strong></p>
+        <p>অর্থাৎ, ক্ষেত্রের তীব্রতা = বিভবের ঋণাত্মক নতি</p>
+      </div>
+
+      <h3>মহাকর্ষীয় বিভব পার্থক্য</h3>
+      <p>দুটি বিন্দুর মধ্যে বিভব পার্থক্য:</p>
+      <div class="formula-box">
+        <p><strong>ΔV = V₂ - V₁ = GM(1/r₁ - 1/r₂)</strong></p>
+        <p>একক ভরকে r₁ থেকে r₂ তে নিতে কৃত কাজ = mΔV</p>
+      </div>
+
+      <div class="example">
+        <strong>উদাহরণ:</strong> পৃথিবীর পৃষ্ঠ থেকে একটি 10 kg বস্তুকে 1000 km উচ্চতায় নিতে কত কাজ করতে হবে?
+        <p>ΔV = GM(1/R - 1/(R+h))</p>
+        <p>W = mΔV = m × GM × h/(R(R+h))</p>
+        <p>W = 10 × 9.8 × 6.4×10⁶ × 10⁶/(6.4×10⁶ × 7.4×10⁶)</p>
+        <p>W ≈ 9.2 × 10⁸ J</p>
+      </div>
+
+      <div class="important">
+        <strong>⚡ স্মরণীয়:</strong>
+        <ul>
+          <li>বিভব শক্তি ঋণাত্মক → বস্তু আবদ্ধ অবস্থায়</li>
+          <li>বিভব শক্তি শূন্য → বস্তু মুক্ত হওয়ার সীমায়</li>
+          <li>বিভব শক্তি ধনাত্মক → বস্তু মুক্ত</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Section 8: Escape Velocity -->
+    <div class="section" id="escape">
+      <h2>৮. মুক্তি বেগ (Escape Velocity)</h2>
+      
+      <h3>সংজ্ঞা</h3>
+      <p>কোনো বস্তুকে পৃথিবীর পৃষ্ঠ থেকে যে ন্যূনতম বেগে উল্লম্বভাবে ছুড়ে দিলে তা পৃথিবীর মহাকর্ষীয় ক্ষেত্র অতিক্রম করে অসীম দূরত্বে চলে যায় এবং ফিরে আসে না, সেই বেগকে <strong>মুক্তি বেগ</strong> বলে।</p>
+
+      <div class="formula-box">
+        <p><strong>v_e = √(2GM/R) = √(2gR)</strong></p>
+        <p>পৃথিবীর জন্য:</p>
+        <p>v_e = √(2 × 9.8 × 6.4 × 10⁶)</p>
+        <p><strong>v_e ≈ 11.2 km/s বা 40,320 km/h</strong></p>
+      </div>
+
+      <h3>নিগমন</h3>
+      <p>শক্তির নিত্যতা সূত্র প্রয়োগ করে:</p>
+      <div class="formula-box">
+        <p>প্রাথমিক শক্তি = শেষ শক্তি</p>
+        <p>½mv_e² + (-GMm/R) = 0 + 0</p>
+        <p>½mv_e² = GMm/R</p>
+        <p><strong>v_e = √(2GM/R)</strong></p>
+      </div>
+
+      <h3>মুক্তি বেগের বৈশিষ্ট্য</h3>
+      <ul>
+        <li>বস্তুর ভরের উপর নির্ভর করে না</li>
+        <li>গ্রহের ভর ও ব্যাসার্ধের উপর নির্ভর করে</li>
+        <li>ছোড়ার কোণের উপর নির্ভর করে না (যেকোনো দিকে একই)</li>
+        <li>কক্ষপথ বেগের √2 গুণ</li>
+      </ul>
+
+      <h3>বিভিন্ন মহাজাগতিক বস্তুর মুক্তি বেগ</h3>
+      <table>
+        <tr>
+          <th>বস্তু</th>
+          <th>মুক্তি বেগ (km/s)</th>
+        </tr>
+        <tr>
+          <td>পৃথিবী</td>
+          <td>11.2</td>
+        </tr>
+        <tr>
+          <td>চাঁদ</td>
+          <td>2.4</td>
+        </tr>
+        <tr>
+          <td>মঙ্গল</td>
+          <td>5.0</td>
+        </tr>
+        <tr>
+          <td>বৃহস্পতি</td>
+          <td>59.5</td>
+        </tr>
+        <tr>
+          <td>সূর্য</td>
+          <td>617.5</td>
+        </tr>
+      </table>
+
+      <h3>মুক্তি বেগ ও কক্ষপথ বেগের সম্পর্ক</h3>
+      <div class="formula-box">
+        <p>কক্ষপথ বেগ: v_o = √(GM/r)</p>
+        <p>মুক্তি বেগ: v_e = √(2GM/r)</p>
+        <p><strong>v_e = √2 × v_o ≈ 1.414 v_o</strong></p>
+      </div>
+
+      <div class="note">
+        <strong>🌌 মজার তথ্য:</strong>
+        <ul>
+          <li>চাঁদের মুক্তি বেগ কম বলে সেখানে বায়ুমণ্ডল নেই</li>
+          <li>ব্ল্যাক হোলের মুক্তি বেগ আলোর বেগের চেয়ে বেশি</li>
+          <li>রকেটকে 11.2 km/s বেগে ছোড়ার প্রয়োজন নেই, ধীরে ধীরে ত্বরান্বিত করা যায়</li>
+        </ul>
+      </div>
+
+      <div class="example">
+        <strong>উদাহরণ:</strong> একটি গ্রহের ভর পৃথিবীর 4 গুণ এবং ব্যাসার্ধ 2 গুণ। এই গ্রহ থেকে মুক্তি বেগ কত?
+        <p>v_e = √(2GM/R)</p>
+        <p>গ্রহের জন্য: v_e' = √(2G×4M/(2R)) = √(4GM/R) = √2 × √(2GM/R) = √2 × v_e</p>
+        <p>v_e' = 1.414 × 11.2 ≈ 15.8 km/s</p>
+      </div>
+    </div>
+
+    <!-- Simulation 4: Escape Velocity -->
+    <div class="simulation">
+      <h3>🚀 সিমুলেশন: মুক্তি বেগ</h3>
+      <div class="control-panel">
+        <div class="control-group">
+          <label>প্রাথমিক বেগ: <span id="launch-vel-val">11.2 km/s</span></label>
+          <input type="range" id="launch-velocity" min="0" max="20" value="11.2" step="0.1">
+        </div>
+        <button class="btn" onclick="launchRocket()">রকেট উৎক্ষেপণ</button>
+      </div>
+      <div class="canvas-container">
+        <canvas id="escapeCanvas" width="700" height="700"></canvas>
+      </div>
+      <div class="output-box" id="escape-output">
+        মুক্তি বেগ = 11.2 km/s
+      </div>
+    </div>
+
+    <!-- Section 9: Satellites -->
+    <div class="section" id="satellite">
+      <h2>৯. কৃত্রিম উপগ্রহ (Artificial Satellites)</h2>
+      
+      <h3>সংজ্ঞা</h3>
+      <p>মানুষের তৈরি যেসব বস্তু পৃথিবী বা অন্য কোনো গ্রহের চারদিকে নির্দিষ্ট কক্ষপথে ঘুরে তাদের <strong>কৃত্রিম উপগ্রহ</strong> বলে।</p>
+
+      <h3>৯.১ কক্ষপথ বেগ (Orbital Velocity)</h3>
+      <p>উপগ্রহ যে বেগে পৃথিবীর চারদিকে ঘোরে তাকে কক্ষপথ বেগ বলে।</p>
+
+      <div class="formula-box">
+        <p><strong>v_o = √(GM/r) = √(gR²/r)</strong></p>
+        <p>পৃথিবীর পৃষ্ঠে (r = R):</p>
+        <p><strong>v_o = √(gR) = √(9.8 × 6.4 × 10⁶) ≈ 7.9 km/s</strong></p>
+      </div>
+
+      <h4>নিগমন:</h4>
+      <p>উপগ্রহের উপর মহাকর্ষ বল = প্রয়োজনীয় কেন্দ্রমুখী বল</p>
+      <div class="formula-box">
+        <p>GMm/r² = mv_o²/r</p>
+        <p><strong>v_o = √(GM/r)</strong></p>
+      </div>
+
+      <h3>৯.২ পর্যায়কাল (Time Period)</h3>
+      <p>উপগ্রহ পৃথিবীকে একবার প্রদক্ষিণ করতে যে সময় নেয় তাকে পর্যায়কাল বলে।</p>
+
+      <div class="formula-box">
+        <p><strong>T = 2πr/v_o = 2π√(r³/GM)</strong></p>
+        <p>বা, <strong>T² = (4π²/GM) × r³</strong></p>
+        <p>পৃথিবীর পৃষ্ঠ ঘেঁষে (r = R): T ≈ 84.6 মিনিট</p>
+      </div>
+
+      <h3>৯.৩ উপগ্রহের শক্তি</h3>
+      
+      <h4>গতিশক্তি:</h4>
+      <div class="formula-box">
+        <p><strong>K.E. = ½mv_o² = GMm/(2r)</strong></p>
+      </div>
+
+      <h4>বিভব শক্তি:</h4>
+      <div class="formula-box">
+        <p><strong>P.E. = -GMm/r</strong></p>
+      </div>
+
+      <h4>মোট শক্তি:</h4>
+      <div class="formula-box">
+        <p><strong>E = K.E. + P.E. = -GMm/(2r)</strong></p>
+        <p>মোট শক্তি সবসময় ঋণাত্মক (আবদ্ধ অবস্থা)</p>
+      </div>
+
+      <div class="important">
+        <strong>⚡ লক্ষণীয়:</strong>
+        <ul>
+          <li>|P.E.| = 2 × K.E.</li>
+          <li>|E| = K.E.</li>
+          <li>উচ্চতা বাড়লে গতিশক্তি কমে, বিভব শক্তি বাড়ে</li>
+          <li>উচ্চতর কক্ষপথের উপগ্রহ ধীরে চলে</li>
+        </ul>
+      </div>
+
+      <h3>৯.৪ ভূস্থির উপগ্রহ (Geostationary Satellite)</h3>
+      <p>যে কৃত্রিম উপগ্রহ বিষুবরেখার উপর স্থির অবস্থানে থাকে এবং পৃথিবীর সাথে একই কৌণিক বেগে ঘোরে তাকে <strong>ভূস্থির উপগ্রহ</strong> বলে।</p>
+
+      <h4>শর্তসমূহ:</h4>
+      <ol>
+        <li>কক্ষপথ অবশ্যই বিষুবরেখার উপর হতে হবে</li>
+        <li>পর্যায়কাল = 24 ঘণ্টা</li>
+        <li>ঘূর্ণন পৃথিবীর ঘূর্ণনের সমান ও সমদিকে</li>
+        <li>নির্দিষ্ট উচ্চতা (প্রায় 36,000 km)</li>
+      </ol>
+
+      <h4>উচ্চতা নির্ণয়:</h4>
+      <div class="formula-box">
+        <p>T = 2π√(r³/GM) = 24 ঘণ্টা = 86400 s</p>
+        <p>r³ = GMT²/(4π²)</p>
+        <p>r ≈ 4.23 × 10⁷ m</p>
+        <p>উচ্চতা h = r - R ≈ 36,000 km</p>
+      </div>
+
+      <h4>ব্যবহার:</h4>
+      <ul>
+        <li>টেলিযোগাযোগ (TV, রেডিও সম্প্রচার)</li>
+        <li>আবহাওয়ার পূর্বাভাস</li>
+        <li>GPS নেভিগেশন</li>
+        <li>সামরিক নজরদারি</li>
+      </ul>
+
+      <h3>৯.৫ মেরু উপগ্রহ (Polar Satellite)</h3>
+      <p>যে উপগ্রহ পৃথিবীর মেরুর উপর দিয়ে উত্তর-দক্ষিণ দিকে ঘোরে তাকে <strong>মেরু উপগ্রহ</strong> বলে।</p>
+
+      <h4>বৈশিষ্ট্য:</h4>
+      <ul>
+        <li>উচ্চতা: 500-800 km</li>
+        <li>পর্যায়কাল: 90-100 মিনিট</li>
+        <li>পৃথিবীর সম্পূর্ণ পৃষ্ঠ পর্যবেক্ষণ করতে পারে</li>
+      </ul>
+
+      <h4>ব্যবহার:</h4>
+      <ul>
+        <li>ভূমি জরিপ ও মানচিত্র তৈরি</li>
+        <li>প্রাকৃতিক সম্পদ অনুসন্ধান</li>
+        <li>পরিবেশ পর্যবেক্ষণ</li>
+        <li>গুপ্তচরবৃত্তি</li>
+      </ul>
+
+      <h3>তুলনা: ভূস্থির ও মেরু উপগ্রহ</h3>
+      <table>
+        <tr>
+          <th>বৈশিষ্ট্য</th>
+          <th>ভূস্থির</th>
+          <th>মেরু</th>
+        </tr>
+        <tr>
+          <td>উচ্চতা</td>
+          <td>~36,000 km</td>
+          <td>500-800 km</td>
+        </tr>
+        <tr>
+          <td>পর্যায়কাল</td>
+          <td>24 ঘণ্টা</td>
+          <td>90-100 মিনিট</td>
+        </tr>
+        <tr>
+          <td>কক্ষপথ</td>
+          <td>বিষুবরেখায়</td>
+          <td>মেরুর উপর</td>
+        </tr>
+        <tr>
+          <td>পৃষ্ঠ কভারেজ</td>
+          <td>নির্দিষ্ট এলাকা</td>
+          <td>সম্পূর্ণ পৃষ্ঠ</td>
+        </tr>
+        <tr>
+          <td>ব্যবহার</td>
+          <td>যোগাযোগ</td>
+          <td>জরিপ, পর্যবেক্ষণ</td>
+        </tr>
+      </table>
+
+      <div class="note">
+        <strong>🛰️ বাংলাদেশের উপগ্রহ:</strong>
+        <ul>
+          <li><strong>বঙ্গবন্ধু স্যাটেলাইট-১</strong> (2018) - ভূস্থির উপগ্রহ</li>
+          <li><strong>বঙ্গবন্ধু স্যাটেলাইট-২</strong> (পরিকল্পিত) - টেলিযোগাযোগ</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Simulation 5: Orbital Motion -->
+    <div class="simulation">
+      <h3>🛰️ সিমুলেশন: উপগ্রহের কক্ষপথ</h3>
+      <div class="control-panel">
+        <div class="control-group">
+          <label>উচ্চতা (h): <span id="orbit-height-val">400 km</span></label>
+          <input type="range" id="orbit-height" min="200" max="40000" value="400" step="100">
+        </div>
+        <button class="btn" onclick="startOrbit()">কক্ষপথে স্থাপন</button>
+        <button class="btn" onclick="stopOrbit()">থামান</button>
+      </div>
+      <div class="canvas-container">
+        <canvas id="orbitCanvas" width="700" height="700"></canvas>
+      </div>
+      <div class="output-box" id="orbit-output">
+        বেগ = ... km/s | পর্যায়কাল = ... মিনিট
+      </div>
+    </div>
+
+    <!-- Section 10: Kepler's Laws -->
+    <div class="section" id="kepler">
+      <h2>১০. কেপলারের সূত্র</h2>
+      
+      <p>জোহানেস কেপলার (1571-1630) গ্রহগুলির গতি পর্যবেক্ষণ করে তিনটি সূত্র আবিষ্কার করেন।</p>
+
+      <h3>প্রথম সূত্র: কক্ষপথের সূত্র (Law of Orbits)</h3>
+      <div class="important">
+        <p><strong>সূত্র:</strong> প্রতিটি গ্রহ সূর্যকে কেন্দ্র করে উপবৃত্তাকার (elliptical) কক্ষপথে ঘোরে এবং সূর্য এই উপবৃত্তের একটি ফোকাসে (focus) অবস্থিত।</p>
+      </div>
+
+      <h4>ব্যাখ্যা:</h4>
+      <ul>
+        <li>কক্ষপথ পুরোপুরি বৃত্তাকার নয়, সামান্য উপবৃত্তাকার</li>
+        <li>সূর্য ঠিক কেন্দ্রে নেই, একটু একপাশে (ফোকাস)</li>
+        <li>গ্রহ কখনো সূর্যের কাছে (perihelion), কখনো দূরে (aphelion)</li>
+      </ul>
+
+      <h3>দ্বিতীয় সূত্র: ক্ষেত্রফলের সূত্র (Law of Areas)</h3>
+      <div class="important">
+        <p><strong>সূত্র:</strong> সূর্য থেকে কোনো গ্রহে টানা সংযোজক সরলরেখা সমান সময়ে সমান ক্ষেত্রফল অতিক্রম করে।</p>
+      </div>
+
+      <h4>ব্যাখ্যা:</h4>
+      <ul>
+        <li>সূর্যের কাছে গ্রহের বেগ বেশি</li>
+        <li>সূর্য থেকে দূরে গ্রহের বেগ কম</li>
+        <li>ক্ষেত্রীয় বেগ (areal velocity) ধ্রুবক</li>
+      </ul>
+
+      <div class="formula-box">
+        <p><strong>dA/dt = constant = L/(2m)</strong></p>
+        <p>যেখানে L = কৌণিক ভরবেগ (সংরক্ষিত)</p>
+      </div>
+
+      <h3>তৃতীয় সূত্র: পর্যায়কালের সূত্র (Law of Periods)</h3>
+      <div class="important">
+        <p><strong>সূত্র:</strong> কোনো গ্রহের পর্যায়কালের বর্গ (T²) তার কক্ষপথের অর্ধ-মুখ্য অক্ষের (semi-major axis) ঘনফলের (a³) সমানুপাতিক।</p>
+      </div>
+
+      <div class="formula-box">
+        <p><strong>T² ∝ a³</strong></p>
+        <p>বা, <strong>T² = (4π²/GM) × a³</strong></p>
+        <p>বৃত্তাকার কক্ষপথের জন্য (a = r):</p>
+        <p><strong>T² = (4π²/GM) × r³</strong></p>
+      </div>
+
+      <h4>প্রয়োগ:</h4>
+      <p>দুটি গ্রহের জন্য:</p>
+      <div class="formula-box">
+        <p><strong>T₁²/T₂² = a₁³/a₂³</strong></p>
+      </div>
+
+      <div class="example">
+        <strong>উদাহরণ:</strong> পৃথিবীর পর্যায়কাল 365 দিন এবং কক্ষপথের ব্যাসার্ধ 1 AU। মঙ্গলের কক্ষপথের ব্যাসার্ধ 1.524 AU হলে তার পর্যায়কাল কত?
+        <p>সমাধান: T₂²/T₁² = a₂³/a₁³</p>
+        <p>T₂²/365² = (1.524)³/1³</p>
+        <p>T₂ = 365 × √(1.524³) = 365 × 1.88 ≈ 686 দিন</p>
+      </div>
+
+      <h3>কেপলারের সূত্র ও নিউটনের মহাকর্ষ সূত্র</h3>
+      <p>নিউটন দেখান যে তার মহাকর্ষ সূত্র থেকে কেপলারের সূত্র নিগমন করা যায়। এভাবে:</p>
+      <ul>
+        <li>কেপলারের তৃতীয় সূত্র → F ∝ 1/r²</li>
+        <li>কেপলারের দ্বিতীয় সূত্র → কৌণিক ভরবেগ সংরক্ষণ</li>
+        <li>কেপলারের প্রথম সূত্র → কেন্দ্রমুখী বল</li>
+      </ul>
+
+      <div class="note">
+        <strong>📜 ঐতিহাসিক তথ্য:</strong>
+        <ul>
+          <li>কেপলার টাইকো ব্রাহের 20 বছরের পর্যবেক্ষণ বিশ্লেষণ করেন</li>
+          <li>প্রথম সূত্র আবিষ্কার করতে 6 বছর লাগে</li>
+          <li>এই সূত্র আধুনিক জ্যোতির্বিজ্ঞানের ভিত্তি</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Section 11: Problem Solving -->
+    <div class="section" id="problems">
+      <h2>১১. গুরুত্বপূর্ণ সমস্যা সমাধান</h2>
+      
+      <h3>সমস্যা ১: মহাকর্ষ বল</h3>
+      <div class="example">
+        <p><strong>প্রশ্ন:</strong> দুটি 50 kg ভরের বস্তু 1 m দূরত্বে রাখা আছে। তাদের মধ্যে মহাকর্ষ বল কত?</p>
+        <p><strong>সমাধান:</strong></p>
+        <p>F = Gm₁m₂/r²</p>
+        <p>F = (6.67 × 10⁻¹¹ × 50 × 50) / 1²</p>
+        <p>F = 1.67 × 10⁻⁷ N</p>
+      </div>
+
+      <h3>সমস্যা ২: পৃথিবীর ভর</h3>
+      <div class="example">
+        <p><strong>প্রশ্ন:</strong> g = 9.8 m/s², R = 6.4 × 10⁶ m হলে পৃথিবীর ভর নির্ণয় কর।</p>
+        <p><strong>সমাধান:</strong></p>
+        <p>g = GM/R²</p>
+        <p>M = gR²/G</p>
+        <p>M = (9.8 × (6.4 × 10⁶)²) / (6.67 × 10⁻¹¹)</p>
+        <p>M ≈ 6 × 10²⁴ kg</p>
+      </div>
+
+      <h3>সমস্যা ৩: উচ্চতায় g</h3>
+      <div class="example">
+        <p><strong>প্রশ্ন:</strong> পৃথিবীর পৃষ্ঠ থেকে 1600 km উচ্চতায় g এর মান কত? (R = 6400 km)</p>
+        <p><strong>সমাধান:</strong></p>
+        <p>g_h = g(1 - 2h/R)</p>
+        <p>g_h = 9.8(1 - 2×1600/6400)</p>
+        <p>g_h = 9.8(1 - 0.5) = 4.9 m/s²</p>
+      </div>
+
+      <h3>সমস্যা ৪: মুক্তি বেগ</h3>
+      <div class="example">
+        <p><strong>প্রশ্ন:</strong> চাঁদের ভর পৃথিবীর 1/81 ভাগ এবং ব্যাসার্ধ 1/3.7 ভাগ। চাঁদ থেকে মুক্তি বেগ কত?</p>
+        <p><strong>সমাধান:</strong></p>
+        <p>v_e = √(2GM/R)</p>
+        <p>v_moon/v_earth = √(M_moon/M_earth) × √(R_earth/R_moon)</p>
+        <p>v_moon/11.2 = √(1/81) × √(3.7/1)</p>
+        <p>v_moon = 11.2 × (1/9) × 1.92 ≈ 2.4 km/s</p>
+      </div>
+
+      <h3>সমস্যা ৫: উপগ্রহের পর্যায়কাল</h3>
+      <div class="example">
+        <p><strong>প্রশ্ন:</strong> 2000 km উচ্চতায় একটি উপগ্রহের পর্যায়কাল কত?</p>
+        <p><strong>সমাধান:</strong></p>
+        <p>r = R + h = 6400 + 2000 = 8400 km = 8.4 × 10⁶ m</p>
+        <p>T = 2π√(r³/GM) = 2π√(r³/gR²)</p>
+        <p>T = 2π√((8.4×10⁶)³/(9.8×(6.4×10⁶)²))</p>
+        <p>T ≈ 7500 s ≈ 125 মিনিট</p>
+      </div>
+
+      <h3>সমস্যা ৬: শক্তি</h3>
+      <div class="example">
+        <p><strong>প্রশ্ন:</strong> 500 kg ভরের একটি উপগ্রহ পৃথিবী থেকে 800 km উচ্চতায় আছে। তার মোট শক্তি কত?</p>
+        <p><strong>সমাধান:</strong></p>
+        <p>E = -GMm/(2r) = -mgR²/(2r)</p>
+        <p>r = 6400 + 800 = 7200 km = 7.2 × 10⁶ m</p>
+        <p>E = -(500 × 9.8 × (6.4×10⁶)²) / (2 × 7.2×10⁶)</p>
+        <p>E ≈ -1.4 × 10¹⁰ J</p>
+      </div>
+
+      <h3>গুরুত্বপূর্ণ সূত্রাবলী (সংক্ষিপ্ত তালিকা)</h3>
+      <div class="formula-box">
+        <ol>
+          <li><strong>F = Gm₁m₂/r²</strong> (মহাকর্ষ বল)</li>
+          <li><strong>g = GM/R²</strong> (অভিকর্ষজ ত্বরণ)</li>
+          <li><strong>g_h = g(1 - 2h/R)</strong> (উচ্চতায়)</li>
+          <li><strong>g_d = g(1 - d/R)</strong> (গভীরতায়)</li>
+          <li><strong>V = -GM/r</strong> (বিভব)</li>
+          <li><strong>v_e = √(2GM/R)</strong> (মুক্তি বেগ)</li>
+          <li><strong>v_o = √(GM/r)</strong> (কক্ষপথ বেগ)</li>
+          <li><strong>T² = (4π²/GM)r³</strong> (পর্যায়কাল)</li>
+          <li><strong>E = -GMm/(2r)</strong> (মোট শক্তি)</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="background: #f8f9fa; padding: 30px; margin-top: 40px; text-align: center; border-top: 3px solid #667eea;">
+      <h3 style="color: #667eea; margin-bottom: 15px;">📚 অধ্যয়নের টিপস</h3>
+      <ul style="list-style: none; margin: 0; padding: 0; line-height: 2;">
+        <li>✅ প্রতিটি সূত্র নিজে  করার চেষ্টা করুন</li>
+        <li>✅ সংখ্যাগত সমস্যা বেশি বেশি অনুশীলন করুন</li>
+        <li>✅ SI একক ব্যবহার করতে অভ্যস্ত হন</li>
+        <li>✅ চিত্র এঁকে বুঝার চেষ্টা করুন</li>
+        <li>✅ গাণিতিক ধাপগুলো মুখস্থ করুন</li>
+        <li>✅ বিগত বছরের প্রশ্ন সমাধান করুন</li>
+      </ul>
+      <p style="margin-top: 20px; color: #764ba2; font-weight: bold;">শুভকামনা রইল! 🎓</p>
+      <p style="margin-top: 20px; color: #764ba2; font-weight: bold;">Made by <a href="https://www.linkedin.com/in/rakibul-hasan-rayhan/">Md. Rakibul Hasan Rayhan</a> </p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Simulation 1: Newton's Law of Gravitation
+const canvas1 = document.getElementById('gravityCanvas');
+const ctx1 = canvas1.getContext('2d');
+
+function updateGravitySimulation() {
+  const m1 = parseFloat(document.getElementById('mass1').value);
+  const m2 = parseFloat(document.getElementById('mass2').value);
+  const d = parseFloat(document.getElementById('distance').value);
+  
+  document.getElementById('mass1-val').textContent = m1 + ' × 10²⁰ kg';
+  document.getElementById('mass2-val').textContent = m2 + ' × 10²⁰ kg';
+  document.getElementById('dist-val').textContent = d + ' km';
+  
+  const G = 6.67e-11;
+  const mass1 = m1 * 1e20;
+  const mass2 = m2 * 1e20;
+  const distance = d * 1000;
+  const force = (G * mass1 * mass2) / (distance * distance);
+  
+  // Draw
+  ctx1.fillStyle = '#000';
+  ctx1.fillRect(0, 0, canvas1.width, canvas1.height);
+  
+  // Object 1
+  ctx1.fillStyle = '#4A90E2';
+  const r1 = Math.min(50, 20 + m1 * 2);
+  ctx1.beginPath();
+  ctx1.arc(200, 200, r1, 0, Math.PI * 2);
+  ctx1.fill();
+  ctx1.fillStyle = '#fff';
+  ctx1.font = '14px Arial';
+  ctx1.textAlign = 'center';
+  ctx1.fillText('m₁', 200, 205);
+  
+  // Object 2
+  ctx1.fillStyle = '#E74C3C';
+  const r2 = Math.min(50, 20 + m2 * 2);
+  ctx1.beginPath();
+  ctx1.arc(600, 200, r2, 0, Math.PI * 2);
+  ctx1.fill();
+  ctx1.fillStyle = '#fff';
+  ctx1.fillText('m₂', 600, 205);
+  
+  // Distance line
+  ctx1.strokeStyle = '#FFD700';
+  ctx1.lineWidth = 2;
+  ctx1.setLineDash([5, 5]);
+  ctx1.beginPath();
+  ctx1.moveTo(200 + r1, 200);
+  ctx1.lineTo(600 - r2, 200);
+  ctx1.stroke();
+  ctx1.setLineDash([]);
+  
+  ctx1.fillStyle = '#FFD700';
+  ctx1.fillText('r = ' + d + ' km', 400, 185);
+  
+  // Force arrows
+  ctx1.strokeStyle = '#00FF00';
+  ctx1.lineWidth = 3;
+  // Arrow from m1
+  ctx1.beginPath();
+  ctx1.moveTo(200 + r1 + 10, 200);
+  ctx1.lineTo(280, 200);
+  ctx1.stroke();
+  ctx1.beginPath();
+  ctx1.moveTo(280, 200);
+  ctx1.lineTo(270, 195);
+  ctx1.moveTo(280, 200);
+  ctx1.lineTo(270, 205);
+  ctx1.stroke();
+  
+  // Arrow from m2
+  ctx1.beginPath();
+  ctx1.moveTo(600 - r2 - 10, 200);
+  ctx1.lineTo(520, 200);
+  ctx1.stroke();
+  ctx1.beginPath();
+  ctx1.moveTo(520, 200);
+  ctx1.lineTo(530, 195);
+  ctx1.moveTo(520, 200);
+  ctx1.lineTo(530, 205);
+  ctx1.stroke();
+  
+  ctx1.fillStyle = '#00FF00';
+  ctx1.fillText('F', 260, 220);
+  ctx1.fillText('F', 540, 220);
+  
+  document.getElementById('gravity-output').innerHTML = 
+    'মহাকর্ষ বল = ' + force.toExponential(3) + ' N<br>' +
+    'বল প্রতিটি বস্তুর উপর সমান ও বিপরীতমুখী';
+}
+
+document.getElementById('mass1').addEventListener('input', updateGravitySimulation);
+document.getElementById('mass2').addEventListener('input', updateGravitySimulation);
+document.getElementById('distance').addEventListener('input', updateGravitySimulation);
+updateGravitySimulation();
+
+// Simulation 2: Free Fall
+const canvas2 = document.getElementById('fallCanvas');
+const ctx2 = canvas2.getContext('2d');
+let fallAnimation;
+let fallTime = 0;
+let falling = false;
+
+function startFall() {
+  if (falling) return;
+  falling = true;
+  fallTime = 0;
+  const g = parseFloat(document.getElementById('planet-select').value);
+  const h0 = parseFloat(document.getElementById('height').value);
+  
+  fallAnimation = setInterval(() => {
+    const h = h0 - 0.5 * g * fallTime * fallTime;
+    const v = g * fallTime;
+    const distance = h0 - h;
+    
+    if (h <= 0) {
+      clearInterval(fallAnimation);
+      falling = false;
+      return;
+    }
+    
+    // Draw
+    ctx2.fillStyle = '#87CEEB';
+    ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
+    
+    // Ground
+    ctx2.fillStyle = '#8B4513';
+    ctx2.fillRect(0, 450, canvas2.width, 50);
+    
+    // Height markers
+    ctx2.strokeStyle = '#666';
+    ctx2.lineWidth = 1;
+    ctx2.setLineDash([2, 2]);
+    for (let i = 0; i <= h0; i += 20) {
+      const y = 450 - (i / h0) * 400;
+      ctx2.beginPath();
+      ctx2.moveTo(0, y);
+      ctx2.lineTo(canvas2.width, y);
+      ctx2.stroke();
+    }
+    ctx2.setLineDash([]);
+    
+    // Ball
+    const ballY = 450 - (h / h0) * 400;
+    ctx2.fillStyle = '#E74C3C';
+    ctx2.beginPath();
+    ctx2.arc(300, ballY, 20, 0, Math.PI * 2);
+    ctx2.fill();
+    
+    // Info
+    ctx2.fillStyle = '#000';
+    ctx2.font = 'bold 16px Arial';
+    ctx2.fillText('উচ্চতা: ' + h.toFixed(1) + ' m', 20, 30);
+    ctx2.fillText('বেগ: ' + v.toFixed(2) + ' m/s', 20, 55);
+    ctx2.fillText('সময়: ' + fallTime.toFixed(2) + ' s', 20, 80);
+    
+    document.getElementById('fall-output').textContent = 
+      'সময় = ' + fallTime.toFixed(2) + ' s | বেগ = ' + v.toFixed(2) + ' m/s | দূরত্ব = ' + distance.toFixed(1) + ' m';
+    
+    fallTime += 0.05;
+  }, 50);
+}
+
+function resetFall() {
+  clearInterval(fallAnimation);
+  falling = false;
+  fallTime = 0;
+  ctx2.fillStyle = '#87CEEB';
+  ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
+  ctx2.fillStyle = '#8B4513';
+  ctx2.fillRect(0, 450, canvas2.width, 50);
+  document.getElementById('fall-output').textContent = 'সময় = 0 s | বেগ = 0 m/s | দূরত্ব = 0 m';
+}
+
+document.getElementById('height').addEventListener('input', function() {
+  document.getElementById('height-val').textContent = this.value + ' m';
+  resetFall();
+});
+
+resetFall();
+
+// Simulation 3: Variation of g
+const canvas3 = document.getElementById('variationCanvas');
+const ctx3 = canvas3.getContext('2d');
+
+function updateVariation() {
+  const h = parseFloat(document.getElementById('altitude').value);
+  const d = parseFloat(document.getElementById('depth').value);
+  const lat = parseFloat(document.getElementById('latitude').value);
+  
+  document.getElementById('altitude-val').textContent = h + ' km';
+  document.getElementById('depth-val').textContent = d + ' km';
+  document.getElementById('latitude-val').textContent = lat + '°';
+  
+  const R = 6400;
+  const g0 = 9.8;
+  const omega = 7.3e-5;
+  
+  let g = g0;
+  
+  if (h > 0) {
+    g = g0 * Math.pow(R / (R + h), 2);
+  } else if (d > 0) {
+    g = g0 * (1 - d / R);
+  }
+  
+  const latRad = lat * Math.PI / 180;
+  g = g - R * 1000 * omega * omega * Math.cos(latRad) * Math.cos(latRad);
+  
+  // Draw
+  ctx3.fillStyle = '#1a1a2e';
+  ctx3.fillRect(0, 0, canvas3.width, canvas3.height);
+  
+  // Earth
+  ctx3.fillStyle = '#4A90E2';
+  ctx3.beginPath();
+  ctx3.arc(400, 200, 80, 0, Math.PI * 2);
+  ctx3.fill();
+  
+  // Altitude
+  if (h > 0) {
+    ctx3.strokeStyle = '#FFD700';
+    ctx3.lineWidth = 2;
+    const rh = 80 + (h / 1000) * 50;
+    ctx3.beginPath();
+    ctx3.arc(400, 200, rh, 0, Math.PI * 2);
+    ctx3.stroke();
+    
+    ctx3.fillStyle = '#FFD700';
+    ctx3.font = '14px Arial';
+    ctx3.fillText('h = ' + h + ' km', 500, 200);
+  }
+  
+  // Depth
+  if (d > 0) {
+    ctx3.fillStyle = '#E74C3C';
+    const rd = 80 * (1 - d / R);
+    ctx3.beginPath();
+    ctx3.arc(400, 200, rd, 0, Math.PI * 2);
+    ctx3.fill();
+    
+    ctx3.fillStyle = '#fff';
+    ctx3.font = '14px Arial';
+    ctx3.fillText('d = ' + d + ' km', 300, 200);
+  }
+  
+  // Latitude indicator
+  ctx3.strokeStyle = '#00FF00';
+  ctx3.lineWidth = 2;
+  const angle = (90 - lat) * Math.PI / 180;
+  ctx3.beginPath();
+  ctx3.moveTo(400, 200);
+  ctx3.lineTo(400 + 100 * Math.sin(angle), 200 - 100 * Math.cos(angle));
+  ctx3.stroke();
+  
+  ctx3.fillStyle = '#00FF00';
+  ctx3.fillText('λ = ' + lat + '°', 420, 150);
+  
+  // g value
+  ctx3.fillStyle = '#fff';
+  ctx3.font = 'bold 20px Arial';
+  ctx3.fillText('g = ' + g.toFixed(3) + ' m/s²', 300, 350);
+  
+  document.getElementById('variation-output').textContent = 
+    'g = ' + g.toFixed(3) + ' m/s² (পৃথিবীর পৃষ্ঠে g₀ = 9.8 m/s²)';
+}
+
+document.getElementById('altitude').addEventListener('input', updateVariation);
+document.getElementById('depth').addEventListener('input', updateVariation);
+document.getElementById('latitude').addEventListener('input', updateVariation);
+updateVariation();
+
+// Simulation 4: Escape Velocity
+const canvas4 = document.getElementById('escapeCanvas');
+const ctx4 = canvas4.getContext('2d');
+let rocketAnimation;
+let rocketY, rocketVy;
+
+function launchRocket() {
+  const v0 = parseFloat(document.getElementById('launch-velocity').value);
+  document.getElementById('launch-vel-val').textContent = v0 + ' km/s';
+  
+  const ve = 11.2; // km/s
+  const g = 9.8 / 1000; // km/s²
+  
+  rocketY = 350;
+  rocketVy = -v0 * 10; // Scale for animation
+  
+  clearInterval(rocketAnimation);
+  
+  rocketAnimation = setInterval(() => {
+    ctx4.fillStyle = '#000';
+    ctx4.fillRect(0, 0, canvas4.width, canvas4.height);
+    
+    // Earth
+    ctx4.fillStyle = '#4A90E2';
+    ctx4.beginPath();
+    ctx4.arc(350, 650, 300, 0, Math.PI * 2);
+    ctx4.fill();
+    
+    // Rocket
+    ctx4.fillStyle = '#E74C3C';
+    ctx4.fillRect(340, rocketY, 20, 40);
+    ctx4.beginPath();
+    ctx4.moveTo(350, rocketY);
+    ctx4.lineTo(330, rocketY + 10);
+    ctx4.lineTo(350, rocketY - 20);
+    ctx4.lineTo(370, rocketY + 10);
+    ctx4.closePath();
+    ctx4.fill();
+    
+    // Exhaust
+    if (rocketY > 100) {
+      ctx4.fillStyle = '#FFA500';
+      ctx4.fillRect(345, rocketY + 40, 10, 20);
+    }
+    
+    // Update position
+    rocketY += rocketVy * 0.05;
+    rocketVy += g * 10 * 0.05; // Gravity slows down
+    
+    // Info
+    ctx4.fillStyle = '#fff';
+    ctx4.font = '16px Arial';
+    ctx4.fillText('প্রাথমিক বেগ: ' + v0 + ' km/s', 20, 30);
+    ctx4.fillText('মুক্তি বেগ: ' + ve + ' km/s', 20, 55);
+    
+    if (v0 >= ve) {
+      ctx4.fillStyle = '#00FF00';
+      ctx4.fillText('✓ রকেট মুক্তি পেয়েছে!', 20, 80);
+    } else {
+      ctx4.fillStyle = '#FF0000';
+      ctx4.fillText('✗ রকেট ফিরে আসবে', 20, 80);
+    }
+    
+    if (rocketY < 0 || (rocketVy > 0 && rocketY > 600)) {
+      clearInterval(rocketAnimation);
+    }
+  }, 50);
+  
+  document.getElementById('escape-output').textContent = 
+    'মুক্তি বেগ = 11.2 km/s | আপনার বেগ = ' + v0 + ' km/s';
+}
+
+document.getElementById('launch-velocity').addEventListener('input', function() {
+  document.getElementById('launch-vel-val').textContent = this.value + ' km/s';
+});
+
+// Simulation 5: Orbital Motion
+const canvas5 = document.getElementById('orbitCanvas');
+const ctx5 = canvas5.getContext('2d');
+let orbitAnimation;
+let angle = 0;
+let orbiting = false;
+
+function startOrbit() {
+  if (orbiting) return;
+  orbiting = true;
+  angle = 0;
+  
+  const h = parseFloat(document.getElementById('orbit-height').value);
+  const R = 6400;
+  const r = R + h;
+  const g = 9.8;
+  const G = 6.67e-11;
+  const M = 5.97e24;
+  
+  const v = Math.sqrt(G * M / (r * 1000));
+  const T = 2 * Math.PI * r * 1000 / v;
+  
+  orbitAnimation = setInterval(() => {
+    ctx5.fillStyle = '#000';
+    ctx5.fillRect(0, 0, canvas5.width, canvas5.height);
+    
+    // Earth
+    ctx5.fillStyle = '#4A90E2';
+    ctx5.beginPath();
+    ctx5.arc(350, 350, 100, 0, Math.PI * 2);
+    ctx5.fill();
+    
+    // Orbit path
+    ctx5.strokeStyle = '#666';
+    ctx5.lineWidth = 2;
+    ctx5.setLineDash([5, 5]);
+    const orbitRadius = 100 + (h / 400);
+    ctx5.beginPath();
+    ctx5.arc(350, 350, orbitRadius, 0, Math.PI * 2);
+    ctx5.stroke();
+    ctx5.setLineDash([]);
+    
+    // Satellite
+    const satX = 350 + orbitRadius * Math.cos(angle);
+    const satY = 350 + orbitRadius * Math.sin(angle);
+    ctx5.fillStyle = '#E74C3C';
+    ctx5.beginPath();
+    ctx5.arc(satX, satY, 10, 0, Math.PI * 2);
+    ctx5.fill();
+    
+    // Velocity vector
+    ctx5.strokeStyle = '#00FF00';
+    ctx5.lineWidth = 2;
+    const vx = -Math.sin(angle);
+    const vy = Math.cos(angle);
+    ctx5.beginPath();
+    ctx5.moveTo(satX, satY);
+    ctx5.lineTo(satX + vx * 30, satY + vy * 30);
+    ctx5.stroke();
+    
+    // Info
+    ctx5.fillStyle = '#fff';
+    ctx5.font = '16px Arial';
+    ctx5.fillText('উচ্চতা: ' + h + ' km', 20, 30);
+    ctx5.fillText('বেগ: ' + (v / 1000).toFixed(2) + ' km/s', 20, 55);
+    ctx5.fillText('পর্যায়কাল: ' + (T / 60).toFixed(1) + ' মিনিট', 20, 80);
+    
+    angle += 0.02;
+    
+    document.getElementById('orbit-output').textContent = 
+      'বেগ = ' + (v / 1000).toFixed(2) + ' km/s | পর্যায়কাল = ' + (T / 60).toFixed(1) + ' মিনিট';
+  }, 50);
+}
+
+function stopOrbit() {
+  clearInterval(orbitAnimation);
+  orbiting = false;
+}
+
+document.getElementById('orbit-height').addEventListener('input', function() {
+  document.getElementById('orbit-height-val').textContent = this.value + ' km';
+  if (orbiting) {
+    stopOrbit();
+    startOrbit();
+  }
+});
+
+// Initialize all simulations
+window.addEventListener('load', function() {
+  updateGravitySimulation();
+  resetFall();
+  updateVariation();
+});
+</script>
+
+</body>
+</html>
