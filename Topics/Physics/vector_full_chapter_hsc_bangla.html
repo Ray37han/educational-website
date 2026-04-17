@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="bn-BD">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ভেক্টর সম্পূর্ণ অধ্যায় - HSC পদার্থবিজ্ঞান </title>
+<style>
+:root {
+  --bg-1: #e9f4ff;
+  --bg-2: #f7fbff;
+  --ink: #14324a;
+  --muted: #4c6c84;
+  --primary: #0b7fab;
+  --primary-2: #0494d0;
+  --accent: #ff7c43;
+  --good: #127c58;
+  --warn: #8b6b00;
+  --danger: #a3273f;
+  --card: #ffffff;
+  --line: #d9e6f2;
+  --dark-canvas: #0d1b2a;
+  --shadow: 0 10px 35px rgba(4, 30, 66, 0.12);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Hind Siliguri", "Noto Sans Bengali", "SolaimanLipi", sans-serif;
+  color: var(--ink);
+  line-height: 1.75;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(11, 127, 171, 0.2), transparent 38%),
+    radial-gradient(circle at 88% 12%, rgba(255, 124, 67, 0.18), transparent 36%),
+    linear-gradient(180deg, var(--bg-1), var(--bg-2));
+  padding: 20px;
+}
+
+.page {
+  max-width: 1240px;
+  margin: 0 auto;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.hero {
+  padding: 36px 28px;
+  color: #eff9ff;
+  background:
+    linear-gradient(135deg, rgba(9, 64, 94, 0.97), rgba(6, 117, 157, 0.95)),
+    repeating-linear-gradient(45deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 10px, transparent 10px, transparent 20px);
+  position: relative;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: auto -60px -60px auto;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,124,67,0.35), rgba(255,124,67,0));
+  pointer-events: none;
+}
+
+.hero-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.top-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.link-btn {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #f3fbff;
+  text-decoration: none;
+  padding: 7px 12px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  transition: 0.25s ease;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.link-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.hero h1 {
+  font-size: clamp(1.7rem, 2.8vw, 2.8rem);
+  line-height: 1.28;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  max-width: 980px;
+  color: rgba(238, 250, 255, 0.92);
+}
+
+.chapter-points {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.chapter-points div {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.main {
+  padding: 28px;
+}
+
+.toc {
+  margin-bottom: 24px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #f8fcff, #f0f8ff);
+  padding: 18px;
+}
+
+.toc h2 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  color: #084f72;
+}
+
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+.toc a {
+  display: block;
+  text-decoration: none;
+  color: #125275;
+  border: 1px solid #c9deef;
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: #ffffff;
+  transition: 0.2s ease;
+}
+
+.toc a:hover {
+  transform: translateY(-1px);
+  border-color: #97c9e3;
+  background: #f5fbff;
+}
+
+.section {
+  margin-bottom: 22px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fbfdff;
+  overflow: hidden;
+}
+
+.section-head {
+  background: linear-gradient(120deg, #e8f6ff 0%, #f7fdff 100%);
+  border-bottom: 1px solid var(--line);
+  padding: 16px 18px;
+}
+
+.section-head h2 {
+  font-size: 1.5rem;
+  color: #0e5f86;
+}
+
+.section-body {
+  padding: 18px;
+}
+
+.section-body h3 {
+  margin: 14px 0 8px;
+  color: #0e6f9b;
+  font-size: 1.17rem;
+}
+
+.section-body p {
+  margin: 8px 0;
+}
+
+ul {
+  margin-left: 22px;
+}
+
+li {
+  margin-bottom: 4px;
+}
+
+.formula-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.formula {
+  background: #fff4da;
+  border: 1px solid #f6d77f;
+  border-left: 5px solid #e8b800;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.formula strong {
+  color: #7f5500;
+}
+
+.note,
+.example,
+.important {
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 12px 0;
+}
+
+.note {
+  background: #e8f3ff;
+  border: 1px solid #b6d8fb;
+}
+
+.example {
+  background: #fff2ee;
+  border: 1px solid #ffc7b1;
+}
+
+.important {
+  background: #e9faee;
+  border: 1px solid #bde8cb;
+}
+
+.sim {
+  border: 1px solid #c9e3f5;
+  border-radius: 14px;
+  background: #ffffff;
+  margin: 18px 0;
+  padding: 14px;
+}
+
+.sim h4 {
+  margin-bottom: 8px;
+  color: #095c82;
+  font-size: 1.05rem;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.controls {
+  background: #f5faff;
+  border: 1px solid #d1e7f7;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.control {
+  margin-bottom: 10px;
+}
+
+.control label {
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: #164e6d;
+}
+
+.control input[type="range"] {
+  width: 100%;
+  margin-top: 6px;
+  accent-color: var(--primary);
+}
+
+.control input[type="number"],
+.control select {
+  width: 100%;
+  border: 1px solid #c3dced;
+  border-radius: 8px;
+  padding: 7px 8px;
+  margin-top: 6px;
+  font-family: inherit;
+  font-size: 0.96rem;
+}
+
+.button-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.btn {
+  border: none;
+  border-radius: 9px;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: white;
+  background: linear-gradient(120deg, var(--primary), var(--primary-2));
+  font-family: inherit;
+  transition: 0.2s ease;
+}
+
+.btn.secondary {
+  background: linear-gradient(120deg, #546f83, #708ca0);
+}
+
+.btn.warn {
+  background: linear-gradient(120deg, #bb7310, #da9210);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.canvas-wrap {
+  background: var(--dark-canvas);
+  border-radius: 12px;
+  min-height: 360px;
+  border: 1px solid #23384d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+canvas {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.out {
+  margin-top: 10px;
+  background: #eef6fc;
+  border: 1px solid #c7e1f5;
+  color: #144664;
+  border-radius: 10px;
+  padding: 10px;
+  font-family: "Consolas", "Menlo", monospace;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+}
+
+.formula-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.formula-table th,
+.formula-table td {
+  border: 1px solid #cbe0f0;
+  padding: 8px 10px;
+  vertical-align: top;
+}
+
+.formula-table th {
+  background: #edf7ff;
+  color: #0e5d83;
+  text-align: left;
+}
+
+.site-footer {
+  padding: 2rem 0 2.5rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+  background: rgba(2, 6, 23, 0.92);
+}
+
+.footer-container {
+  width: min(1200px, calc(100% - 2rem));
+  margin: 0 auto;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #e2e8f0;
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  background: linear-gradient(135deg, #4f46e5 0%, #38bdf8 100%);
+  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.32);
+}
+
+.footer-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.footer-brand {
+  margin-bottom: 0.75rem;
+}
+
+.footer-layout p,
+.footer-bottom {
+  color: #94a3b8;
+  margin: 0;
+}
+
+.footer-links,
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.footer-links a {
+  color: rgba(226, 232, 240, 0.88);
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: #ffffff;
+}
+
+.social-links a {
+  width: 44px;
+  height: 44px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(15, 23, 42, 0.38);
+  color: #e2e8f0;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.footer-bottom {
+  margin-top: 1.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.95rem;
+}
+
+.warn-text {
+  color: var(--warn);
+  font-weight: 700;
+}
+
+.good-text {
+  color: var(--good);
+  font-weight: 700;
+}
+
+.bad-text {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+@media (max-width: 980px) {
+  .grid-2,
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .main {
+    padding: 18px;
+  }
+
+  .hero {
+    padding: 26px 18px;
+  }
+
+  .canvas-wrap {
+    min-height: 280px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="hero">
+    <div class="hero-top">
+      <div class="badge">HSC পদার্থবিজ্ঞান | দ্বিতীয় অধ্যায়</div>
+      <div class="top-links">
+        <a class="link-btn" href="index.html">পদার্থবিজ্ঞান টপিকস</a>
+        <a class="link-btn" href="../../index.html">হোম</a>
+      </div>
+    </div>
+    <h1>ভেক্টর: সম্পূর্ণ অধ্যায়, সব ফর্মুলা, বাস্তব উদাহরণ ও ইন্টারঅ্যাকটিভ সিমুলেশন</h1>
+   
+    <div class="chapter-points">
+      <div>সব গুরুত্বপূর্ণ সূত্র: এক জায়গায়</div>
+      <div>প্রতিটি টপিকে বাস্তব জীবনের ব্যাখ্যা</div>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="toc" id="top">
+      <h2>সূচিপত্র</h2>
+      <div class="toc-grid">
+        <a href="#sec1">1) স্কেলার ও ভেক্টর: ভিত্তি</a>
+        <a href="#sec2">2) ভেক্টরের উপাংশ, একক ভেক্টর, অবস্থান ভেক্টর</a>
+        <a href="#sec3">3) ভেক্টর যোগ-বিয়োগ ও লব্ধির সূত্র</a>
+        <a href="#sec4">4) ভেক্টর বিশ্লেষণ ও নদী-নৌকা</a>
+        <a href="#sec5">5) আপেক্ষিক বেগ</a>
+        <a href="#sec6">6) ডট গুণ (Dot Product)</a>
+        <a href="#sec7">7) ক্রস গুণ</a>
+        <a href="#sec8">8) ক্ষেত্রফল ও আয়তন</a>
+        <a href="#sec9">9) ভেক্টর ক্যালকুলাস: ∇, ∇·, ∇×</a>
+        <a href="#sec10">10) সব ফর্মুলার সারণি</a>
+      </div>
+    </section>
+
+    <section class="section" id="sec1">
+      <div class="section-head"><h2>1) স্কেলার ও ভেক্টর: ভিত্তি</h2></div>
+      <div class="section-body">
+        <h3>স্কেলার রাশি</h3>
+        <p>যে রাশির কেবল মান (magnitude) আছে, কিন্তু দিক নেই, তাকে স্কেলার বলে। যেমন: ভর, সময়, তাপমাত্রা, শক্তি, কাজ, দূরত্ব।</p>
+
+        <h3>ভেক্টর রাশি</h3>
+        <p>যে রাশির মান এবং দিক উভয়ই আছে, তাকে ভেক্টর বলে। যেমন: বল, বেগ, ত্বরণ, সরণ, ভরবেগ।</p>
+
+        <div class="example">
+          <strong>বাস্তব উদাহরণ:</strong>
+          বাসা থেকে স্কুলে ৫ কিমি যাওয়ার তথ্যটি যদি শুধু দূরত্ব বোঝায়, সেটি স্কেলার। কিন্তু "পূর্বদিকে ৫ কিমি" বললে সেটি ভেক্টর, কারণ দিক যোগ হয়েছে।
+        </div>
+
+        <div class="important">
+          ভেক্টরকে তীর চিহ্ন দিয়ে প্রকাশ করা হয়: <strong>A = A<sub>x</sub> î + A<sub>y</sub> ĵ + A<sub>z</sub> k̂</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sec2">
+      <div class="section-head"><h2>2) ভেক্টরের উপাংশ, একক ভেক্টর, অবস্থান ভেক্টর</h2></div>
+      <div class="section-body">
+        <h3>ভেক্টরের আয়তকার উপাংশ</h3>
+        <div class="formula-grid">
+          <div class="formula"><strong>A<sub>x</sub> = A cos θ</strong></div>
+          <div class="formula"><strong>A<sub>y</sub> = A sin θ</strong></div>
+          <div class="formula"><strong>A = √(A<sub>x</sub><sup>2</sup> + A<sub>y</sub><sup>2</sup>)</strong></div>
+          <div class="formula"><strong>θ = tan<sup>-1</sup>(A<sub>y</sub> / A<sub>x</sub>)</strong></div>
+        </div>
+
+        <h3>একক ভেক্টর (Unit Vector)</h3>
+        <p>একক ভেক্টরের মান 1।</p>
+        <div class="formula-grid">
+          <div class="formula"><strong>Â = A / |A|</strong></div>
+          <div class="formula"><strong>|Â| = 1</strong></div>
+        </div>
+
+        <h3>অবস্থান ভেক্টর (Position Vector)</h3>
+        <p>উৎপত্তি O থেকে বিন্দু P(x, y, z) পর্যন্ত অবস্থান ভেক্টর: <strong>r = x î + y ĵ + z k̂</strong></p>
+
+        <div class="sim">
+          <h4>ইন্টারঅ্যাকটিভ: ভেক্টরের উপাংশ বিশ্লেষণ</h4>
+          <div class="grid-2">
+            <div class="controls">
+              <div class="control">
+                <label for="compMag">ভেক্টরের মান A <span id="compMagVal">12</span></label>
+                <input id="compMag" type="range" min="1" max="25" value="12" step="0.2">
+              </div>
+              <div class="control">
+                <label for="compAng">কোণ θ (ডিগ্রি) <span id="compAngVal">35</span></label>
+                <input id="compAng" type="range" min="-170" max="170" value="35" step="1">
+              </div>
+              <div class="out" id="compOut"></div>
+            </div>
+            <div class="canvas-wrap">
+              <canvas id="compCanvas" width="680" height="360"></canvas>
+            </div>
+          </div>
+          <div class="note">যেকোনো ঢালু বলকে অনুভূমিক ও উল্লম্ব উপাংশে ভাঙার জন্য এই ধারণা ব্যবহার করা হয়।</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sec3">
+      <div class="section-head"><h2>3) ভেক্টর যোগ-বিয়োগ ও লব্ধির সূত্র</h2></div>
+      <div class="section-body">
+        <h3>লব্ধি ভেক্টরের গাণিতিক সূত্র (দুটি ভেক্টরের জন্য)</h3>
+        <div class="formula-grid">
+          <div class="formula"><strong>R = √(P<sup>2</sup> + Q<sup>2</sup> + 2PQ cos α)</strong></div>
+          <div class="formula"><strong>θ<sub>r</sub> = tan<sup>-1</sup>((Q sin α) / (P + Q cos α))</strong></div>
+          <div class="formula"><strong>R<sub>max</sub> = P + Q (α = 0°)</strong></div>
+          <div class="formula"><strong>R<sub>min</sub> = |P - Q| (α = 180°)</strong></div>
+        </div>
+
+        <h3>বিয়োগ</h3>
+        <p><strong>P - Q = P + (-Q)</strong> অর্থাৎ Q এর দিক উল্টে যোগ করতে হবে।</p>
+
+        <div class="example">
+          <strong>বাস্তব উদাহরণ:</strong>
+          বিমানকে পূর্বদিকে 400 km/h বেগে চালানো হলেও যদি উত্তরমুখী 120 km/h বায়ুপ্রবাহ থাকে, তাহলে বিমানের প্রকৃত গ্রাউন্ড ভেলোসিটি নির্ণয়ে ভেক্টর যোগ করতে হয়।
+        </div>
+
+        <div class="sim">
+          <h4>ইন্টারঅ্যাকটিভ: ভেক্টর যোগ ও লব্ধি (P + Q)</h4>
+          <div class="grid-2">
+            <div class="controls">
+              <div class="control">
+                <label for="sumP">P এর মান <span id="sumPVal">10</span></label>
+                <input id="sumP" type="range" min="1" max="25" value="10" step="0.2">
+              </div>
+              <div class="control">
+                <label for="sumQ">Q এর মান <span id="sumQVal">8</span></label>
+                <input id="sumQ" type="range" min="1" max="25" value="8" step="0.2">
+              </div>
+              <div class="control">
+                <label for="sumAlpha">P ও Q এর মাঝে কোণ α (ডিগ্রি) <span id="sumAlphaVal">60</span></label>
+                <input id="sumAlpha" type="range" min="0" max="180" value="60" step="1">
+              </div>
+              <div class="out" id="sumOut"></div>
+            </div>
+            <div class="canvas-wrap">
+              <canvas id="sumCanvas" width="680" height="360"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sec4">
+      <div class="section-head"><h2>4) ভেক্টর বিশ্লেষণ ও নদী-নৌকা</h2></div>
+      <div class="section-body">
+        <h3>নদী-নৌকা মৌলিক সম্পর্ক</h3>
+        <p>ধরি নদীর স্রোতের বেগ u (x-দিক), এবং নৌকার বেগ পানির সাপেক্ষে v যা x-অক্ষের সাথে α কোণে চলছে।</p>
+        <div class="formula-grid">
+          <div class="formula"><strong>v<sub>x</sub> = u + v cos α</strong></div>
+          <div class="formula"><strong>v<sub>y</sub> = v sin α</strong></div>
+          <div class="formula"><strong>t = d / v<sub>y</sub> = d / (v sin α)</strong></div>
+          <div class="formula"><strong>x = v<sub>x</sub> t = (u + v cos α) t</strong></div>
+        </div>
+
+        <div class="note">
+          যদি α = 90° (নৌকা ঠিক লম্বভাবে চালানো হয়), তবে v<sub>y</sub> = v, তাই <strong>t = d / v</strong>।
+        </div>
+
+        <div class="formula-grid">
+          <div class="formula"><strong>সর্বনিম্ন সময়ের জন্য: α = 90°</strong></div>
+          <div class="formula"><strong>সোজা বিপরীত পারে যেতে (ভাটির সরণ = 0): cos α = -u / v (শর্ত: v &gt; u)</strong></div>
+        </div>
+
+        <div class="example">
+          <strong>বাস্তব উদাহরণ:</strong>
+          উদ্ধারকর্মী বন্যার স্রোতে নৌকা চালানোর সময় স্রোতের প্রভাব ক্যালকুলেট না করলে নির্দিষ্ট ঘাটে পৌঁছাতে পারে না।
+        </div>
+
+        <div class="sim">
+          <h4>ইন্টারঅ্যাকটিভ: নদী-নৌকা সিমুলেশন</h4>
+          <div class="grid-2">
+            <div class="controls">
+              <div class="control">
+                <label for="riverWidth">নদীর প্রস্থ d (m) <span id="riverWidthVal">120</span></label>
+                <input id="riverWidth" type="range" min="40" max="300" value="120" step="1">
+              </div>
+              <div class="control">
+                <label for="riverU">স্রোতের বেগ u (m/s) <span id="riverUVal">2.2</span></label>
+                <input id="riverU" type="range" min="0" max="6" value="2.2" step="0.1">
+              </div>
+              <div class="control">
+                <label for="riverV">নৌকার বেগ v (m/s) <span id="riverVVal">4.8</span></label>
+                <input id="riverV" type="range" min="1" max="9" value="4.8" step="0.1">
+              </div>
+              <div class="control">
+                <label for="riverA">হেডিং কোণ α (ডিগ্রি) <span id="riverAVal">110</span></label>
+                <input id="riverA" type="range" min="1" max="179" value="110" step="1">
+              </div>
+              <div class="button-row">
+                <button class="btn" id="riverStart">সিমুলেশন চালু</button>
+                <button class="btn secondary" id="riverReset">রিসেট</button>
+              </div>
+              <div class="out" id="riverOut"></div>
+            </div>
+            <div class="canvas-wrap">
+              <canvas id="riverCanvas" width="680" height="360"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sec5">
+      <div class="section-head"><h2>5) আপেক্ষিক বেগ (Relative Velocity)</h2></div>
+      <div class="section-body">
+        <div class="formula-grid">
+          <div class="formula"><strong>v<sub>BC</sub> = v<sub>B</sub> - v<sub>C</sub></strong></div>
+          <div class="formula"><strong>v<sub>B</sub> = v<sub>BC</sub> + v<sub>C</sub></strong></div>
+          <div class="formula"><strong>θ = tan<sup>-1</sup>(v<sub>y</sub> / v<sub>x</sub>)</strong></div>
+        </div>
+
+        <p>অর্থ: C পর্যবেক্ষকের দৃষ্টিতে B কত বেগে চলছে, সেটি v<sub>BC</sub>।</p>
+
+        <div class="example">
+          <strong>বাস্তব উদাহরণ:</strong>
+          চলন্ত বাসের ভেতর দিয়ে সামনে হাঁটা যাত্রীর গতি রাস্তায় দাঁড়ানো মানুষের কাছে বাসের গতি + যাত্রীর আপেক্ষিক গতির সমন্বয়।
+        </div>
+
+        <div class="sim">
+          <h4>ইন্টারঅ্যাকটিভ: দুইটি চলন্ত বস্তুর আপেক্ষিক বেগ</h4>
+          <div class="grid-2">
+            <div class="controls">
+              <div class="control">
+                <label for="relBMag">|v_B| (m/s) <span id="relBMagVal">9</span></label>
+                <input id="relBMag" type="range" min="0" max="20" value="9" step="0.2">
+              </div>
+              <div class="control">
+                <label for="relBAng">v_B কোণ (ডিগ্রি) <span id="relBAngVal">25</span></label>
+                <input id="relBAng" type="range" min="-180" max="180" value="25" step="1">
+              </div>
+              <div class="control">
+                <label for="relCMag">|v_C| (m/s) <span id="relCMagVal">6</span></label>
+                <input id="relCMag" type="range" min="0" max="20" value="6" step="0.2">
+              </div>
+              <div class="control">
+                <label for="relCAng">v_C কোণ (ডিগ্রি) <span id="relCAngVal">150</span></label>
+                <input id="relCAng" type="range" min="-180" max="180" value="150" step="1">
+              </div>
+              <div class="out" id="relOut"></div>
+            </div>
+            <div class="canvas-wrap">
+              <canvas id="relCanvas" width="680" height="360"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sec6">
+      <div class="section-head"><h2>6) ডট গুণ (Dot Product)</h2></div>
+      <div class="section-body">
+        <p>ডট গুণ স্কেলার মান দেয়।</p>
+        <div class="formula-grid">
+          <div class="formula"><strong>A · B = AB cos θ</strong></div>
+          <div class="formula"><strong>A · B = A<sub>x</sub>B<sub>x</sub> + A<sub>y</sub>B<sub>y</sub> + A<sub>z</sub>B<sub>z</sub></strong></div>
+          <div class="formula"><strong>θ = cos<sup>-1</sup>((A · B) / (|A||B|))</strong></div>
+          <div class="formula"><strong>A ⟂ B হলে, A · B = 0</strong></div>
+          <div class="formula"><strong>A-এর উপর B-এর অভিক্ষেপ = (A · B) / |A| = B cos θ</strong></div>
+          <div class="formula"><strong>A বরাবর B-এর উপাংশ ভেক্টর = ((A · B) / |A|<sup>2</sup>) A</strong></div>
+        </div>
+
+        <div class="example">
+          <strong>বাস্তব উদাহরণ:</strong>
+          একটি ট্রলি টানার সময় বলের কেবল রাস্তার সমান্তরাল উপাংশ কাজ করতে পারে। তাই কাজ, <strong>W = F · d = Fd cos θ</strong> ডট গুণ দিয়েই বের হয়।
+        </div>
+
+        <div class="sim">
+          <h4>ইন্টারঅ্যাকটিভ: ডট গুণ, অভিক্ষেপ ও কাজ</h4>
+          <div class="grid-2">
+            <div class="controls">
+              <div class="control">
+                <label for="dotA">|A| (N বা একক) <span id="dotAVal">12</span></label>
+                <input id="dotA" type="range" min="1" max="30" value="12" step="0.2">
+              </div>
+              <div class="control">
+                <label for="dotB">|B| বা সরণ d <span id="dotBVal">9</span></label>
+                <input id="dotB" type="range" min="1" max="30" value="9" step="0.2">
+              </div>
+              <div class="control">
+                <label for="dotTheta">θ (ডিগ্রি) <span id="dotThetaVal">50</span></label>
+                <input id="dotTheta" type="range" min="0" max="180" value="50" step="1">
+              </div>
+              <div class="out" id="dotOut"></div>
+            </div>
+            <div class="canvas-wrap">
+              <canvas id="dotCanvas" width="680" height="360"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sec7">
+      <div class="section-head"><h2>7) ক্রস গুণ</h2></div>
+      <div class="section-body">
+        <p>ক্রস গুণ ভেক্টর মান দেয় এবং দিক ডান-হাত নিয়ম অনুসরণ করে।</p>
+        <div class="formula-grid">
+          <div class="formula"><strong>A × B = AB sin θ n̂</strong></div>
+          <div class="formula"><strong>A ∥ B হলে, A × B = 0</strong></div>
+          <div class="formula"><strong>A ∥ B হলে: A<sub>x</sub>/B<sub>x</sub> = A<sub>y</sub>/B<sub>y</sub> = A<sub>z</sub>/B<sub>z</sub></strong></div>
+          <div class="formula"><strong>n̂ = ± (A × B) / |A × B|</strong></div>
+          <div class="formula"><strong>A × B = | î  ĵ  k̂ ; A<sub>x</sub> A<sub>y</sub> A<sub>z</sub> ; B<sub>x</sub> B<sub>y</sub> B<sub>z</sub> |</strong></div>
+        </div>
+
+        <div class="example">
+          <strong>বাস্তব উদাহরণ:</strong>
+          দরজার হাতল ধরে ধাক্কা দিলে টর্ক হয়: <strong>τ = r × F</strong>। দরজার কবজা থেকে যত দূরে বল প্রয়োগ, টর্ক তত বেশি।
+        </div>
+
+        <div class="sim">
+          <h4>ইন্টারঅ্যাকটিভ: ক্রস গুণ, ক্ষেত্রফল ও অভিলম্ব দিক</h4>
+          <div class="grid-2">
+            <div class="controls">
+              <div class="control">
+                <label for="crossA">|A| <span id="crossAVal">11</span></label>
+                <input id="crossA" type="range" min="1" max="25" value="11" step="0.2">
+              </div>
+              <div class="control">
+                <label for="crossB">|B| <span id="crossBVal">8</span></label>
+                <input id="crossB" type="range" min="1" max="25" value="8" step="0.2">
+              </div>
+              <div class="control">
+                <label for="crossT">θ (ডিগ্রি) <span id="crossTVal">70</span></label>
+                <input id="crossT" type="range" min="0" max="180" value="70" step="1">
+              </div>
+              <div class="out" id="crossOut"></div>
+            </div>
+            <div class="canvas-wrap">
+              <canvas id="crossCanvas" width="680" height="360"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sec8">
+      <div class="section-head"><h2>8) ক্ষেত্রফল ও আয়তন</h2></div>
+      <div class="section-body">
+        <h3>দুটি ভেক্টর A ও B থেকে ক্ষেত্রফল</h3>
+        <div class="formula-grid">
+          <div class="formula"><strong>সমান্তরভুজের ক্ষেত্রফল = |A × B|</strong></div>
+          <div class="formula"><strong>যদি A ও B সমান্তরভুজের কর্ণ হয়, ক্ষেত্রফল = 1/2 |A × B|</strong></div>
+          <div class="formula"><strong>ত্রিভুজের ক্ষেত্রফল = 1/2 |A × B|</strong></div>
+        </div>
+
+        <h3>তিনটি ভেক্টর A, B, C থেকে আয়তন</h3>
+        <div class="formula-grid">
+          <div class="formula"><strong>V = A · (B × C)</strong></div>
+          <div class="formula"><strong>V = | A<sub>x</sub> A<sub>y</sub> A<sub>z</sub> ; B<sub>x</sub> B<sub>y</sub> B<sub>z</sub> ; C<sub>x</sub> C<sub>y</sub> C<sub>z</sub> |</strong></div>
+          <div class="formula"><strong>সহসমতল হলে: A · (B × C) = 0</strong></div>
+          <div class="formula"><strong>জ্যামিতিক আয়তন = |A · (B × C)|</strong></div>
+        </div>
+
+        <div class="sim">
+          <h4>ইন্টারঅ্যাকটিভ: Scalar Triple Product ও 3D প্রক্ষেপণ</h4>
+          <div class="grid-2">
+            <div class="controls">
+              <div class="grid-3">
+                <div class="control"><label for="ax">A<sub>x</sub></label><input id="ax" type="number" value="3" step="0.5"></div>
+                <div class="control"><label for="ay">A<sub>y</sub></label><input id="ay" type="number" value="1" step="0.5"></div>
+                <div class="control"><label for="az">A<sub>z</sub></label><input id="az" type="number" value="2" step="0.5"></div>
+                <div class="control"><label for="bx">B<sub>x</sub></label><input id="bx" type="number" value="0" step="0.5"></div>
+                <div class="control"><label for="by">B<sub>y</sub></label><input id="by" type="number" value="4" step="0.5"></div>
+                <div class="control"><label for="bz">B<sub>z</sub></label><input id="bz" type="number" value="1" step="0.5"></div>
+                <div class="control"><label for="cx">C<sub>x</sub></label><input id="cx" type="number" value="2" step="0.5"></div>
+                <div class="control"><label for="cy">C<sub>y</sub></label><input id="cy" type="number" value="1" step="0.5"></div>
+                <div class="control"><label for="cz">C<sub>z</sub></label><input id="cz" type="number" value="3" step="0.5"></div>
+              </div>
+              <div class="button-row">
+                <button class="btn" id="tripleCalc">হিসাব করো</button>
+                <button class="btn secondary" id="tripleDemo">সহসমতল উদাহরণ দাও</button>
+              </div>
+              <div class="out" id="tripleOut"></div>
+            </div>
+            <div class="canvas-wrap">
+              <canvas id="tripleCanvas" width="680" height="360"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sec9">
+      <div class="section-head"><h2>9) ভেক্টর ক্যালকুলাস: ∇, ∇·, ∇×</h2></div>
+      <div class="section-body">
+        <h3>গ্রেডিয়েন্ট (Gradient)</h3>
+        <p>স্কেলার ফাংশনের সর্বাধিক বৃদ্ধির দিক নির্দেশ করে।</p>
+        <div class="formula-grid">
+          <div class="formula"><strong>grad f = ∇f = î (∂f/∂x) + ĵ (∂f/∂y) + k̂ (∂f/∂z)</strong></div>
+        </div>
+
+        <h3>ডাইভার্জেন্স (Divergence)</h3>
+        <p>ভেক্টর ক্ষেত্রের উৎস/সিঙ্ক (source/sink) প্রকৃতি নির্দেশ করে (স্কেলার ফল)।</p>
+        <div class="formula-grid">
+          <div class="formula"><strong>div A = ∇ · A</strong></div>
+          <div class="formula"><strong>div A &gt; 0: source (বাইরে ছড়ায়)</strong></div>
+          <div class="formula"><strong>div A &lt; 0: sink (ভিতরে ঢোকে)</strong></div>
+          <div class="formula"><strong>div A = 0: solenoidal/incompressible</strong></div>
+        </div>
+
+        <h3>কার্ল (Curl)</h3>
+        <div class="formula-grid">
+          <div class="formula"><strong>curl V = ∇ × V</strong></div>
+          <div class="formula"><strong>|curl| বেশি হলে স্থানীয় ঘূর্ণন বেশি</strong></div>
+        </div>
+
+        <div class="sim">
+          <h4>ইন্টারঅ্যাকটিভ: গ্রেডিয়েন্ট এক্সপ্লোরার</h4>
+          <div class="grid-2">
+            <div class="controls">
+              <div class="control">
+                <label for="gradFn">f(x, y) ফাংশন নির্বাচন</label>
+                <select id="gradFn">
+                  <option value="1">f = x^2 + y^2</option>
+                  <option value="2">f = x^2 - y^2</option>
+                  <option value="3">f = sin(x) + cos(y)</option>
+                </select>
+              </div>
+              <div class="control">
+                <label for="gradX">x <span id="gradXVal">1.2</span></label>
+                <input id="gradX" type="range" min="-3" max="3" value="1.2" step="0.1">
+              </div>
+              <div class="control">
+                <label for="gradY">y <span id="gradYVal">-0.8</span></label>
+                <input id="gradY" type="range" min="-3" max="3" value="-0.8" step="0.1">
+              </div>
+              <div class="control">
+                <label for="dirPhi">দিক φ (ডিগ্রি) <span id="dirPhiVal">30</span></label>
+                <input id="dirPhi" type="range" min="0" max="360" value="30" step="1">
+              </div>
+              <div class="out" id="gradOut"></div>
+            </div>
+            <div class="canvas-wrap">
+              <canvas id="gradCanvas" width="680" height="360"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="sim">
+          <h4>ইন্টারঅ্যাকটিভ: ডাইভার্জেন্স ও কার্ল ফিল্ড এক্সপ্লোরার</h4>
+          <div class="grid-2">
+            <div class="controls">
+              <div class="control">
+                <label for="fieldType">ভেক্টর ক্ষেত্র নির্বাচন</label>
+                <select id="fieldType">
+                  <option value="source">F = (x, y) [উৎস]</option>
+                  <option value="sink">F = (-x, -y) [সিঙ্ক]</option>
+                  <option value="vortex">F = (-y, x) [ঘূর্ণি]</option>
+                  <option value="shear">F = (y, 0) [শিয়ার]</option>
+                </select>
+              </div>
+              <div class="control">
+                <label for="fieldX">x <span id="fieldXVal">0.5</span></label>
+                <input id="fieldX" type="range" min="-3" max="3" value="0.5" step="0.1">
+              </div>
+              <div class="control">
+                <label for="fieldY">y <span id="fieldYVal">0.5</span></label>
+                <input id="fieldY" type="range" min="-3" max="3" value="0.5" step="0.1">
+              </div>
+              <div class="out" id="fieldOut"></div>
+            </div>
+            <div class="canvas-wrap">
+              <canvas id="fieldCanvas" width="680" height="360"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sec10">
+      <div class="section-head"><h2>10) দ্রুত রিভিশন: সব ফর্মুলার সারণি</h2></div>
+      <div class="section-body">
+        <table class="formula-table">
+          <thead>
+            <tr>
+              <th>টপিক</th>
+              <th>মূল সূত্র</th>
+              <th>ব্যবহার/নোট</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>লব্ধি (2 ভেক্টর)</td>
+              <td>R = √(P^2 + Q^2 + 2PQ cos α)</td>
+              <td>দুটি ভেক্টরের লব্ধির মান</td>
+            </tr>
+            <tr>
+              <td>লব্ধির দিক</td>
+              <td>θ_r = tan^-1((Q sin α)/(P + Q cos α))</td>
+              <td>P থেকে মাপা কোণ</td>
+            </tr>
+            <tr>
+              <td>সর্বাধিক/সর্বনিম্ন লব্ধি</td>
+              <td>R_max = P + Q, R_min = |P - Q|</td>
+              <td>α = 0° এবং 180°</td>
+            </tr>
+            <tr>
+              <td>আপেক্ষিক বেগ</td>
+              <td>v_BC = v_B - v_C</td>
+              <td>C থেকে B এর বেগ</td>
+            </tr>
+            <tr>
+              <td>নদী-নৌকা</td>
+              <td>v_x = u + v cos α, v_y = v sin α</td>
+              <td>t = d/v_y, ভাটির সরণ x = v_x t</td>
+            </tr>
+            <tr>
+              <td>ডট গুণ</td>
+              <td>A·B = AB cos θ = A_xB_x + A_yB_y + A_zB_z</td>
+              <td>A ⟂ B হলে শূন্য</td>
+            </tr>
+            <tr>
+              <td>ডট থেকে কোণ</td>
+              <td>θ = cos^-1((A·B)/(|A||B|))</td>
+              <td>দুটি ভেক্টরের মধ্যবর্তী কোণ</td>
+            </tr>
+            <tr>
+              <td>অভিক্ষেপ</td>
+              <td>proj_A(B) = (A·B)/|A|, comp_A(B) = ((A·B)/|A|^2)A</td>
+              <td>অভিক্ষেপ ও উপাংশ ভেক্টর</td>
+            </tr>
+            <tr>
+              <td>ক্রস গুণ</td>
+              <td>A × B = AB sin θ n̂</td>
+              <td>A ∥ B হলে শূন্য</td>
+            </tr>
+            <tr>
+              <td>সমান্তরাল শর্ত</td>
+              <td>A_x/B_x = A_y/B_y = A_z/B_z</td>
+              <td>A এবং B একই বা বিপরীত দিকে হলে প্রযোজ্য</td>
+            </tr>
+            <tr>
+              <td>ক্ষেত্রফল</td>
+              <td>সমান্তরভুজ = |A × B|, ত্রিভুজ = 1/2|A × B|</td>
+              <td>জ্যামিতিক প্রয়োগ</td>
+            </tr>
+            <tr>
+              <td>কর্ণ-নির্দেশিত সামান্তরিক</td>
+              <td>ক্ষেত্রফল = 1/2 |A × B|</td>
+              <td>যখন A ও B কর্ণ হিসেবে দেওয়া থাকে</td>
+            </tr>
+            <tr>
+              <td>আয়তন</td>
+              <td>V = A·(B × C)</td>
+              <td>সহসমতল হলে 0</td>
+            </tr>
+            <tr>
+              <td>Gradient</td>
+              <td>∇f</td>
+              <td>সর্বাধিক বৃদ্ধির দিক</td>
+            </tr>
+            <tr>
+              <td>Divergence</td>
+              <td>∇·A</td>
+              <td>source/sink সূচক</td>
+            </tr>
+            <tr>
+              <td>Curl</td>
+              <td>∇×V</td>
+              <td>স্থানীয় ঘূর্ণনের পরিমাপ</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="important">
+          <strong>বোর্ড পরীক্ষায় সাধারণ ভুল:</strong>
+          <ul>
+            <li>cos/sin এর কোণে ডিগ্রি-রেডিয়ান গুলিয়ে ফেলা।</li>
+            <li>আপেক্ষিক বেগে v_BC = v_B - v_C এর চিহ্ন ভুল করা।</li>
+            <li>ক্রস গুণের মানকে স্কেলার ধরে নেওয়া।</li>
+            <li>আয়তন বের করতে modulus না নেওয়া (জ্যামিতিক আয়তনে | | নিতে হবে)।</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+    <footer class="site-footer">
+      <div class="footer-container footer-layout">
+        <div>
+          <a class="brand footer-brand" href="../../index.html#home">
+            <span class="brand-mark">RL</span>
+            <span>Rayhan Labs</span>
+          </a>
+          <p>Math, Physics, and CSE learning notes built for clarity.</p>
+        </div>
+
+        <div class="footer-links">
+          <a href="../../index.html#home">Home</a>
+          <a href="../../index.html#topics">Topics</a>
+          <a href="../../index.html#about">About</a>
+          <a href="../../index.html#contact">Contact</a>
+        </div>
+
+        <div class="social-links" aria-label="Social links">
+          <a href="https://github.com/Ray37han" target="_blank" rel="noreferrer" aria-label="GitHub">GH</a>
+          <a href="https://www.facebook.com/ray32han" target="_blank" rel="noreferrer" aria-label="Facebook">FB</a>
+          <a href="https://www.linkedin.com/in/rakibul-hasan-rayhan/" target="_blank" rel="noreferrer" aria-label="LinkedIn">IN</a>
+        </div>
+      </div>
+
+      <div class="footer-container footer-bottom">
+        <span>© 2026 Rayhan Labs.</span>
+        <span>Built with HTML, CSS, and vanilla JavaScript.</span>
+      </div>
+    </footer>
+</div>
+
+<script>
+"use strict";
+
+function degToRad(d) {
+  return d * Math.PI / 180;
+}
+
+function fmt(x, n = 3) {
+  if (!Number.isFinite(x)) {
+    return "undefined";
+  }
+  const v = Math.abs(x) < 1e-12 ? 0 : x;
+  return Number(v).toFixed(n);
+}
+
+function drawAxes(ctx, w, h) {
+  ctx.save();
+  ctx.strokeStyle = "rgba(255,255,255,0.2)";
+  ctx.lineWidth = 1;
+
+  for (let x = 0; x <= w; x += 40) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, h);
+    ctx.stroke();
+  }
+  for (let y = 0; y <= h; y += 40) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+    ctx.stroke();
+  }
+
+  ctx.strokeStyle = "rgba(255,255,255,0.45)";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(40, h / 2);
+  ctx.lineTo(w - 20, h / 2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(w / 2, h - 30);
+  ctx.lineTo(w / 2, 20);
+  ctx.stroke();
+
+  ctx.fillStyle = "rgba(255,255,255,0.8)";
+  ctx.font = "14px sans-serif";
+  ctx.fillText("+x", w - 34, h / 2 - 8);
+  ctx.fillText("+y", w / 2 + 7, 34);
+  ctx.restore();
+}
+
+function drawArrow(ctx, ox, oy, x, y, color, width = 3) {
+  const head = 9;
+  const dx = x - ox;
+  const dy = y - oy;
+  const ang = Math.atan2(dy, dx);
+
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = width;
+  ctx.beginPath();
+  ctx.moveTo(ox, oy);
+  ctx.lineTo(x, y);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(x - head * Math.cos(ang - Math.PI / 6), y - head * Math.sin(ang - Math.PI / 6));
+  ctx.lineTo(x - head * Math.cos(ang + Math.PI / 6), y - head * Math.sin(ang + Math.PI / 6));
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+function label(ctx, text, x, y, color = "#fff") {
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.font = "13px sans-serif";
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
+
+function vecFromMagAngle(mag, deg) {
+  const a = degToRad(deg);
+  return { x: mag * Math.cos(a), y: mag * Math.sin(a) };
+}
+
+function setupRangeValue(rangeId, outId) {
+  const r = document.getElementById(rangeId);
+  const o = document.getElementById(outId);
+  if (!r || !o) return;
+  const update = () => { o.textContent = r.value; };
+  r.addEventListener("input", update);
+  update();
+}
+
+[
+  ["compMag", "compMagVal"], ["compAng", "compAngVal"],
+  ["sumP", "sumPVal"], ["sumQ", "sumQVal"], ["sumAlpha", "sumAlphaVal"],
+  ["riverWidth", "riverWidthVal"], ["riverU", "riverUVal"], ["riverV", "riverVVal"], ["riverA", "riverAVal"],
+  ["relBMag", "relBMagVal"], ["relBAng", "relBAngVal"], ["relCMag", "relCMagVal"], ["relCAng", "relCAngVal"],
+  ["dotA", "dotAVal"], ["dotB", "dotBVal"], ["dotTheta", "dotThetaVal"],
+  ["crossA", "crossAVal"], ["crossB", "crossBVal"], ["crossT", "crossTVal"],
+  ["gradX", "gradXVal"], ["gradY", "gradYVal"], ["dirPhi", "dirPhiVal"],
+  ["fieldX", "fieldXVal"], ["fieldY", "fieldYVal"]
+].forEach(([r, o]) => setupRangeValue(r, o));
+
+function initComponentSim() {
+  const magEl = document.getElementById("compMag");
+  const angEl = document.getElementById("compAng");
+  const out = document.getElementById("compOut");
+  const canvas = document.getElementById("compCanvas");
+  const ctx = canvas.getContext("2d");
+
+  const render = () => {
+    const A = parseFloat(magEl.value);
+    const t = parseFloat(angEl.value);
+    const rad = degToRad(t);
+    const Ax = A * Math.cos(rad);
+    const Ay = A * Math.sin(rad);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawAxes(ctx, canvas.width, canvas.height);
+    const ox = canvas.width / 2;
+    const oy = canvas.height / 2;
+    const scale = 11;
+
+    const px = ox + Ax * scale;
+    const py = oy - Ay * scale;
+
+    drawArrow(ctx, ox, oy, px, py, "#4ad6ff", 3.5);
+    drawArrow(ctx, ox, oy, ox + Ax * scale, oy, "#ffd166", 2.8);
+    drawArrow(ctx, ox + Ax * scale, oy, px, py, "#ff7f50", 2.8);
+
+    ctx.setLineDash([5, 4]);
+    ctx.strokeStyle = "rgba(255,255,255,0.6)";
+    ctx.beginPath();
+    ctx.moveTo(px, py);
+    ctx.lineTo(px, oy);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(px, py);
+    ctx.lineTo(ox, py);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    label(ctx, "A", px + 8, py - 8, "#9ce7ff");
+    label(ctx, "Ax", ox + Ax * scale * 0.5, oy - 8, "#ffe59a");
+    label(ctx, "Ay", ox + Ax * scale + 6, oy - Ay * scale * 0.5, "#ffb596");
+
+    out.textContent =
+      "A = " + fmt(A, 2) + "\n" +
+      "A_x = A cos θ = " + fmt(Ax, 3) + "\n" +
+      "A_y = A sin θ = " + fmt(Ay, 3) + "\n" +
+      "পুনরায় যাচাই: √(A_x² + A_y²) = " + fmt(Math.hypot(Ax, Ay), 3);
+  };
+
+  magEl.addEventListener("input", render);
+  angEl.addEventListener("input", render);
+  render();
+}
+
+function initSumSim() {
+  const pEl = document.getElementById("sumP");
+  const qEl = document.getElementById("sumQ");
+  const aEl = document.getElementById("sumAlpha");
+  const out = document.getElementById("sumOut");
+  const canvas = document.getElementById("sumCanvas");
+  const ctx = canvas.getContext("2d");
+
+  const render = () => {
+    const P = parseFloat(pEl.value);
+    const Q = parseFloat(qEl.value);
+    const alpha = parseFloat(aEl.value);
+    const ar = degToRad(alpha);
+
+    const Px = P;
+    const Py = 0;
+    const Qx = Q * Math.cos(ar);
+    const Qy = Q * Math.sin(ar);
+
+    const Rx = Px + Qx;
+    const Ry = Py + Qy;
+
+    const R = Math.sqrt(P * P + Q * Q + 2 * P * Q * Math.cos(ar));
+    const theta = Math.atan2(Qy, Px + Qx) * 180 / Math.PI;
+
+    const scale = 12;
+    const ox = canvas.width / 2 - 120;
+    const oy = canvas.height / 2 + 90;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawAxes(ctx, canvas.width, canvas.height);
+
+    drawArrow(ctx, ox, oy, ox + Px * scale, oy - Py * scale, "#ffd166", 3.2);
+    drawArrow(ctx, ox, oy, ox + Qx * scale, oy - Qy * scale, "#68e1fd", 3.2);
+    drawArrow(ctx, ox, oy, ox + Rx * scale, oy - Ry * scale, "#ff7c43", 4);
+
+    drawArrow(ctx, ox + Px * scale, oy, ox + (Px + Qx) * scale, oy - Qy * scale, "rgba(104,225,253,0.45)", 2.4);
+
+    label(ctx, "P", ox + Px * scale * 0.6, oy - 8, "#ffe2a1");
+    label(ctx, "Q", ox + Qx * scale * 0.5, oy - Qy * scale * 0.5 - 8, "#8fe9ff");
+    label(ctx, "R", ox + Rx * scale * 0.55, oy - Ry * scale * 0.55 - 8, "#ffc4a8");
+
+    out.textContent =
+      "R = √(P² + Q² + 2PQ cos α) = " + fmt(R, 4) + "\n" +
+      "θ_r = tan^-1((Q sin α)/(P + Q cos α)) = " + fmt(theta, 3) + "°\n" +
+      "R_max (α = 0°) = " + fmt(P + Q, 3) + "\n" +
+      "R_min (α = 180°) = " + fmt(Math.abs(P - Q), 3);
+  };
+
+  pEl.addEventListener("input", render);
+  qEl.addEventListener("input", render);
+  aEl.addEventListener("input", render);
+  render();
+}
+
+const riverState = {
+  running: false,
+  t: 0,
+  raf: null,
+  total: 1
+};
+
+function initRiverSim() {
+  const dEl = document.getElementById("riverWidth");
+  const uEl = document.getElementById("riverU");
+  const vEl = document.getElementById("riverV");
+  const aEl = document.getElementById("riverA");
+  const out = document.getElementById("riverOut");
+  const canvas = document.getElementById("riverCanvas");
+  const ctx = canvas.getContext("2d");
+  const startBtn = document.getElementById("riverStart");
+  const resetBtn = document.getElementById("riverReset");
+
+  function values() {
+    const d = parseFloat(dEl.value);
+    const u = parseFloat(uEl.value);
+    const v = parseFloat(vEl.value);
+    const a = degToRad(parseFloat(aEl.value));
+    const vx = u + v * Math.cos(a);
+    const vy = v * Math.sin(a);
+    const canCross = vy > 0.01;
+    const t = canCross ? d / vy : Infinity;
+    const drift = canCross ? vx * t : Infinity;
+    return { d, u, v, a, vx, vy, canCross, t, drift };
+  }
+
+  function drawBoatScene(progress = 0) {
+    const { d, u, v, a, vx, vy, canCross, t, drift } = values();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const left = 60;
+    const right = canvas.width - 60;
+    const top = 55;
+    const bottom = canvas.height - 55;
+    const riverW = right - left;
+    const riverH = bottom - top;
+
+    ctx.fillStyle = "#1f3042";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#2b84b3";
+    ctx.fillRect(left, top, riverW, riverH);
+
+    ctx.fillStyle = "#2a4732";
+    ctx.fillRect(0, top - 18, canvas.width, 18);
+    ctx.fillRect(0, bottom, canvas.width, 22);
+
+    ctx.strokeStyle = "rgba(255,255,255,0.2)";
+    for (let y = top + 20; y < bottom; y += 26) {
+      for (let x = left + 8; x < right; x += 56) {
+        drawArrow(ctx, x, y, x + 20, y, "rgba(197,236,255,0.65)", 1.3);
+      }
+    }
+
+    const pxPerM = riverH / d;
+    const xScale = Math.max(0.4, Math.min(1.8, riverW / (Math.abs(drift) + 120)));
+
+    const sx = left + 30;
+    const sy = bottom - 16;
+
+    let bx = sx;
+    let by = sy;
+
+    if (canCross && Number.isFinite(t)) {
+      const currT = Math.min(progress, 1) * t;
+      bx = sx + (vx * currT) * xScale;
+      by = sy - (vy * currT) * pxPerM;
+    }
+
+    if (by < top + 8) {
+      by = top + 8;
+    }
+
+    ctx.fillStyle = "#ffd166";
+    ctx.beginPath();
+    ctx.arc(bx, by, 7, 0, Math.PI * 2);
+    ctx.fill();
+
+    drawArrow(ctx, sx, sy, sx + vx * 16, sy - vy * 16, "#ffe39d", 2.4);
+    drawArrow(ctx, sx, sy, sx + u * 16, sy, "#81dbff", 2.2);
+    drawArrow(ctx, sx, sy, sx + v * Math.cos(a) * 16, sy - v * Math.sin(a) * 16, "#ff9f76", 2.2);
+
+    label(ctx, "v_ground", sx + vx * 16 + 5, sy - vy * 16 - 4, "#ffe7a8");
+    label(ctx, "u", sx + u * 16 + 5, sy + 14, "#9ce8ff");
+    label(ctx, "v", sx + v * Math.cos(a) * 16 + 5, sy - v * Math.sin(a) * 16 + 12, "#ffc4ad");
+
+    label(ctx, "এই পাড়", 10, bottom + 15, "#d9f6e1");
+    label(ctx, "ওই পাড়", 10, top - 6, "#d9f6e1");
+  }
+
+  function updateOutput() {
+    const { d, u, v, vx, vy, canCross, t, drift } = values();
+
+    let text =
+      "v_x = u + v cos α = " + fmt(vx, 3) + " m/s\n" +
+      "v_y = v sin α = " + fmt(vy, 3) + " m/s\n";
+
+    if (!canCross) {
+      text += "v_y <= 0 হওয়ায় নৌকা বিপরীত পারে যেতে পারছে না। α বাড়ান।\n";
+    } else {
+      text +=
+        "t = d / v_y = " + fmt(t, 3) + " s\n" +
+        "x = v_x t = " + fmt(drift, 3) + " m (ভাটির সরণ)\n" +
+        "α = 90° হলে t = d/v = " + fmt(d / v, 3) + " s\n";
+    }
+
+    if (v > u) {
+      const cancel = Math.acos(-u / v) * 180 / Math.PI;
+      text += "ভাটির সরণ শূন্যের জন্য α = cos^-1(-u/v) = " + fmt(cancel, 2) + "°";
+    } else {
+      text += "v <= u হওয়ায় ভাটির সরণ পুরোপুরি শূন্য করা সম্ভব নয়।";
+    }
+
+    out.textContent = text;
+  }
+
+  function frame() {
+    if (!riverState.running) return;
+    riverState.t += 0.01;
+    if (riverState.t >= 1) {
+      riverState.t = 1;
+      riverState.running = false;
+      startBtn.textContent = "আবার চালু";
+    }
+    drawBoatScene(riverState.t);
+    riverState.raf = requestAnimationFrame(frame);
+  }
+
+  function rerenderStatic() {
+    updateOutput();
+    drawBoatScene(riverState.t);
+  }
+
+  [dEl, uEl, vEl, aEl].forEach(el => el.addEventListener("input", () => {
+    if (!riverState.running) {
+      riverState.t = 0;
+    }
+    rerenderStatic();
+  }));
+
+  startBtn.addEventListener("click", () => {
+    riverState.running = !riverState.running;
+    if (riverState.running) {
+      if (riverState.t >= 1) riverState.t = 0;
+      startBtn.textContent = "থামাও";
+      frame();
+    } else {
+      startBtn.textContent = "চালু";
+      if (riverState.raf) cancelAnimationFrame(riverState.raf);
+    }
+  });
+
+  resetBtn.addEventListener("click", () => {
+    riverState.running = false;
+    riverState.t = 0;
+    startBtn.textContent = "সিমুলেশন চালু";
+    if (riverState.raf) cancelAnimationFrame(riverState.raf);
+    rerenderStatic();
+  });
+
+  rerenderStatic();
+}
+
+function initRelativeSim() {
+  const bMagEl = document.getElementById("relBMag");
+  const bAngEl = document.getElementById("relBAng");
+  const cMagEl = document.getElementById("relCMag");
+  const cAngEl = document.getElementById("relCAng");
+  const out = document.getElementById("relOut");
+  const canvas = document.getElementById("relCanvas");
+  const ctx = canvas.getContext("2d");
+
+  function render() {
+    const vb = vecFromMagAngle(parseFloat(bMagEl.value), parseFloat(bAngEl.value));
+    const vc = vecFromMagAngle(parseFloat(cMagEl.value), parseFloat(cAngEl.value));
+
+    const vbc = { x: vb.x - vc.x, y: vb.y - vc.y };
+    const mag = Math.hypot(vbc.x, vbc.y);
+    const ang = Math.atan2(vbc.y, vbc.x) * 180 / Math.PI;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawAxes(ctx, canvas.width, canvas.height);
+
+    const ox = canvas.width / 2;
+    const oy = canvas.height / 2;
+    const scale = 12;
+
+    drawArrow(ctx, ox, oy, ox + vb.x * scale, oy - vb.y * scale, "#ffd166", 3.1);
+    drawArrow(ctx, ox, oy, ox + vc.x * scale, oy - vc.y * scale, "#56e2ff", 3.1);
+
+    drawArrow(ctx,
+      ox + vc.x * scale,
+      oy - vc.y * scale,
+      ox + vb.x * scale,
+      oy - vb.y * scale,
+      "#ff8e64",
+      3.1
+    );
+
+    label(ctx, "v_B", ox + vb.x * scale + 6, oy - vb.y * scale - 8, "#ffe3a3");
+    label(ctx, "v_C", ox + vc.x * scale + 6, oy - vc.y * scale - 8, "#a4efff");
+    label(ctx, "v_BC", ox + (vb.x + vc.x) * scale * 0.5, oy - (vb.y + vc.y) * scale * 0.5 - 10, "#ffc5af");
+
+    out.textContent =
+      "v_B = (" + fmt(vb.x, 3) + ", " + fmt(vb.y, 3) + ")\n" +
+      "v_C = (" + fmt(vc.x, 3) + ", " + fmt(vc.y, 3) + ")\n" +
+      "v_BC = v_B - v_C = (" + fmt(vbc.x, 3) + ", " + fmt(vbc.y, 3) + ")\n" +
+      "|v_BC| = " + fmt(mag, 3) + ", কোণ = " + fmt(ang, 2) + "°";
+  }
+
+  [bMagEl, bAngEl, cMagEl, cAngEl].forEach(el => el.addEventListener("input", render));
+  render();
+}
+
+function initDotSim() {
+  const aEl = document.getElementById("dotA");
+  const bEl = document.getElementById("dotB");
+  const tEl = document.getElementById("dotTheta");
+  const out = document.getElementById("dotOut");
+  const canvas = document.getElementById("dotCanvas");
+  const ctx = canvas.getContext("2d");
+
+  function render() {
+    const A = parseFloat(aEl.value);
+    const B = parseFloat(bEl.value);
+    const t = parseFloat(tEl.value);
+    const tr = degToRad(t);
+
+    const Ax = A, Ay = 0;
+    const Bx = B * Math.cos(tr), By = B * Math.sin(tr);
+
+    const dot = A * B * Math.cos(tr);
+    const proj = dot / A;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawAxes(ctx, canvas.width, canvas.height);
+
+    const ox = canvas.width / 2 - 160;
+    const oy = canvas.height / 2 + 80;
+    const scale = 12;
+
+    drawArrow(ctx, ox, oy, ox + Ax * scale, oy - Ay * scale, "#ffd166", 3.2);
+    drawArrow(ctx, ox, oy, ox + Bx * scale, oy - By * scale, "#5ce4ff", 3.2);
+    drawArrow(ctx, ox, oy, ox + proj * scale, oy, "#ff8e64", 2.8);
+
+    ctx.setLineDash([4, 4]);
+    ctx.strokeStyle = "rgba(255,255,255,0.6)";
+    ctx.beginPath();
+    ctx.moveTo(ox + Bx * scale, oy - By * scale);
+    ctx.lineTo(ox + proj * scale, oy);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    label(ctx, "A", ox + A * scale + 6, oy - 8, "#ffe19c");
+    label(ctx, "B", ox + Bx * scale + 6, oy - By * scale - 8, "#9ae9ff");
+    label(ctx, "proj_A(B)", ox + proj * scale + 6, oy + 14, "#ffc2a8");
+
+    out.textContent =
+      "A·B = AB cos θ = " + fmt(dot, 3) + "\n" +
+      "উপাংশ যাচাই: A_xB_x + A_yB_y = " + fmt(Ax * Bx + Ay * By, 3) + "\n" +
+      "A-এর উপর B-এর অভিক্ষেপ = (A·B)/|A| = " + fmt(proj, 3) + "\n" +
+      "যদি B সরণ হয়, কাজ W = F·d = " + fmt(dot, 3);
+  }
+
+  [aEl, bEl, tEl].forEach(el => el.addEventListener("input", render));
+  render();
+}
+
+function initCrossSim() {
+  const aEl = document.getElementById("crossA");
+  const bEl = document.getElementById("crossB");
+  const tEl = document.getElementById("crossT");
+  const out = document.getElementById("crossOut");
+  const canvas = document.getElementById("crossCanvas");
+  const ctx = canvas.getContext("2d");
+
+  function render() {
+    const A = parseFloat(aEl.value);
+    const B = parseFloat(bEl.value);
+    const t = parseFloat(tEl.value);
+    const tr = degToRad(t);
+
+    const Ax = A, Ay = 0;
+    const Bx = B * Math.cos(tr), By = B * Math.sin(tr);
+    const cross = A * B * Math.sin(tr);
+    const areaP = Math.abs(cross);
+    const areaT = areaP / 2;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawAxes(ctx, canvas.width, canvas.height);
+
+    const ox = canvas.width / 2 - 150;
+    const oy = canvas.height / 2 + 80;
+    const s = 12;
+
+    const ax = ox + Ax * s;
+    const ay = oy - Ay * s;
+    const bx = ox + Bx * s;
+    const by = oy - By * s;
+    const px = ax + Bx * s;
+    const py = ay - By * s;
+
+    ctx.fillStyle = "rgba(255,124,67,0.22)";
+    ctx.beginPath();
+    ctx.moveTo(ox, oy);
+    ctx.lineTo(ax, ay);
+    ctx.lineTo(px, py);
+    ctx.lineTo(bx, by);
+    ctx.closePath();
+    ctx.fill();
+
+    drawArrow(ctx, ox, oy, ax, ay, "#ffd166", 3.2);
+    drawArrow(ctx, ox, oy, bx, by, "#56e2ff", 3.2);
+
+    ctx.strokeStyle = "rgba(255,255,255,0.5)";
+    ctx.setLineDash([5, 4]);
+    ctx.beginPath();
+    ctx.moveTo(ax, ay);
+    ctx.lineTo(px, py);
+    ctx.moveTo(bx, by);
+    ctx.lineTo(px, py);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    label(ctx, "A", ax + 6, ay - 8, "#ffe19b");
+    label(ctx, "B", bx + 6, by - 8, "#a0eefe");
+
+    let normal = "+k";
+    if (cross < 0) normal = "-k";
+    if (Math.abs(cross) < 1e-8) normal = "অনির্দিষ্ট (সমান্তরাল)";
+
+    out.textContent =
+      "|A × B| = AB sin θ = " + fmt(Math.abs(cross), 3) + "\n" +
+      "সমান্তরভুজের ক্ষেত্রফল = |A × B| = " + fmt(areaP, 3) + "\n" +
+      "ত্রিভুজের ক্ষেত্রফল = 1/2 |A × B| = " + fmt(areaT, 3) + "\n" +
+      "অভিলম্ব দিক (2D সমতল) ~ " + normal;
+  }
+
+  [aEl, bEl, tEl].forEach(el => el.addEventListener("input", render));
+  render();
+}
+
+function det3(a, b, c) {
+  return (
+    a.x * (b.y * c.z - b.z * c.y) -
+    a.y * (b.x * c.z - b.z * c.x) +
+    a.z * (b.x * c.y - b.y * c.x)
+  );
+}
+
+function initTripleSim() {
+  const ids = ["ax","ay","az","bx","by","bz","cx","cy","cz"];
+  const els = ids.map(id => document.getElementById(id));
+  const out = document.getElementById("tripleOut");
+  const calcBtn = document.getElementById("tripleCalc");
+  const demoBtn = document.getElementById("tripleDemo");
+  const canvas = document.getElementById("tripleCanvas");
+  const ctx = canvas.getContext("2d");
+
+  function getVecs() {
+    const v = {};
+    ids.forEach(id => { v[id] = parseFloat(document.getElementById(id).value) || 0; });
+    return {
+      A: { x: v.ax, y: v.ay, z: v.az },
+      B: { x: v.bx, y: v.by, z: v.bz },
+      C: { x: v.cx, y: v.cy, z: v.cz }
+    };
+  }
+
+  function proj(p) {
+    const s = 26;
+    return {
+      x: canvas.width / 2 + s * (p.x - 0.7 * p.y),
+      y: canvas.height / 2 + s * (0.45 * p.x + 0.45 * p.y - 1.1 * p.z)
+    };
+  }
+
+  function draw() {
+    const { A, B, C } = getVecs();
+    const triple = det3(A, B, C);
+    const volume = Math.abs(triple);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#112338";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const O = proj({ x: 0, y: 0, z: 0 });
+    const pA = proj(A);
+    const pB = proj(B);
+    const pC = proj(C);
+    const pAB = proj({ x: A.x + B.x, y: A.y + B.y, z: A.z + B.z });
+    const pAC = proj({ x: A.x + C.x, y: A.y + C.y, z: A.z + C.z });
+    const pBC = proj({ x: B.x + C.x, y: B.y + C.y, z: B.z + C.z });
+    const pABC = proj({ x: A.x + B.x + C.x, y: A.y + B.y + C.y, z: A.z + B.z + C.z });
+
+    ctx.fillStyle = "rgba(255,124,67,0.12)";
+    ctx.beginPath();
+    ctx.moveTo(O.x, O.y);
+    ctx.lineTo(pA.x, pA.y);
+    ctx.lineTo(pAB.x, pAB.y);
+    ctx.lineTo(pB.x, pB.y);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = "rgba(86,226,255,0.1)";
+    ctx.beginPath();
+    ctx.moveTo(O.x, O.y);
+    ctx.lineTo(pA.x, pA.y);
+    ctx.lineTo(pAC.x, pAC.y);
+    ctx.lineTo(pC.x, pC.y);
+    ctx.closePath();
+    ctx.fill();
+
+    drawArrow(ctx, O.x, O.y, pA.x, pA.y, "#ffd166", 3.2);
+    drawArrow(ctx, O.x, O.y, pB.x, pB.y, "#56e2ff", 3.2);
+    drawArrow(ctx, O.x, O.y, pC.x, pC.y, "#ff8e64", 3.2);
+
+    ctx.strokeStyle = "rgba(255,255,255,0.45)";
+    ctx.setLineDash([5, 4]);
+    [[pA,pAB],[pB,pAB],[pA,pAC],[pC,pAC],[pB,pBC],[pC,pBC],[pAB,pABC],[pAC,pABC],[pBC,pABC]].forEach(pair => {
+      ctx.beginPath();
+      ctx.moveTo(pair[0].x, pair[0].y);
+      ctx.lineTo(pair[1].x, pair[1].y);
+      ctx.stroke();
+    });
+    ctx.setLineDash([]);
+
+    label(ctx, "A", pA.x + 4, pA.y - 6, "#ffe4a4");
+    label(ctx, "B", pB.x + 4, pB.y - 6, "#a8f1ff");
+    label(ctx, "C", pC.x + 4, pC.y - 6, "#ffc6af");
+
+    out.textContent =
+      "A·(B × C) = " + fmt(triple, 4) + "\n" +
+      "জ্যামিতিক আয়তন |A·(B × C)| = " + fmt(volume, 4) + "\n" +
+      (Math.abs(triple) < 1e-8 ? "A, B, C সহসমতল (coplanar)" : "A, B, C সহসমতল নয়");
+  }
+
+  calcBtn.addEventListener("click", draw);
+  demoBtn.addEventListener("click", () => {
+    document.getElementById("ax").value = "1";
+    document.getElementById("ay").value = "2";
+    document.getElementById("az").value = "3";
+    document.getElementById("bx").value = "2";
+    document.getElementById("by").value = "4";
+    document.getElementById("bz").value = "6";
+    document.getElementById("cx").value = "3";
+    document.getElementById("cy").value = "6";
+    document.getElementById("cz").value = "9";
+    draw();
+  });
+
+  els.forEach(el => el.addEventListener("input", draw));
+  draw();
+}
+
+function gradVal(fn, x, y) {
+  if (fn === "1") {
+    return {
+      f: x * x + y * y,
+      gx: 2 * x,
+      gy: 2 * y
+    };
+  }
+  if (fn === "2") {
+    return {
+      f: x * x - y * y,
+      gx: 2 * x,
+      gy: -2 * y
+    };
+  }
+  return {
+    f: Math.sin(x) + Math.cos(y),
+    gx: Math.cos(x),
+    gy: -Math.sin(y)
+  };
+}
+
+function initGradientSim() {
+  const fnEl = document.getElementById("gradFn");
+  const xEl = document.getElementById("gradX");
+  const yEl = document.getElementById("gradY");
+  const pEl = document.getElementById("dirPhi");
+  const out = document.getElementById("gradOut");
+  const canvas = document.getElementById("gradCanvas");
+  const ctx = canvas.getContext("2d");
+
+  function mapToCanvas(x, y) {
+    const m = 46;
+    return {
+      x: canvas.width / 2 + x * m,
+      y: canvas.height / 2 - y * m
+    };
+  }
+
+  function render() {
+    const fn = fnEl.value;
+    const x = parseFloat(xEl.value);
+    const y = parseFloat(yEl.value);
+    const phi = parseFloat(pEl.value);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#0f2234";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = -7; i <= 7; i++) {
+      for (let j = -4; j <= 4; j++) {
+        const X = i * 0.45;
+        const Y = j * 0.45;
+        const g = gradVal(fn, X, Y);
+        const hue = 210 + Math.max(-30, Math.min(30, g.f * 10));
+        ctx.fillStyle = "hsla(" + hue + ",75%,55%,0.45)";
+        const p = mapToCanvas(X, Y);
+        ctx.fillRect(p.x - 17, p.y - 17, 34, 34);
+      }
+    }
+
+    drawAxes(ctx, canvas.width, canvas.height);
+
+    const g = gradVal(fn, x, y);
+    const p = mapToCanvas(x, y);
+    const scale = 32;
+
+    drawArrow(ctx, p.x, p.y, p.x + g.gx * scale, p.y - g.gy * scale, "#ffd166", 3.2);
+
+    const pr = degToRad(phi);
+    const nx = Math.cos(pr);
+    const ny = Math.sin(pr);
+    drawArrow(ctx, p.x, p.y, p.x + nx * 52, p.y - ny * 52, "#56e2ff", 2.6);
+
+    const ddir = g.gx * nx + g.gy * ny;
+
+    ctx.fillStyle = "#ff8e64";
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    label(ctx, "∇f", p.x + g.gx * scale + 4, p.y - g.gy * scale - 4, "#ffe3a6");
+    label(ctx, "n", p.x + nx * 52 + 4, p.y - ny * 52 - 4, "#a5f0ff");
+
+    out.textContent =
+      "f(x, y) = " + fmt(g.f, 4) + "\n" +
+      "∇f = (" + fmt(g.gx, 4) + ", " + fmt(g.gy, 4) + ")\n" +
+      "|∇f| = " + fmt(Math.hypot(g.gx, g.gy), 4) + "\n" +
+      "দিকগত অন্তরক D_n f = ∇f · n = " + fmt(ddir, 4);
+  }
+
+  [fnEl, xEl, yEl, pEl].forEach(el => el.addEventListener("input", render));
+  render();
+}
+
+function fieldVal(type, x, y) {
+  if (type === "source") return { u: x, v: y, div: 2, curl: 0 };
+  if (type === "sink") return { u: -x, v: -y, div: -2, curl: 0 };
+  if (type === "vortex") return { u: -y, v: x, div: 0, curl: 2 };
+  return { u: y, v: 0, div: 0, curl: -1 };
+}
+
+function initFieldSim() {
+  const tEl = document.getElementById("fieldType");
+  const xEl = document.getElementById("fieldX");
+  const yEl = document.getElementById("fieldY");
+  const out = document.getElementById("fieldOut");
+  const canvas = document.getElementById("fieldCanvas");
+  const ctx = canvas.getContext("2d");
+
+  function m(x, y) {
+    const s = 54;
+    return { x: canvas.width / 2 + x * s, y: canvas.height / 2 - y * s };
+  }
+
+  function render() {
+    const t = tEl.value;
+    const px = parseFloat(xEl.value);
+    const py = parseFloat(yEl.value);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#102133";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    drawAxes(ctx, canvas.width, canvas.height);
+
+    for (let i = -5; i <= 5; i++) {
+      for (let j = -3; j <= 3; j++) {
+        const x = i * 0.6;
+        const y = j * 0.6;
+        const f = fieldVal(t, x, y);
+        const p = m(x, y);
+        drawArrow(ctx, p.x, p.y, p.x + f.u * 12, p.y - f.v * 12, "rgba(111,216,255,0.86)", 1.7);
+      }
+    }
+
+    const fp = fieldVal(t, px, py);
+    const p0 = m(px, py);
+    drawArrow(ctx, p0.x, p0.y, p0.x + fp.u * 24, p0.y - fp.v * 24, "#ffcf7f", 3.1);
+    ctx.fillStyle = "#ff8e64";
+    ctx.beginPath();
+    ctx.arc(p0.x, p0.y, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    let divText = "∇·F > 0: উৎস (source)";
+    if (fp.div < 0) divText = "∇·F < 0: সিঙ্ক (sink)";
+    if (Math.abs(fp.div) < 1e-8) divText = "∇·F = 0: solenoidal/incompressible";
+
+    let curlText = "ঘড়ির কাঁটার বিপরীতে ঘূর্ণন";
+    if (fp.curl < 0) curlText = "ঘড়ির কাঁটার দিকে ঘূর্ণন";
+    if (Math.abs(fp.curl) < 1e-8) curlText = "স্থানীয় ঘূর্ণন নেই";
+
+    out.textContent =
+      "F(x, y) = (" + fmt(fp.u, 3) + ", " + fmt(fp.v, 3) + ")\n" +
+      "∇·F = " + fmt(fp.div, 3) + " -> " + divText + "\n" +
+      "(∇×F)_z = " + fmt(fp.curl, 3) + " -> " + curlText;
+  }
+
+  [tEl, xEl, yEl].forEach(el => el.addEventListener("input", render));
+  render();
+}
+
+function boot() {
+  initComponentSim();
+  initSumSim();
+  initRiverSim();
+  initRelativeSim();
+  initDotSim();
+  initCrossSim();
+  initTripleSim();
+  initGradientSim();
+  initFieldSim();
+}
+
+window.addEventListener("load", boot);
+</script>
+</body>
+</html>

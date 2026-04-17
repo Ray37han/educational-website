@@ -3,21 +3,186 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Physics Topics | Rayhan Labs</title>
-  <style>
-    body { margin: 0; font-family: Inter, system-ui, sans-serif; background: #0f172a; color: #e2e8f0; }
-    .wrap { max-width: 900px; margin: 0 auto; padding: 48px 20px; }
-    a { color: #93c5fd; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .card { margin-top: 18px; padding: 18px; border: 1px solid rgba(148,163,184,.16); border-radius: 18px; background: rgba(15,23,42,.6); }
-  </style>
+  <meta name="description" content="Explore Physics topics through smooth 3D visuals and interactive simulations.">
+  <title>Physics, Visualized | Rayhan Labs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="wrap">
-    <h1>Physics Topics</h1>
-    <p>Focused notes for HSC physics concepts and explanation pages.</p>
-    <a class="card" href="gravity_gravitation_hsc_note.html">Gravity and Gravitation HSC Note</a>
-    <p style="margin-top:24px;"><a href="../../index.html">Back to home</a></p>
+  <header class="navbar" id="top">
+    <div class="nav-shell">
+      <a class="logo" href="#top">Rayhan Physics</a>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="../../index.html">Home</a>
+        <a href="#papers">Physics</a>
+        <a href="../Math/">Math</a>
+        <a href="../Computer%20Science/">CSE</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="hero">
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+    <div class="hero-shade" aria-hidden="true"></div>
+
+    <div class="hero-content" data-reveal>
+      <p class="eyebrow">Rayhan Labs • Physics Index</p>
+      <h1>Physics, Visualized.</h1>
+      <p class="subtitle">Explore physics through interactive concepts</p>
+      <a class="btn ripple-btn" href="#papers">Start Exploring</a>
+    </div>
+  </section>
+
+  <main>
+    <section class="section" id="papers">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="eyebrow">Paper Blocks</p>
+          <h2>Choose a Physics Paper</h2>
+          <p>Start with Physics First Paper chapters now. Physics 2nd Paper chapter blocks will be added next.</p>
+        </div>
+
+        <div class="paper-grid">
+          <article class="paper-card" data-reveal>
+            <div class="paper-canvas-wrap">
+              <canvas class="paper-canvas" id="paper-first-canvas" aria-label="Physics first paper animation"></canvas>
+            </div>
+            <h3>Physics First Paper</h3>
+            <p>Core mechanics, motion, gravitation, periodic motion, waves, and kinetic theory chapters.</p>
+            <a class="paper-btn ripple-btn" href="physics_first_paper.html">Open First Paper</a>
+          </article>
+
+          <article class="paper-card coming" data-reveal>
+            <div class="paper-canvas-wrap">
+              <canvas class="paper-canvas" id="paper-second-canvas" aria-label="Physics second paper animation"></canvas>
+            </div>
+            <h3>Physics 2nd Paper</h3>
+            <p>Electrostatics, current electricity, optics, modern physics, and electronics chapters.</p>
+            <button class="paper-btn ripple-btn" type="button" disabled>Coming Next</button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="topics">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="eyebrow">Topic Grid</p>
+          <h2>Interactive Physics Concepts</h2>
+          <p>Each topic card includes a lightweight 3D visual powered by Three.js.</p>
+        </div>
+
+        <div class="topics-grid">
+          <article class="topic-card" data-reveal data-topic="mechanics">
+            <div class="topic-canvas-wrap">
+              <canvas class="topic-canvas" id="topic-mechanics" aria-label="Mechanics animation"></canvas>
+            </div>
+            <h3>Mechanics</h3>
+            <p>Forces, motion, and momentum visualized through dynamic systems.</p>
+            <a class="card-btn ripple-btn" href="gravity_gravitation_hsc_note.html">Explore</a>
+          </article>
+
+          <article class="topic-card" data-reveal data-topic="thermodynamics">
+            <div class="topic-canvas-wrap">
+              <canvas class="topic-canvas" id="topic-thermodynamics" aria-label="Thermodynamics animation"></canvas>
+            </div>
+            <h3>Thermodynamics</h3>
+            <p>Heat flow, entropy, and thermal behavior represented with particles.</p>
+            <a class="card-btn ripple-btn" href="#interactive-demos">Explore</a>
+          </article>
+
+          <article class="topic-card" data-reveal data-topic="waves">
+            <div class="topic-canvas-wrap">
+              <canvas class="topic-canvas" id="topic-waves" aria-label="Waves animation"></canvas>
+            </div>
+            <h3>Waves</h3>
+            <p>Oscillation, amplitude, and frequency with animated sinusoidal motion.</p>
+            <a class="card-btn ripple-btn" href="#interactive-demos">Explore</a>
+          </article>
+
+          <article class="topic-card" data-reveal data-topic="optics">
+            <div class="topic-canvas-wrap">
+              <canvas class="topic-canvas" id="topic-optics" aria-label="Optics animation"></canvas>
+            </div>
+            <h3>Optics</h3>
+            <p>Refraction and light behavior shown with a prism and colored beams.</p>
+            <a class="card-btn ripple-btn" href="#interactive-demos">Explore</a>
+          </article>
+
+          <article class="topic-card" data-reveal data-topic="electricity">
+            <div class="topic-canvas-wrap">
+              <canvas class="topic-canvas" id="topic-electricity" aria-label="Electricity animation"></canvas>
+            </div>
+            <h3>Electricity</h3>
+            <p>Charged motion and pulse behavior using animated current lines.</p>
+            <a class="card-btn ripple-btn" href="#interactive-demos">Explore</a>
+          </article>
+
+          <article class="topic-card" data-reveal data-topic="modern">
+            <div class="topic-canvas-wrap">
+              <canvas class="topic-canvas" id="topic-modern" aria-label="Modern physics animation"></canvas>
+            </div>
+            <h3>Modern Physics</h3>
+            <p>An atom-inspired orbital system for quantum-era intuition.</p>
+            <a class="card-btn ripple-btn" href="vector_full_chapter_hsc_bangla.html">Explore</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="interactive-demos">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="eyebrow">Interactive Lab</p>
+          <h2>Mini Simulations in Vanilla JavaScript</h2>
+          <p>Try quick demos for pendulum motion, projectile trajectories, and wave dynamics.</p>
+        </div>
+
+        <div class="demo-grid">
+          <article class="demo-card" data-reveal>
+            <div class="demo-head">
+              <h3>Pendulum</h3>
+              <button class="mini-btn ripple-btn" id="pendulum-toggle" type="button">Pause</button>
+            </div>
+            <canvas id="pendulum-canvas" width="460" height="240" aria-label="Pendulum simulation"></canvas>
+            <p>Simple harmonic motion with damping and gravity.</p>
+          </article>
+
+          <article class="demo-card" data-reveal>
+            <div class="demo-head">
+              <h3>Projectile Motion</h3>
+              <button class="mini-btn ripple-btn" id="projectile-reset" type="button">Reset</button>
+            </div>
+            <canvas id="projectile-canvas" width="460" height="240" aria-label="Projectile simulation"></canvas>
+            <p>Click anywhere on the canvas to launch a ball in an arc.</p>
+          </article>
+
+          <article class="demo-card" data-reveal>
+            <div class="demo-head">
+              <h3>Wave Animation</h3>
+              <label class="mini-control" for="wave-speed">Speed
+                <input id="wave-speed" type="range" min="0.4" max="2.4" value="1.2" step="0.1">
+              </label>
+            </div>
+            <canvas id="wave-canvas" width="460" height="240" aria-label="Wave simulation"></canvas>
+            <p>Adjust propagation speed to see frequency-time behavior.</p>
+          </article>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Rayhan Physics • Built with HTML, CSS, Vanilla JavaScript, and Three.js</p>
+      <a class="footer-link" href="../index.html">Back to Topics</a>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script src="script.js" defer></script>
 </body>
 </html>

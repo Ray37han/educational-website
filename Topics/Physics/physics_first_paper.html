@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Physics First Paper chapters with animated concept cards.">
+  <title>Physics First Paper | Rayhan Labs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="physics_first_paper.css">
+</head>
+<body>
+  <header class="navbar" id="top">
+    <div class="nav-shell">
+      <a class="logo" href="index.html">Rayhan Physics</a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="../../index.html">Home</a>
+        <a href="index.html">Physics Index</a>
+        <a href="#chapters">First Paper</a>
+        <a href="#note">Note</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="hero-content" data-reveal>
+      <p class="eyebrow">Physics First Paper</p>
+      <h1>10 Chapters, Animated by Concept</h1>
+      <p>Based on your provided chapter list. Each chapter card includes a concept-specific motion visual.</p>
+      <a class="btn ripple-btn" href="#chapters">Open Chapters</a>
+    </div>
+  </section>
+
+  <main>
+    <section class="section" id="chapters">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="eyebrow">First Paper Chapters</p>
+          <h2>Chapters 01 to 10</h2>
+          <p>These chapter names are mapped from your uploaded index images, then visualized with lightweight Three.js animations.</p>
+        </div>
+
+        <div class="chapter-grid">
+          <article class="chapter-card" data-reveal>
+            <div class="chapter-canvas-wrap"><canvas id="ch1" class="chapter-canvas" aria-label="Chapter 1 animation"></canvas></div>
+            <p class="chapter-no">Chapter 01</p>
+            <h3>Physical World and Measurement</h3>
+            <p>Scientific notation, units, dimensions, and precision in measurement.</p>
+            <a class="chapter-btn ripple-btn" href="#">Explore</a>
+          </article>
+
+          <article class="chapter-card" data-reveal>
+            <div class="chapter-canvas-wrap"><canvas id="ch2" class="chapter-canvas" aria-label="Chapter 2 animation"></canvas></div>
+            <p class="chapter-no">Chapter 02</p>
+            <h3>Vectors</h3>
+            <p>Vector resolution, addition, subtraction, and relative velocity systems.</p>
+            <a class="chapter-btn ripple-btn" href="vector_full_chapter_hsc_bangla.html">Explore</a>
+          </article>
+
+          <article class="chapter-card" data-reveal>
+            <div class="chapter-canvas-wrap"><canvas id="ch3" class="chapter-canvas" aria-label="Chapter 3 animation"></canvas></div>
+            <p class="chapter-no">Chapter 03</p>
+            <h3>Kinematics</h3>
+            <p>Position, displacement, velocity, acceleration, and trajectory modeling.</p>
+            <a class="chapter-btn ripple-btn" href="#">Explore</a>
+          </article>
+
+          <article class="chapter-card" data-reveal>
+            <div class="chapter-canvas-wrap"><canvas id="ch4" class="chapter-canvas" aria-label="Chapter 4 animation"></canvas></div>
+            <p class="chapter-no">Chapter 04</p>
+            <h3>Newtonian Mechanics</h3>
+            <p>Force, inertia, momentum transfer, and Newton's laws in action.</p>
+            <a class="chapter-btn ripple-btn" href="#">Explore</a>
+          </article>
+
+          <article class="chapter-card" data-reveal>
+            <div class="chapter-canvas-wrap"><canvas id="ch5" class="chapter-canvas" aria-label="Chapter 5 animation"></canvas></div>
+            <p class="chapter-no">Chapter 05</p>
+            <h3>Work, Power and Energy</h3>
+            <p>Energy transfer, conversion, and rate-based mechanical performance.</p>
+            <a class="chapter-btn ripple-btn" href="#">Explore</a>
+          </article>
+
+          <article class="chapter-card" data-reveal>
+            <div class="chapter-canvas-wrap"><canvas id="ch6" class="chapter-canvas" aria-label="Chapter 6 animation"></canvas></div>
+            <p class="chapter-no">Chapter 06</p>
+            <h3>Gravitation</h3>
+            <p>Universal gravitation, field interaction, and orbital behavior.</p>
+            <a class="chapter-btn ripple-btn" href="gravity_gravitation_hsc_note.html">Explore</a>
+          </article>
+
+          <article class="chapter-card" data-reveal>
+            <div class="chapter-canvas-wrap"><canvas id="ch7" class="chapter-canvas" aria-label="Chapter 7 animation"></canvas></div>
+            <p class="chapter-no">Chapter 07</p>
+            <h3>Structural Properties of Matter</h3>
+            <p>Elasticity, stress-strain behavior, viscosity, and material response.</p>
+            <a class="chapter-btn ripple-btn" href="#">Explore</a>
+          </article>
+
+          <article class="chapter-card" data-reveal>
+            <div class="chapter-canvas-wrap"><canvas id="ch8" class="chapter-canvas" aria-label="Chapter 8 animation"></canvas></div>
+            <p class="chapter-no">Chapter 08</p>
+            <h3>Periodic Motion</h3>
+            <p>Simple harmonic motion, oscillators, springs, and energy exchange.</p>
+            <a class="chapter-btn ripple-btn" href="#">Explore</a>
+          </article>
+
+          <article class="chapter-card" data-reveal>
+            <div class="chapter-canvas-wrap"><canvas id="ch9" class="chapter-canvas" aria-label="Chapter 9 animation"></canvas></div>
+            <p class="chapter-no">Chapter 09</p>
+            <h3>Waves</h3>
+            <p>Propagation, superposition, frequency response, and wave mechanics.</p>
+            <a class="chapter-btn ripple-btn" href="#">Explore</a>
+          </article>
+
+          <article class="chapter-card" data-reveal>
+            <div class="chapter-canvas-wrap"><canvas id="ch10" class="chapter-canvas" aria-label="Chapter 10 animation"></canvas></div>
+            <p class="chapter-no">Chapter 10</p>
+            <h3>Ideal Gas and Kinetic Theory</h3>
+            <p>Molecular collision model, gas laws, pressure, and thermal motion.</p>
+            <a class="chapter-btn ripple-btn" href="#">Explore</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section note-section" id="note">
+      <div class="container note-box" data-reveal>
+        <p class="eyebrow">Next Step</p>
+        <h2>Physics 2nd Paper Chapters</h2>
+        <p>Share the 2nd paper chapter images and I will add those chapter cards with matching animations in the same style.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Rayhan Physics • First Paper Interactive Index</p>
+      <a class="footer-link" href="index.html">Back to Physics Index</a>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script src="physics_first_paper.js" defer></script>
+</body>
+</html>
