@@ -1,0 +1,1920 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Bengali:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap');
+:root{
+  --font-sans:'Space Grotesk','Noto Sans Bengali','Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code',monospace;
+  --color-text-primary:#eaf5ff;
+  --color-text-secondary:#abc2db;
+  --color-text-tertiary:#7c97b6;
+  --color-text-info:#d1e6ff;
+  --color-text-success:#caf8df;
+  --color-text-warning:#ffe0ad;
+  --color-background-primary:rgba(11,25,46,.78);
+  --color-background-secondary:rgba(20,39,69,.78);
+  --color-background-info:rgba(32,84,152,.32);
+  --color-background-success:rgba(33,96,71,.34);
+  --color-background-warning:rgba(132,89,24,.34);
+  --color-border-tertiary:rgba(165,206,255,.26);
+  --color-border-secondary:rgba(145,187,240,.34);
+  --color-border-info:rgba(109,183,255,.55);
+  --color-border-success:rgba(92,214,162,.52);
+  --color-border-warning:rgba(255,186,88,.52);
+  --border-radius-md:12px;
+  --border-radius-lg:16px;
+  --scroll-progress:0;
+  --scroll-boost:1;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:var(--font-sans);
+  min-height:100vh;
+  overflow-x:hidden;
+  background:
+    radial-gradient(circle at 16% 12%, #213f74 0%, transparent 38%),
+    radial-gradient(circle at 88% 8%, #294e78 0%, transparent 42%),
+    radial-gradient(circle at 50% 120%, #061226 0%, #030813 45%, #02050b 100%);
+  color:var(--color-text-primary);
+}
+.space-scene{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.star-layer{position:absolute;inset:-18%;will-change:transform;opacity:.9}
+.stars-far{background-image:radial-gradient(1px 1px at 8% 14%,rgba(255,255,255,.54),transparent),radial-gradient(1px 1px at 31% 62%,rgba(182,220,255,.5),transparent),radial-gradient(1px 1px at 66% 28%,rgba(255,255,255,.55),transparent),radial-gradient(1px 1px at 79% 76%,rgba(162,206,255,.45),transparent),radial-gradient(1px 1px at 48% 90%,rgba(255,255,255,.5),transparent);background-size:460px 460px}
+.stars-mid{background-image:radial-gradient(1.5px 1.5px at 12% 22%,rgba(255,255,255,.72),transparent),radial-gradient(1.5px 1.5px at 24% 70%,rgba(160,215,255,.65),transparent),radial-gradient(1.5px 1.5px at 53% 42%,rgba(255,255,255,.62),transparent),radial-gradient(1.5px 1.5px at 72% 18%,rgba(195,227,255,.7),transparent),radial-gradient(1.5px 1.5px at 89% 60%,rgba(255,255,255,.6),transparent);background-size:320px 320px}
+.stars-near{background-image:radial-gradient(2px 2px at 20% 24%,rgba(255,255,255,.86),transparent),radial-gradient(2px 2px at 44% 54%,rgba(180,226,255,.82),transparent),radial-gradient(2px 2px at 69% 34%,rgba(255,255,255,.78),transparent),radial-gradient(2px 2px at 84% 74%,rgba(202,235,255,.84),transparent);background-size:260px 260px}
+.space-grid{position:absolute;inset:-20%;background-image:linear-gradient(rgba(88,138,190,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(88,138,190,.08) 1px,transparent 1px);background-size:62px 62px;transform:perspective(600px) rotateX(64deg) translateY(54%);opacity:.32}
+.space-planet{position:absolute;border-radius:50%;filter:drop-shadow(0 0 24px rgba(110,172,255,.45));opacity:.9}
+.planet-main{width:170px;height:170px;right:4vw;top:9vh;background:radial-gradient(circle at 30% 30%,#9ce4ff 0%,#4f8ec2 38%,#20385f 74%,#10213b 100%)}
+.planet-alt{width:92px;height:92px;left:7vw;bottom:12vh;background:radial-gradient(circle at 35% 35%,#ffe5b5 0%,#dba96f 45%,#6a3f2c 100%)}
+.orbit-path{position:absolute;right:2vw;top:6vh;width:240px;height:240px;border:1px dashed rgba(180,221,255,.35);border-radius:50%}
+.app{position:relative;z-index:4;max-width:min(980px,100% - 20px);margin:0 auto;padding:18px 0 30px}
+.chapter-title{font-size:clamp(22px,3vw,30px);font-weight:700;letter-spacing:.02em;color:var(--color-text-primary);text-align:center;padding:22px 0 10px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:12px;text-shadow:0 0 18px rgba(115,183,255,.35)}
+.chapter-sub{font-size:clamp(13px,1.6vw,15px);color:var(--color-text-secondary);text-align:center;margin-bottom:20px}
+.topic-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;position:sticky;top:10px;z-index:9;padding:10px;border:1px solid rgba(135,192,255,.22);border-radius:14px;background:rgba(8,22,41,.72);backdrop-filter:blur(9px)}
+.topic-btn{font-size:12px;padding:7px 13px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:rgba(25,48,82,.65);color:var(--color-text-secondary);cursor:pointer;transition:all .2s;line-height:1.3}
+.topic-btn:hover{transform:translateY(-1px);border-color:rgba(167,221,255,.56);color:#e3f1ff}
+.topic-btn.active{background:var(--color-background-info);border-color:var(--color-border-info);color:var(--color-text-info);font-weight:600;box-shadow:0 0 20px rgba(94,163,235,.22) inset}
+.topic-panel{display:none}
+.topic-panel.active{display:block;animation:panelIn .32s ease}
+.concept-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:16px;margin-bottom:16px;backdrop-filter:blur(2px);overflow:hidden}
+.concept-title{font-size:17px;font-weight:600;color:var(--color-text-primary);margin-bottom:10px;padding-bottom:8px;border-bottom:0.5px solid var(--color-border-tertiary);line-height:1.4;word-break:break-word}
+.formula-box,.note,.result-box,.example-box,.warn-box{overflow-wrap:anywhere;line-height:1.62}
+.formula-box{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:10px 14px;margin:8px 0;font-size:15px;color:var(--color-text-primary);font-family:var(--font-mono)}
+.note{font-size:13px;color:var(--color-text-secondary);margin:6px 0}
+.sim-area{position:relative;background:linear-gradient(180deg,rgba(15,31,54,.9) 0%,rgba(13,28,49,.96) 100%);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);margin:12px 0;overflow:hidden;isolation:isolate}
+.sim-canvas{display:block;width:100%;height:auto;max-height:340px;background:linear-gradient(180deg,rgba(7,17,32,.92),rgba(7,15,28,.72) 62%,rgba(17,34,58,.66) 100%)}
+.vector-overlay{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity .2s ease}
+.vector-overlay.active{opacity:1}
+.ctrl-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-top:0.5px solid var(--color-border-tertiary);flex-wrap:wrap}
+.ctrl-label{font-size:12px;color:var(--color-text-secondary);flex:0 0 120px;line-height:1.4}
+.ctrl-row input[type=range]{flex:1 1 210px;min-width:150px;accent-color:#5ea8ff}
+.ctrl-val{font-size:12px;font-weight:600;color:var(--color-text-primary);min-width:72px;text-align:right;margin-left:auto}
+.ctrl-btn{font-size:12px;padding:6px 14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:rgba(14,35,61,.78);color:var(--color-text-primary);cursor:pointer}
+.ctrl-btn:hover{background:rgba(20,45,77,.85)}
+.result-box{background:var(--color-background-info);border:0.5px solid var(--color-border-info);border-radius:var(--border-radius-md);padding:8px 12px;margin:8px 0;font-size:13px;color:var(--color-text-info)}
+.example-box{background:var(--color-background-success);border:0.5px solid var(--color-border-success);border-radius:var(--border-radius-md);padding:10px 14px;margin:8px 0;font-size:13px;color:var(--color-text-success)}
+.warn-box{background:var(--color-background-warning);border:0.5px solid var(--color-border-warning);border-radius:var(--border-radius-md);padding:8px 12px;margin:8px 0;font-size:12px;color:var(--color-text-warning)}
+.section-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-tertiary);margin:12px 0 6px}
+table.ftable{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+table.ftable th{background:var(--color-background-secondary);color:var(--color-text-secondary);padding:6px 8px;text-align:left;font-weight:600;border:0.5px solid var(--color-border-tertiary)}
+table.ftable td{padding:6px 8px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.sim-modal{position:fixed;inset:0;z-index:25;background:rgba(2,8,18,.74);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px}
+.sim-modal.active{display:flex}
+.sim-modal-shell{width:min(820px,100%);background:rgba(9,24,44,.95);border:1px solid rgba(140,198,255,.3);border-radius:18px;box-shadow:0 22px 70px rgba(0,0,0,.55);padding:16px}
+.sim-modal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.sim-modal-title{font-size:16px;font-weight:600;color:var(--color-text-primary)}
+.sim-close{border:1px solid rgba(148,199,255,.45);background:rgba(17,43,74,.9);color:var(--color-text-primary);width:34px;height:34px;border-radius:10px;cursor:pointer}
+.mini-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.mini-tab{padding:7px 12px;border:1px solid rgba(140,198,255,.4);border-radius:10px;background:rgba(13,34,59,.85);color:var(--color-text-secondary);cursor:pointer}
+.mini-tab.active{background:rgba(53,112,184,.5);color:#e9f4ff;border-color:rgba(170,220,255,.65)}
+.mini-canvas{display:block;width:100%;height:260px;border-radius:12px;border:1px solid rgba(131,187,246,.3);background:radial-gradient(circle at 50% 20%,rgba(25,59,106,.62) 0%,rgba(8,18,34,.96) 100%);margin-bottom:12px}
+.mini-row{padding-inline:0}
+.mini-row.hide{display:none}
+.mini-info{font-size:12px;color:var(--color-text-info);margin-left:auto}
+@media (max-width:768px){
+  .app{max-width:calc(100% - 14px)}
+  .topic-nav{top:6px;padding:8px}
+  .ctrl-label{flex:1 1 100%}
+  .ctrl-row input[type=range]{flex:1 1 100%;min-width:100%}
+  .ctrl-val{min-width:64px}
+  .chapter-title{padding-top:16px}
+  .planet-main{width:120px;height:120px;right:-16px;top:11vh;opacity:.72}
+  .planet-alt{width:62px;height:62px;left:-12px;bottom:14vh;opacity:.66}
+  .mini-canvas{height:220px}
+}
+@media (max-width:640px){
+  table.ftable{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table.ftable tr{white-space:nowrap}
+}
+@keyframes panelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+</style>
+
+<div class="space-scene" aria-hidden="true">
+<div class="star-layer stars-far"></div>
+<div class="star-layer stars-mid"></div>
+<div class="star-layer stars-near"></div>
+<div class="space-grid"></div>
+<div class="space-planet planet-main"></div>
+<div class="space-planet planet-alt"></div>
+<div class="orbit-path"></div>
+</div>
+
+<div class="app">
+<div class="chapter-title">অধ্যায় ৮ — নিউটনিয়ান বলবিদ্যা</div>
+<div class="chapter-sub">ইঞ্জিনিয়ারিং কনসেপ্ট বুক · সম্পূর্ণ নোট ও সিমুলেশন</div>
+
+<div class="topic-nav">
+<button class="topic-btn active" onclick="showTopic('t1',this)">T-01 নিউটনের ২য় সূত্র</button>
+<button class="topic-btn" onclick="showTopic('t2',this)">T-02 ঘর্ষণ</button>
+<button class="topic-btn" onclick="showTopic('t3',this)">T-03 যুক্ত বস্তু</button>
+<button class="topic-btn" onclick="showTopic('t4',this)">T-04 লিফট</button>
+<button class="topic-btn" onclick="showTopic('t5',this)">T-05 বলের ঘাত</button>
+<button class="topic-btn" onclick="showTopic('t6',this)">T-06 ভরবেগ সংরক্ষণ</button>
+<button class="topic-btn" onclick="showTopic('t7',this)">T-07 সংঘর্ষ</button>
+<button class="topic-btn" onclick="showTopic('t8',this)">T-08 রকেট</button>
+<button class="topic-btn" onclick="showTopic('t9',this)">T-09 জড়তার ভ্রামক</button>
+<button class="topic-btn" onclick="showTopic('t10',this)">T-10 চক্রগতির ব্যাসার্ধ</button>
+<button class="topic-btn" onclick="showTopic('t11',this)">T-11 টর্ক</button>
+<button class="topic-btn" onclick="showTopic('t12',this)">T-12 কৌণিক ভরবেগ</button>
+<button class="topic-btn" onclick="showTopic('t13',this)">T-13 ঘূর্ণন গতিশক্তি</button>
+<button class="topic-btn" onclick="showTopic('t14',this)">T-14 অনুভূমিক বৃত্তাকার</button>
+<button class="topic-btn" onclick="showTopic('t15',this)">T-15 উল্লম্ব বৃত্তাকার</button>
+<button class="topic-btn" onclick="showTopic('t16',this)">T-16 রাস্তার ব্যাংকিং</button>
+<button class="topic-btn" onclick="showTopic('t17',this)">T-17 ভরকেন্দ্র</button>
+</div>
+
+<!-- T01 -->
+<div id="t1" class="topic-panel active">
+<div class="concept-card">
+<div class="concept-title">📐 T-01: নিউটনের দ্বিতীয় সূত্র</div>
+<div class="section-label">মূল সূত্র</div>
+<div class="formula-box">সাধারণ রূপ: F_net = dp/dt = d(mv)/dt</div>
+<div class="formula-box">ধ্রুব ভরের ক্ষেত্রে: F = ma</div>
+<div class="formula-box">পরিবর্তনশীল ভরের ক্ষেত্রে: F_ext = d(mv)/dt</div>
+<div class="formula-box">রকেট/জেটের ধাক্কার মান: T = v_rel * |dm/dt|</div>
+<div class="section-label">কেস বিশ্লেষণ</div>
+<table class="ftable">
+<tr><th>কেস</th><th>শর্ত</th><th>সূত্র</th></tr>
+<tr><td>ধ্রুব ভর</td><td>m = ধ্রুবক</td><td>F = ma</td></tr>
+<tr><td>পরিবর্তনশীল ভর</td><td>বালু পড়া, রকেট</td><td>F = d(mv)/dt</td></tr>
+</table>
+<div class="section-label">উদাহরণ (SUST'24-25)</div>
+<div class="example-box">4 kg বস্তুর উপর 8 N বল — অনুভূমিকের সাথে কোণে 1 ms⁻² ত্বরণ হবে?<br>
+সমাধান: F cosθ = ma → cosθ = ma/F = (4×1)/8 = 0.5 → θ = 60°</div>
+<div class="section-label">ইন্টারেক্টিভ সিমুলেশন</div>
+<div class="sim-area">
+<canvas id="c1" class="sim-canvas" height="200"></canvas>
+<div class="ctrl-row">
+<span class="ctrl-label">ভর m (kg)</span>
+<input type="range" min="1" max="20" value="5" id="s1m" oninput="updateT1()">
+<span class="ctrl-val" id="v1m">5 kg</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">বল F (N)</span>
+<input type="range" min="1" max="100" value="25" id="s1f" oninput="updateT1()">
+<span class="ctrl-val" id="v1f">25 N</span>
+</div>
+<div class="ctrl-row">
+<button class="ctrl-btn" onclick="runT1()">▶ চালাও</button>
+<button class="ctrl-btn" onclick="stopT1()">⏹ থামাও</button>
+<span class="ctrl-val" id="v1a" style="color:var(--color-text-info)">a = 5.0 ms⁻²</span>
+</div>
+</div>
+<div class="result-box" id="r1">F_net = ma → 25 = 5 × 5.0 → a = 5.0 ms⁻²</div>
+</div>
+</div>
+
+<!-- T02 -->
+<div id="t2" class="topic-panel">
+<div class="concept-card">
+<div class="concept-title">🔄 T-02: ঘর্ষণ বল</div>
+<div class="section-label">মূল সূত্র</div>
+<div class="formula-box">স্থিতি ঘর্ষণ: f_s ≤ μ_s·R (সর্বোচ্চ: f_s_max = μ_s·R)</div>
+<div class="formula-box">গতীয় ঘর্ষণ: f_k = μ_k·R</div>
+<div class="formula-box">μ_s = tanθ_s  (ঘর্ষণ কোণ θ থেকে)</div>
+<div class="formula-box">μ_k = tanθ_k</div>
+<table class="ftable">
+<tr><th>কেস</th><th>শর্ত</th><th>ঘর্ষণ বল</th><th>অবস্থা</th></tr>
+<tr><td>১</td><td>F_app &lt; f_s_max</td><td>f_s = F_app</td><td>স্থির</td></tr>
+<tr><td>২</td><td>F_app = f_s_max</td><td>f_s = f_s_max</td><td>গতিশীল হওয়ার উপক্রম</td></tr>
+<tr><td>৩</td><td>F_app > f_s_max</td><td>f_k = μ_k·R</td><td>গতিশীল</td></tr>
+</table>
+<div class="section-label">তলের উপর বস্তু — বল বিশ্লেষণ</div>
+<div class="note">তলের লম্ব বলসমূহ যোগ করো: R = mg·cosθ (তির্যক তলে)<br>তলের সমান্তরাল: F - f_k - mg·sinθ = ma</div>
+<div class="sim-area">
+<canvas id="c2" class="sim-canvas" height="220"></canvas>
+<div class="ctrl-row">
+<span class="ctrl-label">μ_s</span>
+<input type="range" min="10" max="80" value="40" id="s2us" oninput="updateT2()">
+<span class="ctrl-val" id="v2us">0.40</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">প্রয়োগ বল F (N)</span>
+<input type="range" min="0" max="100" value="20" id="s2f" oninput="updateT2()">
+<span class="ctrl-val" id="v2f">20 N</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">ভর m (kg)</span>
+<input type="range" min="1" max="20" value="5" id="s2m" oninput="updateT2()">
+<span class="ctrl-val" id="v2m">5 kg</span>
+</div>
+</div>
+<div class="result-box" id="r2">গণনা হচ্ছে...</div>
+<div class="example-box">KUET'10-11: 500 kg গাড়ি 60 kmh⁻¹ → ব্রেক করে 50m-এ থামে, ব্রেকজনিত বল?<br>
+v=60/3.6 ms⁻¹, a=v²/2s = (60/3.6)²/(2×50) = 25/9 ms⁻²<br>
+ma = F_k + F_b → F_b = 25/9 × 500 − 100 ≈ 1290 N</div>
+</div>
+</div>
+
+<!-- T03 -->
+<div id="t3" class="topic-panel">
+<div class="concept-card">
+<div class="concept-title">🔗 T-03: যুক্ত বস্তুর ত্বরণ</div>
+<div class="note">দুটি বস্তুকে সংযোগকারী সুতায় একটি নির্দিষ্ট টান বল বিদ্যমান থাকে।<br>ঘর্ষণ না থাকলে একই টান সবসময়।</div>
+<div class="section-label">কেস-১: একই সরলরেখায় ৩টি বস্তু</div>
+<div class="formula-box">F = (m1 + m2 + m3)a</div>
+<div class="formula-box">a = F/(m1 + m2 + m3)</div>
+<div class="formula-box">T1 = (m2 + m3)a = [(m2 + m3)/(m1 + m2 + m3)]F</div>
+<div class="formula-box">T2 = m3a = [m3/(m1 + m2 + m3)]F</div>
+<div class="section-label">কেস-২: অ্যাটউড মেশিন (Atwood's Machine)</div>
+<div class="formula-box">a = (M - m)/(M + m) * g</div>
+<div class="formula-box">T = 2Mmg/(M+m)</div>
+<div class="formula-box">পুলির উপর ভার = 2T = 4Mmg/(M+m)</div>
+<div class="sim-area">
+<canvas id="c3" class="sim-canvas" height="240"></canvas>
+<div class="ctrl-row">
+<span class="ctrl-label">ভর M (kg)</span>
+<input type="range" min="2" max="20" value="10" id="s3M" oninput="updateT3()">
+<span class="ctrl-val" id="v3M">10 kg</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">ভর m (kg)</span>
+<input type="range" min="1" max="18" value="5" id="s3m" oninput="updateT3()">
+<span class="ctrl-val" id="v3m">5 kg</span>
+</div>
+<div class="ctrl-row">
+<button class="ctrl-btn" onclick="runT3()">▶ চালাও</button>
+<button class="ctrl-btn" onclick="stopT3()">⏹ থামাও</button>
+</div>
+</div>
+<div class="result-box" id="r3">হিসাব দেখুন...</div>
+</div>
+</div>
+
+<!-- T04 -->
+<div id="t4" class="topic-panel">
+<div class="concept-card">
+<div class="concept-title">🛗 T-04: লিফটের মধ্যে বস্তুর আপাত ওজন</div>
+<div class="section-label">লিফটের বিভিন্ন অবস্থা</div>
+<table class="ftable">
+<tr><th>অবস্থা</th><th>ত্বরণ</th><th>লম্বচাপ R</th></tr>
+<tr><td>উপরে উঠছে (ত্বরণ উপরে)</td><td>+a</td><td>R = m(g+a)</td></tr>
+<tr><td>নিচে নামছে (ত্বরণ নিচে)</td><td>-a</td><td>R = m(g-a)</td></tr>
+<tr><td>সমবেগে (a=0)</td><td>0</td><td>R = mg</td></tr>
+<tr><td>মুক্ত পতন (g ত্বরণে নিচে)</td><td>g</td><td>R = 0 (ভারশূন্য)</td></tr>
+</table>
+<div class="formula-box">লিফট উপরে যাচ্ছে: F−mg = ma → R = m(g+a)</div>
+<div class="formula-box">লিফট নিচে যাচ্ছে: mg−F = ma → R = m(g−a)</div>
+<div class="sim-area">
+<canvas id="c4" class="sim-canvas" height="220"></canvas>
+<div class="ctrl-row">
+<span class="ctrl-label">ভর m (kg)</span>
+<input type="range" min="10" max="200" value="70" id="s4m" oninput="updateT4()">
+<span class="ctrl-val" id="v4m">70 kg</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">ত্বরণ a (ms⁻²)</span>
+<input type="range" min="-9" max="9" value="3" id="s4a" step="1" oninput="updateT4()">
+<span class="ctrl-val" id="v4a">+3 ms⁻²</span>
+</div>
+</div>
+<div class="result-box" id="r4">লম্বচাপ গণনা হচ্ছে...</div>
+<div class="example-box">CKRUET'23-24: ছাত্রের ওজন 950 N → লিফট উঠতে 1250 N, নামতে 590 N<br>
+উঠতে: a = W'/m − g = 1250/96.94 − 9.8 ≈ 3.1 ms⁻²<br>
+নামতে: a = g − W'/m = 9.8 − 590/96.94 ≈ 3.72 ms⁻²</div>
+</div>
+</div>
+
+<!-- T05 -->
+<div id="t5" class="topic-panel">
+<div class="concept-card">
+<div class="concept-title">💥 T-05: বলের ঘাত (Impulse)</div>
+<div class="section-label">মূল সূত্র</div>
+<div class="formula-box">J = integral(F dt) = delta p = m(v - u)</div>
+<div class="formula-box">বলের ঘাত = ভরবেগের পরিবর্তন</div>
+<div class="formula-box">ধ্রুব বলের ক্ষেত্রে: J = Ft</div>
+<div class="formula-box">বল-সময় গ্রাফের ক্ষেত্রফল = বলের ঘাত</div>
+<div class="section-label">পানির পাইপ থেকে বল (Advanced)</div>
+<div class="formula-box">F = Av²ρ = πr²v²ρ (ক্রস সেকশন A, বেগ v, ঘনত্ব ρ)</div>
+<div class="sim-area">
+<canvas id="c5" class="sim-canvas" height="200"></canvas>
+<div class="ctrl-row">
+<span class="ctrl-label">প্রাথমিক বেগ u (ms⁻¹)</span>
+<input type="range" min="0" max="30" value="15" id="s5u" oninput="updateT5()">
+<span class="ctrl-val" id="v5u">15</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">চূড়ান্ত বেগ v (ms⁻¹)</span>
+<input type="range" min="-30" max="30" value="-15" id="s5v" oninput="updateT5()">
+<span class="ctrl-val" id="v5v">-15</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">ভর m (kg)</span>
+<input type="range" min="1" max="10" value="1" id="s5m" oninput="updateT5()">
+<span class="ctrl-val" id="v5m">1 kg</span>
+</div>
+</div>
+<div class="result-box" id="r5">বলের ঘাত = Δp</div>
+<div class="example-box">BUTEX'23-24: 15 ms⁻¹ বেগে বল → ব্যাটে 20 ms⁻¹ ফেরত, গতিশক্তি 8.75 J পরিবর্তিত<br>
+½m(20²−15²)=8.75 → m=0.1 kg; Δp = 0.1×(20−(−15)) = 3.5 kg·ms⁻¹</div>
+</div>
+</div>
+
+<!-- T06 -->
+<div id="t6" class="topic-panel">
+<div class="concept-card">
+<div class="concept-title">⚖️ T-06: ভরবেগের সংরক্ষণ সূত্র</div>
+<div class="section-label">মূল নীতি</div>
+<div class="note">সংরক্ষণশীলতা: বাহ্যিক লব্ধি বল শূন্য হলে মোট ভরবেগ অপরিবর্তিত থাকে।</div>
+<div class="formula-box">m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂ (একমাত্রিক)</div>
+<div class="formula-box">m₁u⃗₁ + m₂u⃗₂ = m₁v⃗₁ + m₂v⃗₂ (দ্বিমাত্রিক)</div>
+<div class="section-label">দ্বিমাত্রিক গতির জন্য x ও y আলাদাভাবে</div>
+<div class="formula-box">x-অক্ষ: m₁u₁cosθ₁ + m₂u₂cosθ₂ = m₁v₁cosφ₁ + m₂v₂cosφ₂</div>
+<div class="formula-box">y-অক্ষ: m₁u₁sinθ₁ + m₂u₂sinθ₂ = m₁v₁sinφ₁ + m₂v₂sinφ₂</div>
+<div class="sim-area">
+<canvas id="c6" class="sim-canvas" height="200"></canvas>
+<div class="ctrl-row">
+<span class="ctrl-label">m₁ (kg)</span>
+<input type="range" min="1" max="10" value="3" id="s6m1" oninput="updateT6()">
+<span class="ctrl-val" id="v6m1">3</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">m₂ (kg)</span>
+<input type="range" min="1" max="10" value="5" id="s6m2" oninput="updateT6()">
+<span class="ctrl-val" id="v6m2">5</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">u₁ (ms⁻¹)</span>
+<input type="range" min="1" max="20" value="8" id="s6u1" oninput="updateT6()">
+<span class="ctrl-val" id="v6u1">8</span>
+</div>
+<div class="ctrl-row">
+<button class="ctrl-btn" onclick="runT6()">▶ সংঘর্ষ</button>
+<button class="ctrl-btn" onclick="stopT6()">⏹ রিসেট</button>
+</div>
+</div>
+<div class="result-box" id="r6">হিসাব দেখুন</div>
+</div>
+</div>
+
+<!-- T07 -->
+<div id="t7" class="topic-panel">
+<div class="concept-card">
+<div class="concept-title">💢 T-07: সংঘর্ষ (Collision)</div>
+<div class="section-label">দুই প্রকার সংঘর্ষ</div>
+<table class="ftable">
+<tr><th>প্রকার</th><th>গতিশক্তি</th><th>ভরবেগ</th></tr>
+<tr><td>স্থিতিস্থাপক</td><td>সংরক্ষিত</td><td>সংরক্ষিত</td></tr>
+<tr><td>অস্থিতিস্থাপক</td><td>সংরক্ষিত নয়</td><td>সংরক্ষিত</td></tr>
+</table>
+<div class="warn-box">উভয় প্রকার সংঘর্ষেই ভরবেগের সংরক্ষণ সূত্র প্রযোজ্য।</div>
+<div class="section-label">একমাত্রিক স্থিতিস্থাপক সংঘর্ষের সূত্র</div>
+<div class="formula-box">v1 = [(m1 - m2)/(m1 + m2)]u1 + [2m2/(m1 + m2)]u2</div>
+<div class="formula-box">v2 = [2m1/(m1 + m2)]u1 + [(m2 - m1)/(m1 + m2)]u2</div>
+<div class="formula-box">e = (v2 - v1)/(u1 - u2), এবং স্থিতিস্থাপকে e = 1 => u1 - u2 = v2 - v1</div>
+<div class="sim-area">
+<canvas id="c7" class="sim-canvas" height="160"></canvas>
+<div class="ctrl-row">
+<span class="ctrl-label">m₁ (kg)</span>
+<input type="range" min="1" max="10" value="4" id="s7m1" oninput="drawT7()">
+<span class="ctrl-val" id="v7m1">4</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">m₂ (kg)</span>
+<input type="range" min="1" max="10" value="2" id="s7m2" oninput="drawT7()">
+<span class="ctrl-val" id="v7m2">2</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">u₁ (ms⁻¹)</span>
+<input type="range" min="1" max="20" value="6" id="s7u1" oninput="drawT7()">
+<span class="ctrl-val" id="v7u1">6</span>
+</div>
+<div class="ctrl-row">
+<button class="ctrl-btn" onclick="animT7()">▶ সংঘর্ষ দেখাও</button>
+</div>
+</div>
+<div class="result-box" id="r7">হিসাব করুন</div>
+</div>
+</div>
+
+<!-- T08 -->
+<div id="t8" class="topic-panel">
+<div class="concept-card">
+<div class="concept-title">🚀 T-08: রকেটের গতি</div>
+<div class="section-label">রকেটের সূত্রসমূহ</div>
+<div class="formula-box">উর্ধ্বমুখী ধাক্কা: F_t = v_r(dm/dt)</div>
+<div class="formula-box">রকেটের ত্বরণ: a = (1/m)·v_r(dm/dt)</div>
+<div class="formula-box">মহাশূন্যে রকেটের বেগ: v = v₀ + v_r·ln(m₀/m)</div>
+<div class="formula-box">ভূ-পৃষ্ঠে রকেটের বেগ: v = v₀ + v_r·ln(m₀/m) − gt</div>
+<div class="formula-box">লম্বচাপ: F = v_r(dm/dt) − mg (উড্ডয়নের সময়)</div>
+<div class="section-label">নিক্ষেপের সময় লম্বিক বল</div>
+<div class="formula-box">F_net = উর্ধ্বমুখী ধাক্কা − রকেটের ওজন</div>
+<div class="sim-area">
+<canvas id="c8" class="sim-canvas" height="220"></canvas>
+<div class="ctrl-row">
+<span class="ctrl-label">v_r (ms⁻¹)</span>
+<input type="range" min="500" max="5000" value="3000" step="100" id="s8vr" oninput="updateT8()">
+<span class="ctrl-val" id="v8vr">3000</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">dm/dt (kgs⁻¹)</span>
+<input type="range" min="10" max="500" value="200" step="10" id="s8dm" oninput="updateT8()">
+<span class="ctrl-val" id="v8dm">200</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">প্রাথমিক ভর m₀ (kg)</span>
+<input type="range" min="1000" max="50000" value="20000" step="1000" id="s8m0" oninput="updateT8()">
+<span class="ctrl-val" id="v8m0">20000</span>
+</div>
+<div class="ctrl-row">
+<button class="ctrl-btn" onclick="runT8()">▶ উড্ডয়ন</button>
+<button class="ctrl-btn" onclick="stopT8()">⏹ থামাও</button>
+</div>
+</div>
+<div class="result-box" id="r8">থ্রাস্ট ফোর্স গণনা হবে...</div>
+</div>
+</div>
+
+<!-- T09 -->
+<div id="t9" class="topic-panel">
+<div class="concept-card">
+<div class="concept-title">🌀 T-09: জড়তার ভ্রামক (Moment of Inertia)</div>
+<div class="section-label">মূল সংজ্ঞা ও সূত্র</div>
+<div class="formula-box">I = Σmr² = ∫r²dm</div>
+<div class="formula-box">লম্ব-অক্ষ উপপাদ্য: I_z = I_x + I_y</div>
+<div class="formula-box">সমান্তরাল-অক্ষ উপপাদ্য (Parallel axis): I = I_G + Mh²</div>
+<div class="section-label">বিভিন্ন বস্তুর I (সামগ্রিক ছক)</div>
+<table class="ftable">
+<tr><th>বস্তু</th><th>অক্ষ</th><th>জড়তার ভ্রামক I</th></tr>
+<tr><td>সরু ও সুষম দণ্ড</td><td>ভরকেন্দ্র দিয়ে লম্ব</td><td>ML²/12</td></tr>
+<tr><td>সরু ও সুষম দণ্ড</td><td>এক প্রান্ত দিয়ে লম্ব</td><td>ML²/3</td></tr>
+<tr><td>আয়তাকার পাতলা পাত</td><td>ভরকেন্দ্রগামী MN</td><td>Mb²/12</td></tr>
+<tr><td>আয়তাকার পাতলা পাত</td><td>ভরকেন্দ্রগামী PQ</td><td>Ml²/12</td></tr>
+<tr><td>আয়তাকার পাতলা পাত</td><td>পাতের উপর RS</td><td>M(l²+b²)/12</td></tr>
+<tr><td>পাতলা বৃত্তাকার চাকতি</td><td>ব্যাস (UV, MN)</td><td>Mr²/4</td></tr>
+<tr><td>পাতলা বৃত্তাকার চাকতি</td><td>ব্যাসের লম্ব (PQ)</td><td>Mr²/2</td></tr>
+<tr><td>পাতলা বৃত্তাকার চাকতি</td><td>স্পর্শক (RS)</td><td>5Mr²/4</td></tr>
+<tr><td>সিলিন্ডার</td><td>দৈর্ঘ্যের সমান্তরাল (PQ)</td><td>Mr²/2</td></tr>
+<tr><td>সিলিন্ডার</td><td>দৈর্ঘ্যের উপর RS</td><td>M(l²/12 + r²/4)</td></tr>
+<tr><td>নিরেট গোলক</td><td>ব্যাস (PQ, KL)</td><td>2Mr²/5</td></tr>
+<tr><td>নিরেট গোলক</td><td>স্পর্শক (MN)</td><td>7Mr²/5</td></tr>
+<tr><td>ফাঁপা গোলক</td><td>ব্যাস (KL, QP)</td><td>2Mr²/3</td></tr>
+<tr><td>বৃত্তাকার চাকতি / সিলিন্ডার</td><td>দৈর্ঘ্য AB সমান্তরাল</td><td>M(R²+r²)/2</td></tr>
+</table>
+<div class="sim-area">
+<canvas id="c9" class="sim-canvas" height="160"></canvas>
+<div class="ctrl-row">
+<span class="ctrl-label">ভর M (kg)</span>
+<input type="range" min="1" max="20" value="5" id="s9M" oninput="drawT9()">
+<span class="ctrl-val" id="v9M">5</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">ব্যাসার্ধ R (m)</span>
+<input type="range" min="10" max="100" value="50" id="s9R" oninput="drawT9()">
+<span class="ctrl-val" id="v9R">0.50</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">h দূরত্ব (m)</span>
+<input type="range" min="10" max="200" value="100" id="s9h" oninput="drawT9()">
+<span class="ctrl-val" id="v9h">1.00</span>
+</div>
+</div>
+<div class="result-box" id="r9">সমান্তরাল অক্ষ: I = I_G + Mh²</div>
+</div>
+</div>
+
+<!-- T10 -->
+<div id="t10" class="topic-panel">
+<div class="concept-card">
+<div class="concept-title">📏 T-10: চক্রগতির ব্যাসার্ধ (Radius of Gyration)</div>
+<div class="section-label">সংজ্ঞা ও সূত্র</div>
+<div class="note">কোনো বস্তুর সমগ্র ভর যদি একটি বিন্দুতে পুঞ্জীভূত করা হয় এবং সেই বিন্দু থেকে সেই অক্ষের দূরত্বকে চক্রগতির ব্যাসার্ধ বলে।</div>
+<div class="formula-box">I = MK²  →  K = √(I/M)</div>
+<div class="formula-box">K = √(∫r²dm / M)</div>
+<div class="section-label">সাধারণ উদাহরণ</div>
+<table class="ftable">
+<tr><th>বস্তু</th><th>অক্ষ</th><th>K</th></tr>
+<tr><td>নিরেট চাকতি (r)</td><td>কেন্দ্রগামী ও তলের লম্ব</td><td>r/√2</td></tr>
+<tr><td>নিরেট গোলক (r)</td><td>ব্যাস</td><td>r√(2/5)</td></tr>
+<tr><td>দণ্ড (L)</td><td>ভরকেন্দ্রগামী লম্ব</td><td>L/√12</td></tr>
+</table>
+<div class="sim-area">
+<canvas id="c10" class="sim-canvas" height="200"></canvas>
+<div class="ctrl-row">
+<span class="ctrl-label">I (kg·m²)</span>
+<input type="range" min="1" max="100" value="20" id="s10I" oninput="drawT10()">
+<span class="ctrl-val" id="v10I">20</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">M (kg)</span>
+<input type="range" min="1" max="20" value="5" id="s10M" oninput="drawT10()">
+<span class="ctrl-val" id="v10M">5</span>
+</div>
+</div>
+<div class="result-box" id="r10">K = √(I/M)</div>
+</div>
+</div>
+
+<!-- T11 -->
+<div id="t11" class="topic-panel">
+<div class="concept-card">
+<div class="concept-title">🔩 T-11: টর্ক (Torque / Moment of Force)</div>
+<div class="section-label">মূল সূত্র</div>
+<div class="formula-box">tau = r x F</div>
+<div class="formula-box">|tau| = rF sin(theta) (theta = r ও F-এর মধ্যবর্তী কোণ)</div>
+<div class="formula-box">সাধারণ রূপ: tau_net = dL/dt, স্থির অক্ষ ও ধ্রুব I হলে tau_net = I alpha</div>
+<div class="formula-box">ক্ষমতা: P = tau omega</div>
+<div class="formula-box">কৌণিক ভরবেগ: L = I omega (স্থির অক্ষের ঘূর্ণনের জন্য)</div>
+<div class="warn-box">সতর্কতা: Clockwise ঘূর্ণনের জন্য τ ঋণাত্মক, Anti-clockwise-এর জন্য ধনাত্মক।</div>
+<div class="sim-area">
+<canvas id="c11" class="sim-canvas" height="220"></canvas>
+<div class="ctrl-row">
+<span class="ctrl-label">বল F (N)</span>
+<input type="range" min="1" max="100" value="50" id="s11F" oninput="drawT11()">
+<span class="ctrl-val" id="v11F">50 N</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">দূরত্ব r (m)</span>
+<input type="range" min="1" max="50" value="10" id="s11r" oninput="drawT11()">
+<span class="ctrl-val" id="v11r">1.0 m</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">কোণ θ (°)</span>
+<input type="range" min="1" max="179" value="90" id="s11t" oninput="drawT11()">
+<span class="ctrl-val" id="v11t">90°</span>
+</div>
+</div>
+<div class="result-box" id="r11">τ = rF sinθ</div>
+</div>
+</div>
+
+<!-- T12 -->
+<div id="t12" class="topic-panel">
+<div class="concept-card">
+<div class="concept-title">🌀 T-12: কৌণিক ভরবেগ ও সংরক্ষণ সূত্র</div>
+<div class="section-label">মূল সূত্র</div>
+<div class="formula-box">L = r x p = m(r x v)</div>
+<div class="formula-box">|L| = mvr sin(theta)</div>
+<div class="formula-box">বৃত্তাকার পথে: L = mvr = m omega r^2 = I omega</div>
+<div class="formula-box">সংরক্ষণ সূত্র: I1 omega1 = I2 omega2 (বাহ্যিক টর্ক শূন্য হলে)</div>
+<div class="formula-box">mv1r1 = mv2r2 => v1r1 = v2r2</div>
+<div class="section-label">উদাহরণ (SUST'16-17)</div>
+<div class="example-box">ধাতুর গোলক 6g, সুতা 3m, 4 বার/সেকেন্ডে ঘোরে<br>
+L = Iω = mr² × 2πf = 0.006 × 9 × 2π × 4 ≈ 1.36 kgm²s⁻¹</div>
+<div class="sim-area">
+<canvas id="c12" class="sim-canvas" height="200"></canvas>
+<div class="ctrl-row">
+<span class="ctrl-label">প্রথম ব্যাসার্ধ r₁ (m)</span>
+<input type="range" min="1" max="10" value="6" step="1" id="s12r1" oninput="updateT12()">
+<span class="ctrl-val" id="v12r1">0.6</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">দ্বিতীয় ব্যাসার্ধ r₂ (m)</span>
+<input type="range" min="1" max="10" value="4" step="1" id="s12r2" oninput="updateT12()">
+<span class="ctrl-val" id="v12r2">0.4</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">প্রথম বেগ v₁ (ms⁻¹)</span>
+<input type="range" min="1" max="10" value="24" step="1" id="s12v1" oninput="updateT12()">
+<span class="ctrl-val" id="v12v1">2.4</span>
+</div>
+</div>
+<div class="result-box" id="r12">v₁r₁ = v₂r₂ → v₂ = ?</div>
+</div>
+</div>
+
+<!-- T13 -->
+<div id="t13" class="topic-panel">
+<div class="concept-card">
+<div class="concept-title">⚡ T-13: ঘূর্ণায়মান বস্তুর গতিশক্তি</div>
+<table class="ftable">
+<tr><th>বস্তু</th><th>ঘূর্ণন গতিশক্তি E_r</th><th>রৈখিক গতিশক্তি E_k</th><th>মোট</th></tr>
+<tr><td>নিজ অক্ষে ঘূর্ণমান</td><td>½Iω²</td><td>0</td><td>½Iω²</td></tr>
+<tr><td>গড়িয়ে চলা বস্তু</td><td>½Iω²</td><td>½mv²</td><td>½mv²(k²/r²+1)</td></tr>
+</table>
+<div class="formula-box">গড়িয়ে চলা: E_total = ½mv²(1 + k²/r²)</div>
+<div class="formula-box">কৌণিক ভরবেগ L ও গতিশক্তি: E = L²/(2I)</div>
+<div class="section-label">বিভিন্ন বস্তুর গড়ানো বেগ (উচ্চতা h থেকে)</div>
+<div class="formula-box">রিং: v_R = √(gh)</div>
+<div class="formula-box">নিরেট সিলিন্ডার: v_C = √(4gh/3)</div>
+<div class="formula-box">নিরেট গোলক: v_S = √(10gh/7)</div>
+<div class="note">∴ v_S > v_C > v_R → গোলক সবচেয়ে বেগে ভূমিতে পৌঁছায়</div>
+<div class="sim-area">
+<canvas id="c13" class="sim-canvas" height="200"></canvas>
+<div class="ctrl-row">
+<span class="ctrl-label">উচ্চতা h (m)</span>
+<input type="range" min="1" max="20" value="5" id="s13h" oninput="drawT13()">
+<span class="ctrl-val" id="v13h">5 m</span>
+</div>
+<div class="ctrl-row">
+<button class="ctrl-btn" onclick="runT13()">▶ গড়াতে দাও</button>
+<button class="ctrl-btn" onclick="stopT13()">⏹ রিসেট</button>
+</div>
+</div>
+<div class="result-box" id="r13">বেগ তুলনা করুন</div>
+</div>
+</div>
+
+<!-- T14 -->
+<div id="t14" class="topic-panel">
+<div class="concept-card">
+<div class="concept-title">🔄 T-14: অনুভূমিক তলে বৃত্তাকার গতি</div>
+<div class="section-label">কেন্দ্রমুখী বল</div>
+<div class="formula-box">F_c = mv²/r = mω²r</div>
+<div class="formula-box">অনুভূমিক বৃত্তে সুতার টান: T = F_c = mv²/r = mω²r</div>
+<div class="formula-box">সুতার টান: T = mv²/r = mω²r</div>
+<div class="warn-box">অনুভূমিক তলে বৃত্তাকার গতিতে g-এর কোনো ভূমিকা নেই।</div>
+<div class="section-label">শঙ্কু দোলক (Conical Pendulum)</div>
+<div class="formula-box">T·cosθ = mg → T = mg/cosθ</div>
+<div class="formula-box">T·sinθ = mv²/r = mω²r</div>
+<div class="formula-box">tanθ = v²/(rg) = ω²r/g</div>
+<div class="sim-area">
+<canvas id="c14" class="sim-canvas" height="220"></canvas>
+<div class="ctrl-row">
+<span class="ctrl-label">বেগ v (ms⁻¹)</span>
+<input type="range" min="1" max="30" value="10" id="s14v" oninput="updateT14()">
+<span class="ctrl-val" id="v14v">10</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">ব্যাসার্ধ r (m)</span>
+<input type="range" min="1" max="20" value="5" id="s14r" oninput="updateT14()">
+<span class="ctrl-val" id="v14r">5</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">ভর m (kg)</span>
+<input type="range" min="1" max="10" value="2" id="s14m" oninput="updateT14()">
+<span class="ctrl-val" id="v14m">2</span>
+</div>
+</div>
+<div class="result-box" id="r14">কেন্দ্রমুখী বল = mv²/r</div>
+</div>
+</div>
+
+<!-- T15 -->
+<div id="t15" class="topic-panel">
+<div class="concept-card">
+<div class="concept-title">🎡 T-15: উল্লম্ব তলে বৃত্তাকার গতি</div>
+<div class="section-label">তিনটি মূল বিন্দুতে টান</div>
+<table class="ftable">
+<tr><th>বিন্দু</th><th>θ</th><th>বেগ v</th><th>সুতার টান T</th></tr>
+<tr><td>সর্বোচ্চ A</td><td>180°</td><td>√(gR)</td><td>0 N</td></tr>
+<tr><td>মাঝ B</td><td>90°</td><td>√(3gR)</td><td>3mg</td></tr>
+<tr><td>সর্বনিম্ন C</td><td>0°</td><td>√(5gR)</td><td>6mg</td></tr>
+</table>
+<div class="formula-box">যেকোনো x বিন্দুতে: T_x = mg·cosθ + mv²/r</div>
+<div class="formula-box">সর্বোচ্চ বিন্দু A: T_A = mv²/r − mg</div>
+<div class="formula-box">সর্বনিম্ন বিন্দু C: T_C = mv²/r + mg</div>
+<div class="formula-box">T_A : T_C = 1 : 4 (DU'21-22)</div>
+<div class="sim-area">
+<canvas id="c15" class="sim-canvas" height="220"></canvas>
+<div class="ctrl-row">
+<span class="ctrl-label">ব্যাসার্ধ R (m)</span>
+<input type="range" min="1" max="10" value="3" id="s15R" oninput="updateT15()">
+<span class="ctrl-val" id="v15R">3 m</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">ভর m (kg)</span>
+<input type="range" min="1" max="10" value="2" id="s15m" oninput="updateT15()">
+<span class="ctrl-val" id="v15m">2 kg</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">কোণ θ (°)</span>
+<input type="range" min="0" max="360" value="0" id="s15t" oninput="updateT15()">
+<span class="ctrl-val" id="v15t">0°</span>
+</div>
+</div>
+<div class="result-box" id="r15">সুতার টান দেখুন</div>
+</div>
+</div>
+
+<!-- T16 -->
+<div id="t16" class="topic-panel">
+<div class="concept-card">
+<div class="concept-title">🛣️ T-16: রাস্তার ব্যাংকিং নির্ণয়</div>
+<div class="section-label">কেস-১: ঘর্ষণহীন রাস্তা</div>
+<div class="formula-box">tanθ = v²/(rg)</div>
+<div class="section-label">কেস-২: ঘর্ষণযুক্ত সমতল রাস্তা (সর্বোচ্চ বেগ)</div>
+<div class="formula-box">v ≤ √(μ_s·r·g)</div>
+<div class="section-label">কেস-৩: ব্যাংকিং ও ঘর্ষণ দুটোই</div>
+<div class="formula-box">v_max = √[rg(tanθ + μ_s)/(1 − μ_s·tanθ)]</div>
+<div class="formula-box">v_max = √[rg(tanθ + μ_s cosθ)/(cosθ − μ_s sinθ)]</div>
+<div class="section-label">রেলের ট্রেনের জন্য</div>
+<div class="formula-box">h = L·sinθ ≈ L·tanθ = Lv²/(rg)</div>
+<div class="sim-area">
+<canvas id="c16" class="sim-canvas" height="200"></canvas>
+<div class="ctrl-row">
+<span class="ctrl-label">বেগ v (kmh⁻¹)</span>
+<input type="range" min="10" max="200" value="60" step="5" id="s16v" oninput="updateT16()">
+<span class="ctrl-val" id="v16v">60</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">ব্যাসার্ধ r (m)</span>
+<input type="range" min="50" max="2000" value="500" step="50" id="s16r" oninput="updateT16()">
+<span class="ctrl-val" id="v16r">500</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">μ_s</span>
+<input type="range" min="0" max="60" value="30" id="s16mu" oninput="updateT16()">
+<span class="ctrl-val" id="v16mu">0.30</span>
+</div>
+</div>
+<div class="result-box" id="r16">ব্যাংকিং কোণ গণনা হবে...</div>
+</div>
+</div>
+
+<!-- T17 -->
+<div id="t17" class="topic-panel">
+<div class="concept-card">
+<div class="concept-title">⚖️ T-17: ভরকেন্দ্রের স্থানাঙ্ক</div>
+<div class="section-label">মূল সূত্র</div>
+<div class="formula-box">x_cm = (m₁x₁ + m₂x₂ + ... + mₙxₙ) / (m₁ + m₂ + ... + mₙ)</div>
+<div class="formula-box">y_cm = (m₁y₁ + m₂y₂ + ... + mₙyₙ) / (m₁ + m₂ + ... + mₙ)</div>
+<div class="section-label">উদাহরণ (CUET'14-15)</div>
+<div class="example-box">তিনটি ভর m₁=1kg (0,0), m₂=2kg (1,0), m₃=3kg (1/2, √3/2)<br>
+x_cm = (1×0+2×1+3×1/2)/(1+2+3) = 3.5/6 ✓<br>
+y_cm = (1×0+2×0+3×√3/2)/6 = 3√3/12 = √3/4 ✓</div>
+<div class="sim-area">
+<canvas id="c17" class="sim-canvas" height="220"></canvas>
+<div class="ctrl-row">
+<span class="ctrl-label">m₁ (kg)</span>
+<input type="range" min="1" max="10" value="2" id="s17m1" oninput="drawT17()">
+<span class="ctrl-val" id="v17m1">2</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">m₂ (kg)</span>
+<input type="range" min="1" max="10" value="5" id="s17m2" oninput="drawT17()">
+<span class="ctrl-val" id="v17m2">5</span>
+</div>
+<div class="ctrl-row">
+<span class="ctrl-label">m₃ (kg)</span>
+<input type="range" min="1" max="10" value="3" id="s17m3" oninput="drawT17()">
+<span class="ctrl-val" id="v17m3">3</span>
+</div>
+</div>
+<div class="result-box" id="r17">ভরকেন্দ্র গণনা হবে</div>
+</div>
+</div>
+
+</div>
+
+<div id="mini-sim-modal" class="sim-modal" aria-hidden="true">
+<div class="sim-modal-shell">
+<div class="sim-modal-head">
+<div class="sim-modal-title">Space-Time Mini Simulation Dock</div>
+<button type="button" class="sim-close" id="miniClose">✕</button>
+</div>
+<div class="mini-tabs">
+<button type="button" class="mini-tab active" data-mode="projectile">Projectile Motion</button>
+<button type="button" class="mini-tab" data-mode="orbit">Orbit Simulation</button>
+</div>
+<canvas id="miniCanvas" class="mini-canvas" height="260"></canvas>
+<div class="ctrl-row mini-row">
+<span class="ctrl-label" id="miniSpeedLabel">Speed</span>
+<input type="range" min="10" max="80" value="36" id="miniSpeed">
+<span class="ctrl-val" id="miniSpeedVal">36 ms⁻¹</span>
+</div>
+<div class="ctrl-row mini-row" id="miniAngleRow">
+<span class="ctrl-label" id="miniAngleLabel">Launch Angle</span>
+<input type="range" min="10" max="85" value="52" id="miniAngle">
+<span class="ctrl-val" id="miniAngleVal">52°</span>
+</div>
+<div class="ctrl-row mini-row">
+<button class="ctrl-btn" id="miniToggle" type="button">▶ চালাও</button>
+<button class="ctrl-btn" id="miniReset" type="button">⟲ রিসেট</button>
+<span class="mini-info" id="miniInfo">scroll boost: 1.00x</span>
+</div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script>
+const g=9.8;
+const motionState={scrollBoost:1,spaceRaf:null,resizeTimer:null};
+const vectorOverlayState=new Map();
+const miniState={mode:'projectile',running:false,raf:null,lastTs:0,time:0,orbitPhase:0,points:[]};
+const miniRefs={};
+
+function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+function motionBoost(){return motionState.scrollBoost;}
+
+function updateScrollBoost(){
+  const maxScroll=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
+  const ratio=clamp(window.scrollY/maxScroll,0,1);
+  motionState.scrollBoost=1+ratio*2.4;
+  document.documentElement.style.setProperty('--scroll-progress',ratio.toFixed(4));
+  document.documentElement.style.setProperty('--scroll-boost',motionState.scrollBoost.toFixed(3));
+}
+
+function animateSpace(){
+  const t=performance.now()*0.001;
+  const scroll=window.scrollY||0;
+  const far=document.querySelector('.stars-far');
+  const mid=document.querySelector('.stars-mid');
+  const near=document.querySelector('.stars-near');
+  const grid=document.querySelector('.space-grid');
+  const orbit=document.querySelector('.orbit-path');
+  if(far)far.style.transform='translate3d(0,'+(scroll*0.05+t*4).toFixed(2)+'px,0)';
+  if(mid)mid.style.transform='translate3d(0,'+(scroll*0.09+t*7).toFixed(2)+'px,0)';
+  if(near)near.style.transform='translate3d(0,'+(scroll*0.15+t*11).toFixed(2)+'px,0)';
+  if(grid)grid.style.transform='perspective(600px) rotateX(64deg) translateY('+(54+Math.sin(t*0.7+scroll*0.002)*1.2).toFixed(2)+'%)';
+  if(orbit)orbit.style.transform='rotate('+(t*6).toFixed(2)+'deg)';
+  motionState.spaceRaf=requestAnimationFrame(animateSpace);
+}
+
+function drawVectorArrow(ctx,x,y,dx,dy,label){
+  const tx=x+dx,ty=y+dy;
+  ctx.strokeStyle='rgba(155,212,255,0.95)';
+  ctx.fillStyle='rgba(196,231,255,0.95)';
+  ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(tx,ty);ctx.stroke();
+  const ang=Math.atan2(dy,dx);
+  const head=7;
+  ctx.beginPath();
+  ctx.moveTo(tx,ty);
+  ctx.lineTo(tx-head*Math.cos(ang-Math.PI/6),ty-head*Math.sin(ang-Math.PI/6));
+  ctx.lineTo(tx-head*Math.cos(ang+Math.PI/6),ty-head*Math.sin(ang+Math.PI/6));
+  ctx.closePath();ctx.fill();
+  ctx.font='11px '+getStyle('--font-mono');
+  ctx.fillText(label,tx+6,ty-6);
+}
+
+function resizeVectorOverlays(){
+  const dpr=window.devicePixelRatio||1;
+  document.querySelectorAll('.sim-area').forEach(sim=>{
+    const base=sim.querySelector('.sim-canvas');
+    const overlay=sim.querySelector('.vector-overlay');
+    if(!base||!overlay)return;
+    const bRect=base.getBoundingClientRect();
+    const sRect=sim.getBoundingClientRect();
+    overlay.style.left=(bRect.left-sRect.left)+'px';
+    overlay.style.top=(bRect.top-sRect.top)+'px';
+    overlay.style.width=bRect.width+'px';
+    overlay.style.height=bRect.height+'px';
+    overlay.width=Math.max(2,Math.round(bRect.width*dpr));
+    overlay.height=Math.max(2,Math.round(bRect.height*dpr));
+  });
+}
+
+function setupForceOverlays(){
+  // Only create hover overlays on explicitly opted-in sim areas.
+  document.querySelectorAll('.sim-area.force-overlay-enabled').forEach(sim=>{
+    const canvas=sim.querySelector('.sim-canvas');
+    if(!canvas||sim.querySelector('.vector-overlay'))return;
+    const overlay=document.createElement('canvas');
+    overlay.className='vector-overlay';
+    sim.appendChild(overlay);
+    const state={running:false,raf:null,phase:0,pointer:{x:0,y:0}};
+    vectorOverlayState.set(overlay,state);
+
+    const tick=()=>{
+      if(!state.running)return;
+      const dpr=window.devicePixelRatio||1;
+      const ctx=overlay.getContext('2d');
+      const w=overlay.width/dpr;
+      const h=overlay.height/dpr;
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      ctx.clearRect(0,0,w,h);
+      ctx.fillStyle='rgba(66,123,199,0.12)';
+      ctx.fillRect(0,0,w,h);
+      state.phase+=0.06*motionBoost();
+      const swing=Math.sin(state.phase)*10;
+      const px=state.pointer.x||w*0.6;
+      const py=state.pointer.y||h*0.5;
+      drawVectorArrow(ctx,px-50,py,80+swing,0,'F');
+      drawVectorArrow(ctx,px,py+42,0,-70-swing*0.5,'R');
+      drawVectorArrow(ctx,px+46,py-8,-56,34,'a');
+      state.raf=requestAnimationFrame(tick);
+    };
+
+    canvas.addEventListener('mouseenter',e=>{
+      const rect=canvas.getBoundingClientRect();
+      state.pointer.x=e.clientX-rect.left;
+      state.pointer.y=e.clientY-rect.top;
+      state.running=true;
+      overlay.classList.add('active');
+      if(!state.raf)state.raf=requestAnimationFrame(tick);
+    });
+    canvas.addEventListener('mousemove',e=>{
+      const rect=canvas.getBoundingClientRect();
+      state.pointer.x=e.clientX-rect.left;
+      state.pointer.y=e.clientY-rect.top;
+    });
+    canvas.addEventListener('mouseleave',()=>{
+      const dpr=window.devicePixelRatio||1;
+      const ctx=overlay.getContext('2d');
+      state.running=false;
+      overlay.classList.remove('active');
+      if(state.raf){cancelAnimationFrame(state.raf);state.raf=null;}
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      ctx.clearRect(0,0,overlay.width/dpr,overlay.height/dpr);
+    });
+  });
+  resizeVectorOverlays();
+}
+
+function resizeMiniCanvas(){
+  if(!miniRefs.canvas||!miniRefs.ctx)return;
+  const dpr=window.devicePixelRatio||1;
+  const w=miniRefs.canvas.clientWidth;
+  const h=miniRefs.canvas.clientHeight;
+  miniRefs.canvas.width=Math.max(2,Math.round(w*dpr));
+  miniRefs.canvas.height=Math.max(2,Math.round(h*dpr));
+  miniRefs.ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+
+function updateMiniLabels(){
+  if(!miniRefs.speed)return;
+  const speed=+miniRefs.speed.value;
+  const angle=+miniRefs.angle.value;
+  if(miniState.mode==='projectile'){
+    miniRefs.speedVal.textContent=speed+' ms⁻¹';
+    miniRefs.angleVal.textContent=angle+'°';
+    miniRefs.angleLabel.textContent='Launch Angle';
+    miniRefs.angleRow.classList.remove('hide');
+  }else{
+    miniRefs.speedVal.textContent=speed+' rpm';
+    miniRefs.angleVal.textContent=angle+'%';
+    miniRefs.angleLabel.textContent='Orbit Radius';
+    miniRefs.angleRow.classList.remove('hide');
+  }
+}
+
+function resetMiniState(){
+  miniState.time=0;
+  miniState.orbitPhase=0;
+  miniState.points=[];
+  miniState.running=false;
+  miniState.lastTs=0;
+  if(miniState.raf){cancelAnimationFrame(miniState.raf);miniState.raf=null;}
+  if(miniRefs.toggle)miniRefs.toggle.textContent='▶ চালাও';
+}
+
+function drawMiniProjectile(dt){
+  const ctx=miniRefs.ctx;
+  const w=miniRefs.canvas.clientWidth;
+  const h=miniRefs.canvas.clientHeight;
+  const speed=+miniRefs.speed.value;
+  const angle=(+miniRefs.angle.value)*Math.PI/180;
+  if(miniState.running)miniState.time+=dt*motionBoost();
+  const x0=40,y0=h-30;
+  const pxScale=3;
+  const pyScale=3;
+  const gy=6;
+  const x=x0+speed*Math.cos(angle)*miniState.time*pxScale;
+  const y=y0-(speed*Math.sin(angle)*miniState.time*pyScale-0.5*g*miniState.time*miniState.time*gy);
+  if(miniState.running){
+    miniState.points.push({x,y});
+    if(y>=y0||x>w-10){
+      miniState.running=false;
+      miniRefs.toggle.textContent='▶ চালাও';
+    }
+  }
+  ctx.fillStyle='rgba(18,39,68,0.9)';
+  ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle='rgba(151,204,255,0.2)';
+  ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(0,y0+0.5);ctx.lineTo(w,y0+0.5);ctx.stroke();
+  ctx.strokeStyle='rgba(138,221,255,0.65)';
+  ctx.lineWidth=1.4;
+  ctx.beginPath();
+  miniState.points.forEach((p,i)=>{if(i===0)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y);});
+  ctx.stroke();
+  ctx.fillStyle='#ffd474';
+  ctx.beginPath();ctx.arc(clamp(x,0,w),clamp(y,0,h),6,0,2*Math.PI);ctx.fill();
+  miniRefs.info.textContent='scroll boost: '+motionBoost().toFixed(2)+'x | projectile t='+miniState.time.toFixed(2)+'s';
+}
+
+function drawMiniOrbit(dt){
+  const ctx=miniRefs.ctx;
+  const w=miniRefs.canvas.clientWidth;
+  const h=miniRefs.canvas.clientHeight;
+  const speed=+miniRefs.speed.value;
+  const radiusRatio=+miniRefs.angle.value/100;
+  const radius=40+radiusRatio*Math.min(w,h)*0.3;
+  if(miniState.running)miniState.orbitPhase+=dt*(speed/16)*motionBoost();
+  const cx=w/2,cy=h/2;
+  const ox=cx+radius*Math.cos(miniState.orbitPhase);
+  const oy=cy+radius*Math.sin(miniState.orbitPhase*0.94);
+  ctx.fillStyle='rgba(12,30,56,0.92)';
+  ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle='rgba(137,201,255,0.4)';
+  ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.arc(cx,cy,radius,0,2*Math.PI);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#66b8ff';
+  ctx.beginPath();ctx.arc(cx,cy,20,0,2*Math.PI);ctx.fill();
+  ctx.fillStyle='#ffd08b';
+  ctx.beginPath();ctx.arc(ox,oy,7,0,2*Math.PI);ctx.fill();
+  ctx.strokeStyle='rgba(255,239,188,0.8)';
+  ctx.lineWidth=1.6;
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(ox,oy);ctx.stroke();
+  miniRefs.info.textContent='scroll boost: '+motionBoost().toFixed(2)+'x | orbit ω='+(speed/16).toFixed(2)+' rad/s';
+}
+
+function drawMiniFrame(dtMs){
+  if(!miniRefs.ctx)return;
+  const dt=(dtMs||16)/1000;
+  if(miniState.mode==='projectile')drawMiniProjectile(dt);
+  else drawMiniOrbit(dt);
+}
+
+function miniLoop(ts){
+  if(!miniState.running){miniState.raf=null;return;}
+  if(!miniState.lastTs)miniState.lastTs=ts;
+  const dt=Math.min(40,ts-miniState.lastTs);
+  miniState.lastTs=ts;
+  drawMiniFrame(dt);
+  miniState.raf=requestAnimationFrame(miniLoop);
+}
+
+function setMiniMode(mode){
+  miniState.mode=mode;
+  document.querySelectorAll('.mini-tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.mode===mode));
+  resetMiniState();
+  updateMiniLabels();
+  drawMiniFrame(16);
+}
+
+function openMiniSim(mode){
+  if(!miniRefs.modal)return;
+  setMiniMode(mode||miniState.mode);
+  miniRefs.modal.classList.add('active');
+  miniRefs.modal.setAttribute('aria-hidden','false');
+  resizeMiniCanvas();
+  drawMiniFrame(16);
+  if(window.gsap){
+    gsap.fromTo(miniRefs.shell,{y:26,opacity:0,scale:0.96},{y:0,opacity:1,scale:1,duration:0.32,ease:'power3.out'});
+  }
+}
+
+function closeMiniSim(){
+  if(!miniRefs.modal)return;
+  resetMiniState();
+  miniRefs.modal.classList.remove('active');
+  miniRefs.modal.setAttribute('aria-hidden','true');
+}
+
+function setupMiniSim(){
+  miniRefs.modal=document.getElementById('mini-sim-modal');
+  miniRefs.shell=document.querySelector('.sim-modal-shell');
+  miniRefs.canvas=document.getElementById('miniCanvas');
+  if(!miniRefs.modal||!miniRefs.canvas)return;
+  miniRefs.ctx=miniRefs.canvas.getContext('2d');
+  miniRefs.speed=document.getElementById('miniSpeed');
+  miniRefs.angle=document.getElementById('miniAngle');
+  miniRefs.speedVal=document.getElementById('miniSpeedVal');
+  miniRefs.angleVal=document.getElementById('miniAngleVal');
+  miniRefs.angleLabel=document.getElementById('miniAngleLabel');
+  miniRefs.angleRow=document.getElementById('miniAngleRow');
+  miniRefs.toggle=document.getElementById('miniToggle');
+  miniRefs.reset=document.getElementById('miniReset');
+  miniRefs.info=document.getElementById('miniInfo');
+
+  document.querySelectorAll('.mini-tab').forEach(tab=>tab.addEventListener('click',()=>setMiniMode(tab.dataset.mode)));
+  document.getElementById('miniClose').addEventListener('click',closeMiniSim);
+  miniRefs.modal.addEventListener('click',e=>{if(e.target===miniRefs.modal)closeMiniSim();});
+  miniRefs.speed.addEventListener('input',()=>{updateMiniLabels();drawMiniFrame(16);});
+  miniRefs.angle.addEventListener('input',()=>{updateMiniLabels();drawMiniFrame(16);});
+  miniRefs.toggle.addEventListener('click',()=>{
+    miniState.running=!miniState.running;
+    miniRefs.toggle.textContent=miniState.running?'⏸ বিরতি':'▶ চালাও';
+    miniState.lastTs=0;
+    if(miniState.running&& !miniState.raf)miniState.raf=requestAnimationFrame(miniLoop);
+    if(!miniState.running)drawMiniFrame(16);
+  });
+  miniRefs.reset.addEventListener('click',()=>{resetMiniState();drawMiniFrame(16);});
+
+  document.querySelectorAll('.sim-canvas').forEach(cv=>{
+    cv.addEventListener('dblclick',()=>{
+      const mode=(cv.id==='c8'||cv.id==='c14'||cv.id==='c15'||cv.id==='c16')?'orbit':'projectile';
+      openMiniSim(mode);
+    });
+  });
+
+  resizeMiniCanvas();
+  setMiniMode('projectile');
+}
+
+function bootSpaceExperience(){
+  updateScrollBoost();
+  window.addEventListener('scroll',updateScrollBoost,{passive:true});
+  setupForceOverlays();
+  setupMiniSim();
+  if(!motionState.spaceRaf)motionState.spaceRaf=requestAnimationFrame(animateSpace);
+  window.addEventListener('resize',()=>{
+    clearTimeout(motionState.resizeTimer);
+    motionState.resizeTimer=setTimeout(()=>{
+      resizeVectorOverlays();
+      resizeMiniCanvas();
+      const active=document.querySelector('.topic-panel.active');
+      if(active)initCanvas(active.id);
+    },130);
+  });
+}
+
+function showTopic(id,btn){
+  document.querySelectorAll('.topic-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.topic-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  setTimeout(()=>{initCanvas(id);resizeVectorOverlays();},50);
+}
+
+function initCanvas(id){
+  if(id==='t1') drawT1();
+  if(id==='t2') drawT2();
+  if(id==='t3') drawT3();
+  if(id==='t4') drawT4();
+  if(id==='t5') drawT5();
+  if(id==='t6') drawT6();
+  if(id==='t7') drawT7();
+  if(id==='t8') drawT8();
+  if(id==='t9') drawT9();
+  if(id==='t10') drawT10();
+  if(id==='t11') drawT11();
+  if(id==='t12') drawT12();
+  if(id==='t13') drawT13();
+  if(id==='t14') drawT14();
+  if(id==='t15') drawT15();
+  if(id==='t16') drawT16();
+  if(id==='t17') drawT17();
+}
+
+function getStyle(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()}
+function pc(){return getStyle('--color-text-primary')||'#000'}
+function sc(){return getStyle('--color-text-secondary')||'#666'}
+function bc(){return getStyle('--color-border-tertiary')||'#ddd'}
+function bg2(){return getStyle('--color-background-secondary')||'#f5f5f5'}
+
+// ===== T1 =====
+let t1Anim=null,t1x=60;
+function drawT1(){
+  const c=document.getElementById('c1');
+  const ctx=c.getContext('2d');
+  const W=c.offsetWidth||640;c.width=W;c.height=200;
+  const m=+document.getElementById('s1m').value;
+  const F=+document.getElementById('s1f').value;
+  const a=F/m;
+  document.getElementById('v1m').textContent=m+' kg';
+  document.getElementById('v1f').textContent=F+' N';
+  document.getElementById('v1a').textContent='a = '+a.toFixed(2)+' ms⁻²';
+  document.getElementById('r1').textContent='F_net = ma → '+F+' = '+m+' × '+a.toFixed(2)+' → a = '+a.toFixed(2)+' ms⁻²';
+  ctx.clearRect(0,0,W,200);
+  ctx.fillStyle=bg2();ctx.fillRect(0,170,W,30);
+  ctx.strokeStyle=bc();ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,170);ctx.lineTo(W,170);ctx.stroke();
+  const bx=clamp(t1x,40,W-110),by=120,bw=60,bh=50;
+  ctx.fillStyle='#3B8BD4';ctx.fillRect(bx,by,bw,bh);
+  ctx.fillStyle='#fff';ctx.font='bold 13px sans-serif';ctx.textAlign='center';
+  ctx.fillText(m+'kg',bx+bw/2,by+bh/2+5);
+  const midY=by+bh/2;
+  const forceLen=Math.min(70,24+F*0.8);
+  ctx.strokeStyle='#E85D24';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(bx+bw,midY);ctx.lineTo(Math.min(W-20,bx+bw+forceLen),midY);ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(Math.min(W-20,bx+bw+forceLen),midY);
+  ctx.lineTo(Math.min(W-30,bx+bw+forceLen-8),midY-5);
+  ctx.lineTo(Math.min(W-30,bx+bw+forceLen-8),midY+5);
+  ctx.closePath();ctx.fillStyle='#E85D24';ctx.fill();
+  ctx.font='13px sans-serif';ctx.textAlign='left';
+  ctx.fillText('F='+F+'N',Math.min(W-95,bx+bw+8),midY-8);
+  ctx.strokeStyle='#0F6E56';ctx.lineWidth=3;
+  const axEnd=Math.min(W-12,bx+bw+50+a*2);
+  ctx.beginPath();ctx.moveTo(bx+bw,midY+20);ctx.lineTo(axEnd,midY+20);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(axEnd,midY+20);
+  ctx.lineTo(axEnd-8,midY+15);
+  ctx.lineTo(axEnd-8,midY+25);
+  ctx.closePath();ctx.fillStyle='#0F6E56';ctx.fill();
+  ctx.fillStyle='#0F6E56';ctx.font='13px sans-serif';ctx.textAlign='left';
+  ctx.fillText('a='+a.toFixed(1),Math.min(W-76,bx+bw+2),midY+14);
+  ctx.fillStyle=pc();ctx.font='12px sans-serif';ctx.textAlign='left';
+  ctx.fillText('→ ত্বরণ',Math.min(W-70,bx+bw+55+a*2),midY+30);
+}
+function updateT1(){drawT1();}
+function runT1(){
+  if(t1Anim)return;
+  const F=+document.getElementById('s1f').value,m=+document.getElementById('s1m').value;
+  const a=F/m;
+  t1Anim=setInterval(()=>{
+    const limit=((document.getElementById('c1').offsetWidth||640)-110);
+    t1x+=a*0.3*motionBoost();
+    if(t1x>limit){t1x=60;clearInterval(t1Anim);t1Anim=null;}
+    drawT1();
+  },30);
+}
+function stopT1(){clearInterval(t1Anim);t1Anim=null;t1x=60;drawT1();}
+
+// ===== T2 =====
+function drawT2(){
+  const c=document.getElementById('c2');
+  const ctx=c.getContext('2d');
+  const W=c.offsetWidth||640;c.width=W;c.height=220;
+  const mu=+document.getElementById('s2us').value/100;
+  const F=+document.getElementById('s2f').value;
+  const m=+document.getElementById('s2m').value;
+  document.getElementById('v2us').textContent=mu.toFixed(2);
+  document.getElementById('v2f').textContent=F+' N';
+  document.getElementById('v2m').textContent=m+' kg';
+  const R=m*g,fs_max=mu*R,fk=0.8*mu*R;
+  let state,fVal,aVal;
+  if(F<fs_max){state='স্থির';fVal=F;aVal=0;}
+  else{state='গতিশীল';fVal=fk;aVal=(F-fk)/m;}
+  document.getElementById('r2').textContent=
+    'R='+R.toFixed(1)+'N, f_s_max='+fs_max.toFixed(1)+'N, F_app='+F+'N → '+state+
+    ', f='+fVal.toFixed(1)+'N, a='+aVal.toFixed(2)+'ms⁻²';
+  ctx.clearRect(0,0,W,220);
+  ctx.fillStyle=bg2();ctx.fillRect(0,160,W,60);
+  ctx.strokeStyle=bc();ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,160);ctx.lineTo(W,160);ctx.stroke();
+  const bx=clamp(W*0.28,70,W-130),by=100,bw=80,bh=60;
+  ctx.fillStyle='#7F77DD';ctx.fillRect(bx,by,bw,bh);
+  ctx.fillStyle='#fff';ctx.font='bold 12px sans-serif';ctx.textAlign='center';
+  ctx.fillText(m+'kg',bx+bw/2,by+bh/2+5);
+  // Applied force
+  ctx.strokeStyle='#E85D24';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(bx+bw,by+bh/2);ctx.lineTo(bx+bw+50,by+bh/2);ctx.stroke();
+  ctx.fillStyle='#E85D24';ctx.font='12px sans-serif';ctx.textAlign='left';ctx.fillText('F='+F+'N',bx+bw+3,by+bh/2-8);
+  // Friction
+  ctx.strokeStyle='#D85A30';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(bx,by+bh/2);ctx.lineTo(bx-50,by+bh/2);ctx.stroke();
+  ctx.fillStyle='#D85A30';ctx.textAlign='right';ctx.fillText('f='+fVal.toFixed(0)+'N',bx-3,by+bh/2-8);
+  // Normal
+  ctx.strokeStyle='#185FA5';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(bx+bw/2,by);ctx.lineTo(bx+bw/2,by-40);ctx.stroke();
+  ctx.fillStyle='#185FA5';ctx.textAlign='center';ctx.fillText('R='+R.toFixed(0)+'N',bx+bw/2,by-45);
+  // Weight
+  ctx.strokeStyle='#3B6D11';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(bx+bw/2,by+bh);ctx.lineTo(bx+bw/2,by+bh+35);ctx.stroke();
+  ctx.fillStyle='#3B6D11';ctx.fillText('mg='+R.toFixed(0)+'N',bx+bw/2,by+bh+50);
+  ctx.fillStyle=state==='স্থির'?'#3B6D11':'#E85D24';
+  ctx.font='bold 13px sans-serif';ctx.textAlign='left';
+  ctx.fillText('অবস্থা: '+state+(aVal>0?', a='+aVal.toFixed(2)+'ms⁻²':''),10,20);
+}
+function updateT2(){drawT2();}
+
+// ===== T3 (Atwood) =====
+let t3anim=null,t3pos=0;
+function drawT3(){
+  const c=document.getElementById('c3');
+  const ctx=c.getContext('2d');
+  const W=c.offsetWidth||640;c.width=W;c.height=240;
+  const M=+document.getElementById('s3M').value;
+  const m=+document.getElementById('s3m').value;
+  document.getElementById('v3M').textContent=M+' kg';
+  document.getElementById('v3m').textContent=m+' kg';
+  const a=(M-m)/(M+m)*g;
+  const T=2*M*m*g/(M+m);
+  document.getElementById('r3').textContent=
+    'a = (M−m)g/(M+m) = '+a.toFixed(3)+' ms⁻²  |  T = 2Mmg/(M+m) = '+T.toFixed(1)+' N';
+  ctx.clearRect(0,0,W,240);
+  const px=W/2,py=30,r=18;
+  // Pulley
+  ctx.beginPath();ctx.arc(px,py,r,0,2*Math.PI);
+  ctx.strokeStyle='#888';ctx.lineWidth=3;ctx.stroke();
+  ctx.fillStyle=bg2();ctx.fill();
+  // Rope
+  ctx.strokeStyle='#444';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(px-r,py);ctx.lineTo(px-r,py+80+t3pos);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(px+r,py);ctx.lineTo(px+r,py+80-t3pos);ctx.stroke();
+  // M block
+  const Mh=py+80+t3pos;
+  ctx.fillStyle='#3B8BD4';ctx.fillRect(px-r-30,Mh,50,40);
+  ctx.fillStyle='#fff';ctx.font='bold 13px sans-serif';ctx.textAlign='center';
+  ctx.fillText('M='+M,px-r-5,Mh+24);
+  // m block
+  const mh=py+80-t3pos;
+  ctx.fillStyle='#E85D24';ctx.fillRect(px+r-20,mh,50,40);
+  ctx.fillStyle='#fff';ctx.fillText('m='+m,px+r+5,mh+24);
+  // Labels
+  ctx.fillStyle=pc();ctx.font='12px sans-serif';ctx.textAlign='left';
+  ctx.fillText('a = '+a.toFixed(2)+' ms⁻²',10,220);
+  ctx.fillText('T = '+T.toFixed(1)+' N',10,205);
+}
+function updateT3(){t3pos=0;drawT3();}
+function runT3(){
+  if(t3anim)return;
+  const M=+document.getElementById('s3M').value,m=+document.getElementById('s3m').value;
+  const a=(M-m)/(M+m)*g;
+  t3anim=setInterval(()=>{
+    t3pos+=Math.sign(a)*1.5*motionBoost();
+    if(Math.abs(t3pos)>60){clearInterval(t3anim);t3anim=null;}
+    drawT3();
+  },30);
+}
+function stopT3(){clearInterval(t3anim);t3anim=null;t3pos=0;drawT3();}
+
+// ===== T4 Lift =====
+let liftY=100;
+function drawT4(){
+  const c=document.getElementById('c4');
+  const ctx=c.getContext('2d');
+  const W=c.offsetWidth||640;c.width=W;c.height=220;
+  const m=+document.getElementById('s4m').value;
+  const a=+document.getElementById('s4a').value;
+  document.getElementById('v4m').textContent=m+' kg';
+  document.getElementById('v4a').textContent=(a>=0?'+':'')+a+' ms⁻²';
+  const Rraw=m*(g+a);
+  const R=Math.max(0,Rraw);
+  let state='';
+  if(a>0)state='উপরে উঠছে';
+  else if(a<0)state='নিচে নামছে';
+  else state='সমবেগ / স্থির';
+  document.getElementById('r4').textContent=
+    state+': R = max[0, m(g+a)] = max[0, '+m+'×('+g+(a>=0?'+':'')+''+a+')] = '+R.toFixed(1)+' N';
+  ctx.clearRect(0,0,W,220);
+  // Lift box
+  ctx.strokeStyle='#7F77DD';ctx.lineWidth=2;
+  ctx.strokeRect(W/2-45,40,90,130);
+  ctx.fillStyle=bg2();ctx.fillRect(W/2-44,41,88,128);
+  // Person
+  ctx.fillStyle='#3B8BD4';
+  ctx.beginPath();ctx.arc(W/2,100,15,0,2*Math.PI);ctx.fill();
+  ctx.fillStyle='#3B8BD4';ctx.fillRect(W/2-10,115,20,30);
+  // Force arrows
+  if(R>0.5){
+    ctx.strokeStyle='#0F6E56';ctx.lineWidth=2.5;
+    const len=Math.min(R/20,50);
+    ctx.beginPath();ctx.moveTo(W/2,145);ctx.lineTo(W/2,145-len);ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(W/2,145-len);
+    ctx.lineTo(W/2-5,145-len+8);
+    ctx.lineTo(W/2+5,145-len+8);
+    ctx.closePath();ctx.fillStyle='#0F6E56';ctx.fill();
+    ctx.fillStyle='#0F6E56';ctx.font='11px sans-serif';ctx.textAlign='center';
+    ctx.fillText('R='+R.toFixed(0)+'N',W/2,150-len-4);
+  }
+  ctx.strokeStyle='#E85D24';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(W/2,145);ctx.lineTo(W/2,145+40);ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(W/2,185);
+  ctx.lineTo(W/2-5,177);
+  ctx.lineTo(W/2+5,177);
+  ctx.closePath();ctx.fillStyle='#E85D24';ctx.fill();
+  ctx.fillStyle='#E85D24';ctx.font='11px sans-serif';ctx.textAlign='center';
+  ctx.fillText('mg='+(m*g).toFixed(0)+'N',W/2,200);
+  // Acceleration
+  ctx.strokeStyle=a>=0?'#185FA5':'#D85A30';ctx.lineWidth=3;
+  const ay=a>=0?40:170;
+  ctx.beginPath();ctx.moveTo(W/2+55,100);ctx.lineTo(W/2+55,ay);ctx.stroke();
+  if(a!==0){
+    const dir=a>0?-1:1;
+    ctx.beginPath();
+    ctx.moveTo(W/2+55,ay);
+    ctx.lineTo(W/2+50,ay+8*dir);
+    ctx.lineTo(W/2+60,ay+8*dir);
+    ctx.closePath();ctx.fillStyle=ctx.strokeStyle;ctx.fill();
+  }
+  ctx.fillStyle=ctx.strokeStyle;ctx.font='bold 11px sans-serif';ctx.textAlign='left';
+  ctx.fillText('a='+(a>=0?'+':'')+a,W/2+60,a>=0?90:185);
+  ctx.fillStyle=pc();ctx.font='13px sans-serif';ctx.textAlign='center';
+  ctx.fillText(state,W/2,210);
+}
+function updateT4(){drawT4();}
+
+// ===== T5 Impulse =====
+function drawT5(){
+  const c=document.getElementById('c5');
+  const ctx=c.getContext('2d');
+  const W=c.offsetWidth||640;c.width=W;c.height=200;
+  const u=+document.getElementById('s5u').value;
+  const v=+document.getElementById('s5v').value;
+  const m=+document.getElementById('s5m').value;
+  document.getElementById('v5u').textContent=u;
+  document.getElementById('v5v').textContent=v;
+  document.getElementById('v5m').textContent=m+' kg';
+  const J=m*(v-u);
+  document.getElementById('r5').textContent=
+    'J = m(v−u) = '+m+'×('+v+'−'+u+') = '+J.toFixed(2)+' kg·ms⁻¹ = '+J.toFixed(2)+' N·s';
+  ctx.clearRect(0,0,W,200);
+  const drawArrow=(x0,y0,len,color,label)=>{
+    if(len===0)return;
+    const x1=x0+len;
+    const sign=len>0?1:-1;
+    ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y0);ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x1,y0);
+    ctx.lineTo(x1-8*sign,y0-5);
+    ctx.lineTo(x1-8*sign,y0+5);
+    ctx.closePath();ctx.fill();
+    ctx.font='12px sans-serif';ctx.textAlign='center';
+    ctx.fillText(label,(x0+x1)/2,y0-8);
+  };
+  // Ball
+  ctx.fillStyle='#7F77DD';
+  ctx.beginPath();ctx.arc(W/2,100,25,0,2*Math.PI);ctx.fill();
+  // Before arrow (u)
+  drawArrow(W/2,82,u*2.8,'#3B8BD4','u='+u);
+  // After arrow (v)
+  drawArrow(W/2,128,v*2.8,'#E85D24','v='+v);
+  ctx.fillStyle='#0F6E56';ctx.font='bold 14px sans-serif';ctx.textAlign='center';
+  ctx.fillText('J = Δp = '+J.toFixed(2)+' N·s',W/2,170);
+}
+function updateT5(){drawT5();}
+
+// ===== T6 Conservation =====
+let t6anim=null,t6phase=0;
+function drawT6(){
+  const c=document.getElementById('c6');
+  const ctx=c.getContext('2d');
+  const W=c.offsetWidth||640;c.width=W;c.height=200;
+  const m1=+document.getElementById('s6m1').value;
+  const m2=+document.getElementById('s6m2').value;
+  const u1=+document.getElementById('s6u1').value;
+  document.getElementById('v6m1').textContent=m1;
+  document.getElementById('v6m2').textContent=m2;
+  document.getElementById('v6u1').textContent=u1;
+  // Perfectly inelastic
+  const v_f=(m1*u1)/(m1+m2);
+  const progress=t6phase;
+  ctx.clearRect(0,0,W,200);
+  ctx.fillStyle=bg2();ctx.fillRect(0,160,W,40);
+  ctx.strokeStyle=bc();ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,160);ctx.lineTo(W,160);ctx.stroke();
+  const r1=12+m1*2,r2=12+m2*2;
+  let x1,x2;
+  const start=Math.max(34,W*0.14);
+  if(progress<1){
+    x1=start+progress*(W/2-start-r1);
+    x2=W-start;
+  } else {
+    x1=W/2-10+progress*10;
+    x2=W/2-5+progress*10;
+  }
+  ctx.fillStyle='#3B8BD4';ctx.beginPath();ctx.arc(x1,130,r1,0,2*Math.PI);ctx.fill();
+  ctx.fillStyle='#fff';ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.fillText(m1,x1,134);
+  ctx.fillStyle='#E85D24';ctx.beginPath();ctx.arc(x2,130,r2,0,2*Math.PI);ctx.fill();
+  ctx.fillStyle='#fff';ctx.fillText(m2,x2,134);
+  const p_before=m1*u1,p_after=(m1+m2)*v_f;
+  document.getElementById('r6').textContent=
+    'সংরক্ষণ সূত্র: p_আগে = '+p_before.toFixed(1)+' kg·ms⁻¹ = p_পরে = '+p_after.toFixed(1)+' kg·ms⁻¹, v_f = '+v_f.toFixed(2)+' ms⁻¹';
+  ctx.fillStyle=pc();ctx.font='12px sans-serif';ctx.textAlign='left';
+  ctx.fillText('m₁u₁ = '+p_before.toFixed(1)+' → v_f = '+v_f.toFixed(2)+' ms⁻¹',10,180);
+}
+function updateT6(){t6phase=0;drawT6();}
+function runT6(){
+  if(t6anim)return;t6phase=0;
+  t6anim=setInterval(()=>{t6phase+=0.04*motionBoost();if(t6phase>3){clearInterval(t6anim);t6anim=null;}drawT6();},30);
+}
+function stopT6(){clearInterval(t6anim);t6anim=null;t6phase=0;drawT6();}
+
+// ===== T7 Collision =====
+let t7anim=null,t7ph=0;
+function drawT7(){
+  const c=document.getElementById('c7');
+  const ctx=c.getContext('2d');
+  const W=c.offsetWidth||640;c.width=W;c.height=160;
+  const m1=+document.getElementById('s7m1').value;
+  const m2=+document.getElementById('s7m2').value;
+  const u1=+document.getElementById('s7u1').value;
+  document.getElementById('v7m1').textContent=m1;
+  document.getElementById('v7m2').textContent=m2;
+  document.getElementById('v7u1').textContent=u1;
+  const v1=((m1-m2)/(m1+m2))*u1;
+  const v2=(2*m1/(m1+m2))*u1;
+  document.getElementById('r7').textContent=
+    'স্থিতিস্থাপক সংঘর্ষ: v₁='+v1.toFixed(2)+' ms⁻¹, v₂='+v2.toFixed(2)+' ms⁻¹';
+  ctx.clearRect(0,0,W,160);
+  ctx.fillStyle=bg2();ctx.fillRect(0,120,W,40);
+  ctx.strokeStyle=bc();ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,120);ctx.lineTo(W,120);ctx.stroke();
+  const r1=10+m1*3,r2=10+m2*3;
+  let x1,x2;
+  const start=Math.max(34,W*0.14);
+  if(t7ph<1){x1=start+(t7ph*(W/2-start));x2=W-start;}
+  else{x1=W/2-20-(t7ph-1)*Math.abs(v1)*5;x2=W/2+20+(t7ph-1)*v2*5;}
+  ctx.fillStyle='#3B8BD4';ctx.beginPath();ctx.arc(x1,90,r1,0,2*Math.PI);ctx.fill();
+  ctx.fillStyle='#fff';ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.fillText('m₁='+m1,x1,94);
+  ctx.fillStyle='#D85A30';ctx.beginPath();ctx.arc(x2,90,r2,0,2*Math.PI);ctx.fill();
+  ctx.fillStyle='#fff';ctx.fillText('m₂='+m2,x2,94);
+  ctx.fillStyle=pc();ctx.font='12px sans-serif';ctx.textAlign='left';
+  if(t7ph>1){ctx.fillText('v₁='+v1.toFixed(1),10,15);ctx.fillText('v₂='+v2.toFixed(1),Math.max(10,W-88),15);}
+}
+function animT7(){
+  if(t7anim)return;t7ph=0;
+  t7anim=setInterval(()=>{t7ph+=0.04*motionBoost();if(t7ph>3){clearInterval(t7anim);t7anim=null;}drawT7();},30);
+}
+
+// ===== T8 Rocket =====
+let t8anim=null,t8y=160;
+function drawT8(){
+  const c=document.getElementById('c8');
+  const ctx=c.getContext('2d');
+  const W=c.offsetWidth||640;c.width=W;c.height=220;
+  const vr=+document.getElementById('s8vr').value;
+  const dm=+document.getElementById('s8dm').value;
+  const m0=+document.getElementById('s8m0').value;
+  document.getElementById('v8vr').textContent=vr;
+  document.getElementById('v8dm').textContent=dm;
+  document.getElementById('v8m0').textContent=m0;
+  const thrust=vr*dm;
+  const a=thrust/m0-g;
+  document.getElementById('r8').textContent=
+    'Thrust = v_r×(dm/dt) = '+vr+'×'+dm+' = '+thrust.toFixed(0)+' N | a = '+a.toFixed(2)+' ms⁻²';
+  ctx.clearRect(0,0,W,220);
+  ctx.fillStyle=bg2();ctx.fillRect(0,190,W,30);
+  // Rocket body
+  const rx=W/2-15,ry=t8y;
+  ctx.fillStyle='#7F77DD';
+  ctx.beginPath();ctx.moveTo(rx,ry);ctx.lineTo(rx+30,ry);ctx.lineTo(rx+30,ry+50);ctx.lineTo(rx,ry+50);ctx.closePath();ctx.fill();
+  // Nose
+  ctx.fillStyle='#534AB7';
+  ctx.beginPath();ctx.moveTo(rx,ry);ctx.lineTo(rx+15,ry-20);ctx.lineTo(rx+30,ry);ctx.closePath();ctx.fill();
+  // Flame
+  if(a>0){
+    ctx.fillStyle='#E85D24';
+    ctx.beginPath();ctx.moveTo(rx+5,ry+50);ctx.lineTo(rx+15,ry+50+25+Math.random()*10);ctx.lineTo(rx+25,ry+50);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#FCDE5A';
+    ctx.beginPath();ctx.moveTo(rx+10,ry+50);ctx.lineTo(rx+15,ry+50+15);ctx.lineTo(rx+20,ry+50);ctx.closePath();ctx.fill();
+  }
+  ctx.fillStyle=pc();ctx.font='11px sans-serif';ctx.textAlign='right';
+  ctx.fillText('Thrust='+thrust.toFixed(0)+'N',W-10,30);
+  ctx.fillText('a='+a.toFixed(2)+'ms⁻²',W-10,48);
+}
+function updateT8(){t8y=160;drawT8();}
+function runT8(){
+  if(t8anim)return;t8y=160;
+  const vr=+document.getElementById('s8vr').value,dm=+document.getElementById('s8dm').value,m0=+document.getElementById('s8m0').value;
+  const a=vr*dm/m0-g;
+  if(a<=0){document.getElementById('r8').textContent='ত্বরণ ঋণাত্মক — উড্ডয়ন সম্ভব নয়!';return;}
+  t8anim=setInterval(()=>{t8y-=a*0.5*motionBoost();if(t8y<-50){clearInterval(t8anim);t8anim=null;t8y=160;}drawT8();},30);
+}
+function stopT8(){clearInterval(t8anim);t8anim=null;t8y=160;drawT8();}
+
+// ===== T9 =====
+function drawT9(){
+  const c=document.getElementById('c9');
+  const ctx=c.getContext('2d');
+  const W=c.offsetWidth||640;c.width=W;c.height=160;
+  const M=+document.getElementById('s9M').value;
+  const R=+document.getElementById('s9R').value/100;
+  const h=+document.getElementById('s9h').value/100;
+  document.getElementById('v9M').textContent=M;
+  document.getElementById('v9R').textContent=R.toFixed(2);
+  document.getElementById('v9h').textContent=h.toFixed(2);
+  const IG=0.5*M*R*R;
+  const I=IG+M*h*h;
+  document.getElementById('r9').textContent=
+    'I_G = ½MR² = '+IG.toFixed(3)+' kg·m² | I = I_G+Mh² = '+I.toFixed(3)+' kg·m²';
+  ctx.clearRect(0,0,W,160);
+  const cx=W/2,cy=100,cr=Math.min(R*60,60);
+  ctx.fillStyle='#B5D4F4';ctx.beginPath();ctx.arc(cx,cy,cr,0,2*Math.PI);ctx.fill();
+  ctx.strokeStyle='#185FA5';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,cr,0,2*Math.PI);ctx.stroke();
+  ctx.fillStyle='#185FA5';ctx.beginPath();ctx.arc(cx,cy,4,0,2*Math.PI);ctx.fill();
+  // Parallel axis
+  const hpx=Math.min(h*60,80);
+  ctx.strokeStyle='#E85D24';ctx.lineWidth=2;ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.moveTo(cx+hpx,20);ctx.lineTo(cx+hpx,140);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.strokeStyle='#E85D24';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+hpx,cy);ctx.stroke();
+  ctx.fillStyle='#E85D24';ctx.font='11px sans-serif';ctx.textAlign='center';
+  ctx.fillText('h='+h.toFixed(2)+'m',cx+hpx/2,cy-8);
+  ctx.fillStyle=pc();ctx.font='12px sans-serif';ctx.textAlign='left';
+  ctx.fillText('I = '+I.toFixed(3)+' kg·m²',10,20);
+}
+
+// ===== T10 =====
+function drawT10(){
+  const c=document.getElementById('c10');
+  const ctx=c.getContext('2d');
+  const W=c.offsetWidth||640;c.width=W;c.height=200;
+  const I=+document.getElementById('s10I').value;
+  const M=+document.getElementById('s10M').value;
+  document.getElementById('v10I').textContent=I;
+  document.getElementById('v10M').textContent=M;
+  const K=Math.sqrt(I/M);
+  document.getElementById('r10').textContent='K = √(I/M) = √('+I+'/'+M+') = '+K.toFixed(3)+' m';
+  ctx.clearRect(0,0,W,200);
+  ctx.fillStyle='rgba(10,24,44,0.26)';
+  ctx.fillRect(0,0,W,200);
+  const cx=Math.max(95,Math.min(W/2,W-95)),cy=100;
+  const cr=Math.max(12,Math.min(K*32,80));
+  ctx.fillStyle='#C0DD97';ctx.beginPath();ctx.arc(cx,cy,cr,0,2*Math.PI);ctx.fill();
+  ctx.strokeStyle='#3B6D11';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,cr,0,2*Math.PI);ctx.stroke();
+  ctx.strokeStyle='#3B6D11';ctx.lineWidth=1.5;ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+cr,cy);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#3B6D11';ctx.font='12px sans-serif';ctx.textAlign='center';
+  ctx.fillText('K='+K.toFixed(2)+'m',cx+cr/2,cy-10);
+  const lumpX=Math.min(W-16,cx+cr);
+  ctx.fillStyle='#185FA5';ctx.beginPath();ctx.arc(lumpX,cy,6,0,2*Math.PI);ctx.fill();
+  ctx.fillStyle='#185FA5';ctx.font='11px sans-serif';ctx.fillText('M পুঞ্জীভূত',Math.min(W-42,lumpX),cy-12);
+  ctx.fillStyle=pc();ctx.font='13px sans-serif';ctx.textAlign='center';
+  ctx.fillText('চক্রগতির ব্যাসার্ধ K = '+K.toFixed(3)+' m',cx,180);
+}
+
+// ===== T11 Torque =====
+function drawT11(){
+  const c=document.getElementById('c11');
+  const ctx=c.getContext('2d');
+  const W=c.offsetWidth||640;c.width=W;c.height=220;
+  const F=+document.getElementById('s11F').value;
+  const r=+document.getElementById('s11r').value/10;
+  const th=+document.getElementById('s11t').value;
+  document.getElementById('v11F').textContent=F+' N';
+  document.getElementById('v11r').textContent=r.toFixed(1)+' m';
+  document.getElementById('v11t').textContent=th+'°';
+  const tau=r*F*Math.sin(th*Math.PI/180);
+  document.getElementById('r11').textContent='τ = rF sinθ = '+r.toFixed(1)+'×'+F+'×sin('+th+'°) = '+tau.toFixed(2)+' N·m';
+  ctx.clearRect(0,0,W,220);
+  // Pivot
+  const px=100,py=110;
+  ctx.fillStyle='#888';ctx.beginPath();ctx.arc(px,py,8,0,2*Math.PI);ctx.fill();
+  // r vector
+  const angle=20*Math.PI/180;
+  const rx2=px+Math.min(r*40,160),ry2=py;
+  ctx.strokeStyle='#3B8BD4';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(rx2,ry2);ctx.stroke();
+  ctx.fillStyle='#3B8BD4';ctx.font='12px sans-serif';ctx.textAlign='center';
+  ctx.fillText('r='+r.toFixed(1)+'m',px+(rx2-px)/2,py-10);
+  // F vector (at angle theta from r)
+  const fangle=(90-th)*Math.PI/180;
+  const fl=60;
+  const fx2=rx2+fl*Math.cos(fangle),fy2=ry2-fl*Math.sin(fangle);
+  ctx.strokeStyle='#E85D24';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(rx2,ry2);ctx.lineTo(fx2,fy2);ctx.stroke();
+  ctx.fillStyle='#E85D24';ctx.fillText('F='+F+'N',fx2+10,fy2);
+  // Theta arc
+  ctx.strokeStyle='#7F77DD';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.arc(rx2,ry2,20,(-90)*Math.PI/180,fangle,true);ctx.stroke();
+  ctx.fillStyle='#7F77DD';ctx.fillText('θ='+th+'°',rx2+15,ry2-25);
+  // Torque
+  ctx.fillStyle='#0F6E56';ctx.font='bold 14px sans-serif';ctx.textAlign='center';
+  ctx.fillText('τ = '+tau.toFixed(2)+' N·m '+(th<180?'(↺)':''),W/2,200);
+}
+
+// ===== T12 Angular momentum =====
+function drawT12(){
+  const c=document.getElementById('c12');
+  const ctx=c.getContext('2d');
+  const W=c.offsetWidth||640;c.width=W;c.height=200;
+  const r1=+document.getElementById('s12r1').value/10;
+  const r2=+document.getElementById('s12r2').value/10;
+  const v1=+document.getElementById('s12v1').value/10;
+  document.getElementById('v12r1').textContent=r1.toFixed(1);
+  document.getElementById('v12r2').textContent=r2.toFixed(1);
+  document.getElementById('v12v1').textContent=v1.toFixed(1);
+  const v2=v1*r1/r2;
+  document.getElementById('r12').textContent=
+    'v₁r₁ = v₂r₂ → '+v1.toFixed(1)+'×'+r1.toFixed(1)+' = v₂×'+r2.toFixed(1)+' → v₂ = '+v2.toFixed(2)+' ms⁻¹';
+  ctx.clearRect(0,0,W,200);
+  // Two circles
+  const c1x=W/3,c1y=100,c1r=r1*40;
+  const c2x=2*W/3,c2y=100,c2r=r2*40;
+  ctx.strokeStyle='#3B8BD4';ctx.lineWidth=2;ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.arc(c1x,c1y,c1r,0,2*Math.PI);ctx.stroke();ctx.setLineDash([]);
+  ctx.strokeStyle='#E85D24';ctx.lineWidth=2;ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.arc(c2x,c2y,c2r,0,2*Math.PI);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#7F77DD';ctx.beginPath();ctx.arc(c1x,c1y,5,0,2*Math.PI);ctx.fill();
+  ctx.fillStyle='#7F77DD';ctx.beginPath();ctx.arc(c2x,c2y,5,0,2*Math.PI);ctx.fill();
+  ctx.fillStyle='#3B8BD4';ctx.font='12px sans-serif';ctx.textAlign='center';
+  ctx.fillText('r₁='+r1.toFixed(1)+'m',c1x,c1y+c1r+16);
+  ctx.fillText('v₁='+v1.toFixed(1)+'ms⁻¹',c1x,c1y-c1r-6);
+  ctx.fillStyle='#E85D24';
+  ctx.fillText('r₂='+r2.toFixed(1)+'m',c2x,c2y+c2r+16);
+  ctx.fillText('v₂='+v2.toFixed(2)+'ms⁻¹',c2x,c2y-c2r-6);
+  ctx.fillStyle=pc();ctx.font='bold 13px sans-serif';ctx.textAlign='center';
+  ctx.fillText('কৌণিক ভরবেগ সংরক্ষিত → L = মেলছে',W/2,190);
+}
+function updateT12(){drawT12();}
+
+// ===== T13 Rolling =====
+let t13anim=null;
+function drawT13(){
+  const c=document.getElementById('c13');
+  const ctx=c.getContext('2d');
+  const W=c.offsetWidth||640;c.width=W;c.height=200;
+  const h=+document.getElementById('s13h').value;
+  document.getElementById('v13h').textContent=h+' m';
+  const vR=Math.sqrt(g*h),vC=Math.sqrt(4*g*h/3),vS=Math.sqrt(10*g*h/7);
+  document.getElementById('r13').textContent=
+    'রিং: '+vR.toFixed(2)+' | সিলিন্ডার: '+vC.toFixed(2)+' | গোলক: '+vS.toFixed(2)+' ms⁻¹';
+  ctx.clearRect(0,0,W,200);
+  ctx.fillStyle=bg2();ctx.fillRect(0,160,W,40);
+  ctx.strokeStyle=bc();ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,160);ctx.lineTo(W,160);ctx.stroke();
+  // 3 objects
+  const left=Math.max(42,W*0.13);
+  const gap=Math.max(78,W*0.28);
+  const objs=[{lbl:'রিং',v:vR,col:'#3B8BD4',x:left},{lbl:'সিলিন্ড.',v:vC,col:'#7F77DD',x:left+gap},{lbl:'গোলক',v:vS,col:'#0F6E56',x:left+gap*2}];
+  objs.forEach(o=>{
+    ctx.fillStyle=o.col;
+    ctx.beginPath();ctx.arc(o.x,130,20,0,2*Math.PI);ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText(o.lbl,o.x,134);
+    ctx.fillStyle=o.col;ctx.font='11px sans-serif';ctx.fillText(o.v.toFixed(2)+'ms⁻¹',o.x,110);
+  });
+  ctx.fillStyle=pc();ctx.font='12px sans-serif';ctx.textAlign='left';
+  ctx.fillText('গোলক > সিলিন্ডার > রিং',10,185);
+}
+function runT13(){
+  if(t13anim)return;
+  const h=+document.getElementById('s13h').value;
+  const vR=Math.sqrt(g*h),vC=Math.sqrt(4*g*h/3),vS=Math.sqrt(10*g*h/7);
+  const canvas=document.getElementById('c13');
+  const W=canvas.offsetWidth||640;
+  const left=Math.max(42,W*0.13);
+  const gap=Math.max(78,W*0.28);
+  let xR=left,xC=left+gap,xS=left+gap*2;
+  let frames=0;
+  t13anim=setInterval(()=>{
+    frames++;
+    xR+=vR*0.4*motionBoost();xC+=vC*0.4*motionBoost();xS+=vS*0.4*motionBoost();
+    if(xS>(W-40)){clearInterval(t13anim);t13anim=null;return;}
+    const c=document.getElementById('c13');const ctx=c.getContext('2d');
+    ctx.clearRect(0,0,c.width,c.height);
+    ctx.fillStyle=bg2();ctx.fillRect(0,160,c.width,40);
+    ctx.strokeStyle=bc();ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,160);ctx.lineTo(c.width,160);ctx.stroke();
+    const objs=[{lbl:'রিং',x:xR,col:'#3B8BD4',v:vR},{lbl:'সিলিন্ড.',x:xC,col:'#7F77DD',v:vC},{lbl:'গোলক',x:xS,col:'#0F6E56',v:vS}];
+    objs.forEach(o=>{
+      ctx.fillStyle=o.col;ctx.beginPath();ctx.arc(o.x,130,20,0,2*Math.PI);ctx.fill();
+      ctx.fillStyle='#fff';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText(o.lbl,o.x,134);
+    });
+  },30);
+}
+function stopT13(){clearInterval(t13anim);t13anim=null;drawT13();}
+
+// ===== T14 Circular horizontal =====
+function drawT14(){
+  const c=document.getElementById('c14');
+  const ctx=c.getContext('2d');
+  const W=c.offsetWidth||640;c.width=W;c.height=220;
+  const v=+document.getElementById('s14v').value;
+  const r=+document.getElementById('s14r').value;
+  const m=+document.getElementById('s14m').value;
+  document.getElementById('v14v').textContent=v;
+  document.getElementById('v14r').textContent=r;
+  document.getElementById('v14m').textContent=m;
+  const Fc=m*v*v/r,T=Fc;
+  document.getElementById('r14').textContent=
+    'F_c = mv²/r = '+m+'×'+v+'²/'+r+' = '+Fc.toFixed(2)+' N  |  T = '+T.toFixed(2)+' N';
+  ctx.clearRect(0,0,W,220);
+  // Top view - circle
+  const cx=W/2,cy=110;const cr=Math.min(r*15,90);
+  ctx.strokeStyle='#B5D4F4';ctx.lineWidth=2;ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.arc(cx,cy,cr,0,2*Math.PI);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#888';ctx.beginPath();ctx.arc(cx,cy,5,0,2*Math.PI);ctx.fill();
+  // Object
+  const t=(performance.now()/800)*motionBoost();
+  const ox=cx+cr*Math.cos(t),oy=cy+cr*Math.sin(t);
+  ctx.fillStyle='#7F77DD';ctx.beginPath();ctx.arc(ox,oy,14,0,2*Math.PI);ctx.fill();
+  ctx.fillStyle='#fff';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText(m+'kg',ox,oy+4);
+  // String
+  ctx.strokeStyle='#444';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(ox,oy);ctx.stroke();
+  // Centripetal arrow
+  const dx=cx-ox,dy=cy-oy,dl=Math.sqrt(dx*dx+dy*dy);
+  ctx.strokeStyle='#E85D24';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox+dx/dl*25,oy+dy/dl*25);ctx.stroke();
+  ctx.fillStyle='#E85D24';ctx.font='11px sans-serif';ctx.textAlign='left';
+  ctx.fillText('F_c='+Fc.toFixed(1)+'N',ox+dx/dl*28,oy+dy/dl*28);
+  ctx.fillStyle=pc();ctx.font='12px sans-serif';ctx.textAlign='center';
+  ctx.fillText('উপর থেকে দর্শন — সুষম বৃত্তাকার গতি',cx,210);
+}
+function updateT14(){
+  const c=document.getElementById('c14');
+  const v=+document.getElementById('s14v').value;
+  const r=+document.getElementById('s14r').value;
+  const m=+document.getElementById('s14m').value;
+  document.getElementById('v14v').textContent=v;
+  document.getElementById('v14r').textContent=r;
+  document.getElementById('v14m').textContent=m;
+  const Fc=m*v*v/r;
+  document.getElementById('r14').textContent='F_c = mv²/r = '+Fc.toFixed(2)+' N';
+}
+let t14loop;
+function startT14Loop(){
+  t14loop=setInterval(()=>{if(document.getElementById('t14').classList.contains('active'))drawT14();},50);
+}
+startT14Loop();
+
+// ===== T15 Vertical circular =====
+function drawT15(){
+  const c=document.getElementById('c15');
+  const ctx=c.getContext('2d');
+  const W=c.offsetWidth||640;c.width=W;c.height=220;
+  const R=+document.getElementById('s15R').value;
+  const m=+document.getElementById('s15m').value;
+  const theta=+document.getElementById('s15t').value;
+  document.getElementById('v15R').textContent=R+' m';
+  document.getElementById('v15m').textContent=m+' kg';
+  document.getElementById('v15t').textContent=theta+'°';
+  const th=theta*Math.PI/180;
+  const vc=Math.sqrt(5*g*R);
+  const v2=vc*vc-2*g*R*(1-Math.cos(Math.PI-th));
+  const v=Math.sqrt(Math.max(0,v2));
+  const T=m*v*v/R+m*g*Math.cos(Math.PI-th);
+  ctx.clearRect(0,0,W,220);
+  const cx=W/2,cy=110,cr=Math.min(R*25,90);
+  ctx.strokeStyle='#B5D4F4';ctx.lineWidth=2;ctx.setLineDash([5,4]);
+  ctx.beginPath();ctx.arc(cx,cy,cr,0,2*Math.PI);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#888';ctx.beginPath();ctx.arc(cx,cy,5,0,2*Math.PI);ctx.fill();
+  const ox=cx+cr*Math.sin(th),oy=cy-cr*Math.cos(th);
+  ctx.fillStyle='#7F77DD';ctx.beginPath();ctx.arc(ox,oy,13,0,2*Math.PI);ctx.fill();
+  ctx.fillStyle='#fff';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText('m',ox,oy+4);
+  ctx.strokeStyle='#333';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(ox,oy);ctx.stroke();
+  const dx=cx-ox,dy=cy-oy,dl=Math.sqrt(dx*dx+dy*dy);
+  ctx.strokeStyle=T<0?'#E85D24':'#3B8BD4';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox+dx/dl*25,oy+dy/dl*25);ctx.stroke();
+  ctx.fillStyle='#3B8BD4';ctx.font='11px sans-serif';ctx.textAlign='center';
+  ctx.fillText('T='+Math.max(0,T).toFixed(1)+'N',ox+dx/dl*35,oy+dy/dl*35+10);
+  ctx.strokeStyle='#E85D24';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox,oy+30);ctx.stroke();
+  ctx.fillStyle='#E85D24';ctx.fillText('mg',ox+18,oy+28);
+  document.getElementById('r15').textContent=
+    'θ='+theta+'°: v='+v.toFixed(2)+'ms⁻¹, T='+Math.max(0,T).toFixed(2)+'N'+(T<0?' (সুতা ছিঁড়ে গেছে!)':'');
+}
+function updateT15(){drawT15();}
+
+// ===== T16 Banking =====
+function drawT16(){
+  const c=document.getElementById('c16');
+  const ctx=c.getContext('2d');
+  const W=c.offsetWidth||640;c.width=W;c.height=200;
+  const v_kmh=+document.getElementById('s16v').value;
+  const r=+document.getElementById('s16r').value;
+  const mu=+document.getElementById('s16mu').value/100;
+  document.getElementById('v16v').textContent=v_kmh;
+  document.getElementById('v16r').textContent=r;
+  document.getElementById('v16mu').textContent=mu.toFixed(2);
+  const v=v_kmh/3.6;
+  const theta=Math.atan(v*v/(r*g))*180/Math.PI;
+  const vmax=Math.sqrt(mu*r*g);
+  const vmax_bank=Math.sqrt(r*g*(Math.tan(theta*Math.PI/180)+mu)/(1-mu*Math.tan(theta*Math.PI/180)));
+  document.getElementById('r16').textContent=
+    'ব্যাংকিং কোণ θ = '+theta.toFixed(2)+'° | ঘর্ষণ সহ সর্বোচ্চ বেগ = '+vmax_bank.toFixed(2)+' ms⁻¹ = '+Math.round(vmax_bank*3.6)+' kmh⁻¹';
+  ctx.clearRect(0,0,W,200);
+  // Banked road cross section
+  const t=theta*Math.PI/180;
+  const bx=W/2-70,by=100;
+  ctx.save();ctx.translate(W/2,150);ctx.rotate(-t);
+  ctx.fillStyle='#C0DD97';ctx.fillRect(-80,0,160,20);
+  ctx.fillStyle='#333';ctx.fillRect(-80,-4,160,4);
+  ctx.restore();
+  // Car
+  ctx.save();ctx.translate(W/2,150);ctx.rotate(-t);
+  ctx.fillStyle='#3B8BD4';ctx.fillRect(-18,-28,36,20);ctx.restore();
+  // Vectors
+  const cxv=W/2,cyv=120;
+  ctx.strokeStyle='#0F6E56';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(cxv,cyv);ctx.lineTo(cxv,cyv-50);ctx.stroke();
+  ctx.fillStyle='#0F6E56';ctx.font='11px sans-serif';ctx.textAlign='center';ctx.fillText('R',cxv+10,cyv-35);
+  ctx.strokeStyle='#E85D24';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(cxv,cyv);ctx.lineTo(cxv,cyv+35);ctx.stroke();
+  ctx.fillStyle='#E85D24';ctx.fillText('mg',cxv+15,cyv+35);
+  ctx.fillStyle=pc();ctx.font='12px sans-serif';ctx.textAlign='left';
+  ctx.fillText('θ = '+theta.toFixed(1)+'°',10,30);
+  ctx.fillText('v = '+v.toFixed(2)+' ms⁻¹',10,50);
+}
+function updateT16(){drawT16();}
+
+// ===== T17 Center of mass =====
+function drawT17(){
+  const c=document.getElementById('c17');
+  const ctx=c.getContext('2d');
+  const W=c.offsetWidth||640;c.width=W;c.height=220;
+  const m1=+document.getElementById('s17m1').value;
+  const m2=+document.getElementById('s17m2').value;
+  const m3=+document.getElementById('s17m3').value;
+  document.getElementById('v17m1').textContent=m1;
+  document.getElementById('v17m2').textContent=m2;
+  document.getElementById('v17m3').textContent=m3;
+  const left=Math.max(72,W*0.16);
+  const right=Math.min(W-72,W*0.84);
+  const p1={x:left,y:160},p2={x:right,y:160},p3={x:(left+right)/2,y:70};
+  const xc=(m1*p1.x+m2*p2.x+m3*p3.x)/(m1+m2+m3);
+  const yc=(m1*p1.y+m2*p2.y+m3*p3.y)/(m1+m2+m3);
+  document.getElementById('r17').textContent=
+    '(x_cm, y_cm) = ('+xc.toFixed(0)+', '+yc.toFixed(0)+') পিক্সেল (স্ক্রিন)';
+  ctx.clearRect(0,0,W,220);
+  // Axes
+  ctx.strokeStyle=bc();ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(left-36,20);ctx.lineTo(left-36,200);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(left-36,190);ctx.lineTo(right+38,190);ctx.stroke();
+  ctx.fillStyle=sc();ctx.font='11px sans-serif';ctx.fillText('y',left-46,25);ctx.fillText('x',right+40,195);
+  // Masses
+  const masses=[{p:p1,m:m1,c:'#3B8BD4',lbl:'m₁='+m1},{p:p2,m:m2,c:'#E85D24',lbl:'m₂='+m2},{p:p3,m:m3,c:'#0F6E56',lbl:'m₃='+m3}];
+  masses.forEach(o=>{
+    const radius=clamp(8+o.m*1.9,10,24);
+    ctx.fillStyle=o.c;ctx.beginPath();ctx.arc(o.p.x,o.p.y,radius,0,2*Math.PI);ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.fillText(o.lbl,o.p.x,o.p.y+4);
+    ctx.strokeStyle=o.c;ctx.lineWidth=1;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(o.p.x,o.p.y);ctx.lineTo(xc,yc);ctx.stroke();ctx.setLineDash([]);
+  });
+  // Center of mass
+  ctx.fillStyle='#FCDE5A';ctx.strokeStyle='#E85D24';ctx.lineWidth=3;
+  ctx.beginPath();ctx.arc(xc,yc,10,0,2*Math.PI);ctx.fill();ctx.stroke();
+  ctx.fillStyle=pc();ctx.font='bold 12px sans-serif';ctx.textAlign='left';
+  ctx.fillText('ভরকেন্দ্র CM',xc+14,yc+5);
+}
+
+// Init first tab + space-time interactions
+setTimeout(()=>{drawT1();bootSpaceExperience();},100);
+</script>
