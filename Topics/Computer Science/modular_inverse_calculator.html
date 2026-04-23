@@ -1,23 +1,53 @@
 
 <h2 class="sr-only">Interactive modular inverse calculator using the Extended Euclidean Algorithm</h2>
 <style>
-  .mi-wrap { padding: 1.5rem 0; font-family: var(--font-sans); }
-  .mi-inputs { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .mi-wrap { padding: 1.5rem 0; font-family: var(--font-sans); max-width: 100%; }
+  .mi-inputs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: end; margin-bottom: 1.25rem; }
   .mi-field { display: flex; flex-direction: column; gap: 6px; }
   .mi-field label { font-size: 13px; color: var(--color-text-secondary); }
-  .mi-field input { width: 90px; }
-  .mi-result { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+  .mi-field input { width: 100%; min-height: 44px; }
+  .mi-inputs button { min-height: 44px; padding: 0 1rem; }
+  .mi-result { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1.1rem 1.25rem; margin-bottom: 1rem; }
   .mi-result .val { font-size: 28px; font-weight: 500; color: var(--color-text-primary); }
   .mi-result .sub { font-size: 13px; color: var(--color-text-secondary); margin-top: 4px; }
   .mi-error { color: var(--color-text-danger); font-size: 14px; margin-bottom: 1rem; }
   .steps-title { font-size: 14px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 10px; letter-spacing: 0.04em; }
-  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .mi-steps {
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem 1.1rem;
+  }
+  .mi-steps summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .mi-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 0.75rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 420px; }
   th { text-align: left; font-weight: 500; font-size: 13px; color: var(--color-text-secondary); border-bottom: 0.5px solid var(--color-border-tertiary); padding: 6px 10px; }
   td { padding: 8px 10px; border-bottom: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); font-variant-numeric: tabular-nums; }
   tr:last-child td { border-bottom: none; background: var(--color-background-secondary); font-weight: 500; }
   .verify { margin-top: 1rem; font-size: 14px; color: var(--color-text-secondary); }
   .verify span { color: var(--color-text-success); font-weight: 500; }
   .no-inv { color: var(--color-text-danger); font-size: 14px; }
+
+  @media (max-width: 768px) {
+    .mi-inputs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .mi-inputs button { grid-column: 1 / -1; }
+    .mi-result .val { font-size: 24px; line-height: 1.25; }
+  }
+
+  @media (max-width: 480px) {
+    .mi-wrap { padding: 1rem 0; }
+    .mi-inputs { grid-template-columns: 1fr; }
+    .mi-result,
+    .mi-steps { padding: 0.95rem; }
+    .mi-result .val { font-size: 22px; }
+    .mi-steps summary { font-size: 0.98rem; }
+  }
 </style>
 
 <div class="mi-wrap">
@@ -94,15 +124,20 @@ function compute() {
   }).join('');
 
   sb.innerHTML = `
-    <div class="steps-title">Extended Euclidean steps — solving ${a}·x + ${m}·y = gcd</div>
-    <table>
-      <thead><tr><th>Quotient</th><th>Remainder</th><th>x coeff</th><th>y coeff</th></tr></thead>
-      <tbody>${rowsHtml}</tbody>
-    </table>
-    <p class="verify">
-      Verification: ${a} × ${inv} mod ${m} = ${(a * inv) % m}
-      <span>✓ confirmed</span>
-    </p>`;
+    <details class="mi-steps" open>
+      <summary>Extended Euclidean steps for ${a} and ${m}</summary>
+      <div class="steps-title">Solving ${a}·x + ${m}·y = gcd</div>
+      <div class="mi-table-wrap">
+        <table>
+          <thead><tr><th>Quotient</th><th>Remainder</th><th>x coeff</th><th>y coeff</th></tr></thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </div>
+      <p class="verify">
+        Verification: ${a} × ${inv} mod ${m} = ${(a * inv) % m}
+        <span>✓ confirmed</span>
+      </p>
+    </details>`;
 }
 
 compute();

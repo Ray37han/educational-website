@@ -5,6 +5,7 @@ const previewTabs = document.querySelectorAll('[data-preview]');
 const previewPanels = document.querySelectorAll('[data-panel]');
 const previewAction = document.querySelector('[data-preview-action]');
 const revealItems = document.querySelectorAll('.reveal');
+const motionReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const previewCycle = ['formula', 'code', 'graph'];
 let previewIndex = 0;
@@ -22,11 +23,13 @@ const setActivePreview = (name) => {
 const openNav = () => {
   navLinks.classList.add('is-open');
   navToggle.setAttribute('aria-expanded', 'true');
+  document.documentElement.classList.add('nav-open');
 };
 
 const closeNav = () => {
   navLinks.classList.remove('is-open');
   navToggle.setAttribute('aria-expanded', 'false');
+  document.documentElement.classList.remove('nav-open');
 };
 
 if (navToggle && navLinks) {
@@ -46,6 +49,22 @@ if (navToggle && navLinks) {
       }
     });
   });
+
+  document.addEventListener('click', (event) => {
+    if (!navLinks.classList.contains('is-open')) {
+      return;
+    }
+
+    if (!navToggle.contains(event.target) && !navLinks.contains(event.target)) {
+      closeNav();
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeNav();
+    }
+  });
 }
 
 previewTabs.forEach((tab) => {
@@ -59,14 +78,16 @@ if (previewAction) {
   previewAction.addEventListener('click', () => {
     previewIndex = (previewIndex + 1) % previewCycle.length;
     setActivePreview(previewCycle[previewIndex]);
-    previewAction.animate(
-      [
-        { transform: 'scale(1)' },
-        { transform: 'scale(0.96)' },
-        { transform: 'scale(1)' },
-      ],
-      { duration: 220, easing: 'ease-out' },
-    );
+    if (!motionReduced) {
+      previewAction.animate(
+        [
+          { transform: 'scale(1)' },
+          { transform: 'scale(0.96)' },
+          { transform: 'scale(1)' },
+        ],
+        { duration: 220, easing: 'ease-out' },
+      );
+    }
   });
 }
 
@@ -90,6 +111,27 @@ const updateHeader = () => {
 
 window.addEventListener('scroll', updateHeader, { passive: true });
 updateHeader();
+
+const injectBackToTop = () => {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'back-to-top';
+  button.setAttribute('aria-label', 'Back to top');
+  button.textContent = 'Top';
+
+  button.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: motionReduced ? 'auto' : 'smooth' });
+  });
+
+  document.body.appendChild(button);
+
+  const toggle = () => {
+    button.classList.toggle('is-visible', window.scrollY > 640);
+  };
+
+  window.addEventListener('scroll', toggle, { passive: true });
+  toggle();
+};
 
 const createParticles = () => {
   const background = document.querySelector('.hero-bg');
@@ -117,6 +159,16 @@ const createParticles = () => {
 
 createParticles();
 setActivePreview('formula');
+injectBackToTop();
+
+document.querySelectorAll('img').forEach((img) => {
+  if (!img.hasAttribute('loading')) {
+    img.loading = 'lazy';
+  }
+  if (!img.hasAttribute('decoding')) {
+    img.decoding = 'async';
+  }
+});
 
 const smoothScrollLinks = document.querySelectorAll('a[href^="#"]');
 smoothScrollLinks.forEach((link) => {
@@ -135,13 +187,15 @@ smoothScrollLinks.forEach((link) => {
 const pulseButtons = document.querySelectorAll('.btn, .preview-tab, .social-links a');
 pulseButtons.forEach((button) => {
   button.addEventListener('click', () => {
-    button.animate(
-      [
-        { transform: 'scale(1)' },
-        { transform: 'scale(0.97)' },
-        { transform: 'scale(1)' },
-      ],
-      { duration: 180, easing: 'ease-out' },
-    );
+    if (!motionReduced) {
+      button.animate(
+        [
+          { transform: 'scale(1)' },
+          { transform: 'scale(0.97)' },
+          { transform: 'scale(1)' },
+        ],
+        { duration: 180, easing: 'ease-out' },
+      );
+    }
   });
 });

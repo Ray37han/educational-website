@@ -5,25 +5,91 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Math Topics | Rayhan Labs</title>
   <style>
-    body { margin: 0; font-family: Inter, system-ui, sans-serif; background: #0f172a; color: #e2e8f0; }
-    .wrap { max-width: 900px; margin: 0 auto; padding: 48px 20px; }
-    a { color: #93c5fd; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .card { margin-top: 18px; padding: 18px; border: 1px solid rgba(148,163,184,.16); border-radius: 18px; background: rgba(15,23,42,.6); }
-    .list { display: grid; gap: 12px; margin-top: 20px; }
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, system-ui, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(56, 189, 248, 0.16), transparent 24%),
+        linear-gradient(180deg, #020617 0%, #0f172a 58%, #111827 100%);
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(900px, calc(100% - 1rem)); margin: 0 auto; padding: 28px 0 40px; }
+    h1 { margin: 0; font-size: clamp(2rem, 8vw, 3rem); letter-spacing: -0.04em; }
+    .lede { margin: 0.6rem 0 0; max-width: 46ch; color: #94a3b8; line-height: 1.7; }
+    .toolbar { display: grid; gap: 0.75rem; margin-top: 1.25rem; }
+    .search {
+      width: 100%;
+      min-height: 48px;
+      padding: 0.9rem 1rem;
+      border: 1px solid rgba(148,163,184,.18);
+      border-radius: 16px;
+      background: rgba(15,23,42,.72);
+      color: #e2e8f0;
+      font: inherit;
+    }
+    .search::placeholder { color: #94a3b8; }
+    .search:focus { outline: 2px solid rgba(96, 165, 250, 0.55); outline-offset: 2px; }
+    .meta { margin: 0; color: #94a3b8; font-size: 0.95rem; }
+    .list { display: grid; gap: 12px; margin-top: 18px; }
+    .card {
+      min-height: 58px;
+      padding: 18px;
+      border: 1px solid rgba(148,163,184,.16);
+      border-radius: 18px;
+      background: rgba(15,23,42,.68);
+      display: flex;
+      align-items: center;
+      transition: transform 180ms ease, border-color 180ms ease;
+    }
+    .card:hover { transform: translateY(-1px); border-color: rgba(96,165,250,.44); }
+    .back-link { display: inline-flex; margin-top: 24px; min-height: 44px; align-items: center; color: #93c5fd; }
+    @media (max-width: 480px) {
+      .wrap { width: min(100% - 0.75rem, 900px); padding-top: 20px; }
+      .card { padding: 16px; }
+      .back-link { margin-top: 18px; }
+    }
   </style>
 </head>
 <body>
   <main class="wrap">
     <h1>Math Topics</h1>
-    <p>Organized notes and calculators for modular arithmetic and related number theory.</p>
-    <div class="list">
-      <a class="card" href="../Computer%20Science/modular_inverse_calculator.html">Modular Inverse Calculator</a>
-      <a class="card" href="../Computer%20Science/modular_inverse.html">Modular Inverse Explainer</a>
-      <a class="card" href="../Computer%20Science/congruence.html">Congruence Explainer</a>
-      <a class="card" href="../Computer%20Science/crt.html">CRT Explainer</a>
+    <p class="lede">Organized notes and calculators for modular arithmetic and related number theory.</p>
+    <div class="toolbar">
+      <input class="search" type="search" id="math-search" placeholder="Search a math topic" autocomplete="off">
+      <p class="meta" id="math-count">4 topics available</p>
     </div>
-    <p style="margin-top:24px;"><a href="../../index.html">Back to home</a></p>
+    <div class="list">
+      <a class="card" href="../Computer%20Science/modular_inverse_calculator.html" data-card>Modular Inverse Calculator</a>
+      <a class="card" href="../Computer%20Science/modular_inverse.html" data-card>Modular Inverse Explainer</a>
+      <a class="card" href="../Computer%20Science/congruence.html" data-card>Congruence Explainer</a>
+      <a class="card" href="../Computer%20Science/crt.html" data-card>CRT Explainer</a>
+    </div>
+    <a class="back-link" href="../../index.html">Back to home</a>
   </main>
+  </script>
+</body>
+</html>
+    const count = document.getElementById('math-count');
+
+    const updateCount = () => {
+      const visible = cards.filter((card) => !card.hidden).length;
+      count.textContent = visible === 1 ? '1 topic available' : `${visible} topics available`;
+    };
+
+    search.addEventListener('input', () => {
+      const query = search.value.trim().toLowerCase();
+      cards.forEach((card) => {
+        card.hidden = Boolean(query) && !card.textContent.toLowerCase().includes(query);
+      });
+      updateCount();
+    });
+
+    updateCount();
+  </script>
 </body>
 </html>

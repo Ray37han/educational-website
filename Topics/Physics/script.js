@@ -96,6 +96,33 @@ function initReveal() {
   revealNodes.forEach((node) => observer.observe(node));
 }
 
+/* ------------------------ Search Filter ------------------------ */
+function initCatalogSearch() {
+  const input = document.getElementById("catalog-search");
+  if (!input) return;
+
+  const items = Array.from(
+    document.querySelectorAll(".paper-card, .topic-card, .demo-card")
+  );
+  const sections = document.querySelectorAll(".paper-grid, .topics-grid, .demo-grid");
+
+  const applyFilter = () => {
+    const query = input.value.trim().toLowerCase();
+
+    items.forEach((item) => {
+      const text = item.textContent.toLowerCase();
+      item.hidden = Boolean(query) && !text.includes(query);
+    });
+
+    sections.forEach((section) => {
+      const visibleCount = Array.from(section.children).filter((child) => !child.hidden).length;
+      section.hidden = visibleCount === 0;
+    });
+  };
+
+  input.addEventListener("input", applyFilter);
+}
+
 /* ------------------------ Ripple ------------------------ */
 function initRippleButtons() {
   const buttons = document.querySelectorAll(".ripple-btn");
@@ -812,6 +839,7 @@ function init() {
   initNavbar();
   initReveal();
   initRippleButtons();
+  initCatalogSearch();
 
   initHeroScene();
   initPaperScenes();
