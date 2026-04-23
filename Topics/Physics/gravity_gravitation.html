@@ -225,6 +225,110 @@ tr:nth-child(even) {
 .toc a:hover {
   color: #667eea;
 }
+
+@media (max-width: 900px) {
+  body {
+    padding: 14px;
+  }
+
+  .container {
+    max-width: 100%;
+  }
+
+  .header {
+    padding: 28px 18px;
+  }
+
+  .header h1 {
+    font-size: clamp(1.7rem, 6vw, 2.3rem);
+  }
+
+  .header p {
+    font-size: 1rem;
+  }
+
+  .content {
+    padding: 24px 18px;
+  }
+
+  .section {
+    padding: 18px;
+  }
+
+  .section h2 {
+    font-size: clamp(1.35rem, 5vw, 1.9rem);
+  }
+
+  .section h3 {
+    font-size: 1.18rem;
+  }
+
+  .simulation {
+    padding: 18px;
+  }
+
+  .canvas-container {
+    min-height: 280px;
+  }
+
+  canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 560px) {
+  body {
+    padding: 10px;
+  }
+
+  .header {
+    padding: 22px 14px;
+  }
+
+  .content {
+    padding: 18px 14px;
+  }
+
+  .section {
+    padding: 14px;
+  }
+
+  .formula-box,
+  .important,
+  .note,
+  .example {
+    padding: 12px;
+    margin: 12px 0;
+  }
+
+  .simulation {
+    padding: 14px;
+  }
+
+  .control-panel {
+    padding: 14px;
+  }
+
+  .canvas-container {
+    min-height: 230px;
+    margin: 14px 0;
+  }
+
+  .toc {
+    padding: 14px;
+  }
+
+  .toc h3 {
+    font-size: 1.05rem;
+  }
+}
 </style>
 </head>
 <body>
