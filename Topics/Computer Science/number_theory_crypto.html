@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Number Theory & Cryptography</title>
+<style>
+  :root{--bg:#0f1117;--card:#1a1d2e;--card2:#22263a;--accent:#6c63ff;--accent2:#00d4aa;--accent3:#ff6b6b;--accent4:#ffd93d;--text:#e8eaf0;--muted:#8b8fa8;--border:#2e3250;--code:#0d1117;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6;}
+  nav{background:var(--card);border-bottom:1px solid var(--border);padding:0 1rem;display:flex;gap:0;overflow-x:auto;position:sticky;top:0;z-index:100;}
+  nav button{background:none;border:none;color:var(--muted);padding:.8rem 1rem;cursor:pointer;font-size:.8rem;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;}
+  nav button:hover{color:var(--text);}
+  nav button.active{color:var(--accent);border-bottom-color:var(--accent);}
+  .hero{background:linear-gradient(135deg,#1a1d2e,#12152a);padding:2.5rem 2rem 1.5rem;text-align:center;border-bottom:1px solid var(--border);}
+  .hero h1{font-size:2rem;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .hero p{color:var(--muted);margin-top:.4rem;}
+  .section{display:none;padding:1.5rem;max-width:960px;margin:0 auto;}
+  .section.active{display:block;}
+  h2{font-size:1.4rem;color:var(--accent);margin-bottom:1rem;}
+  h3{font-size:1rem;color:var(--accent2);margin:1.2rem 0 .5rem;}
+  p{color:#c8cad8;margin-bottom:.7rem;}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:1rem;}
+  .card2{background:var(--card2);border-radius:8px;padding:.8rem;margin:.6rem 0;}
+  .formula{background:var(--code);border-left:4px solid var(--accent);border-radius:6px;padding:.7rem 1rem;font-family:'Courier New',monospace;color:var(--accent4);margin:.7rem 0;font-size:.9rem;white-space:pre-wrap;}
+  .sim{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:1rem;margin:.8rem 0;}
+  .sim-title{font-size:.78rem;color:var(--accent4);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.7rem;}
+  .controls{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-bottom:.7rem;}
+  label{font-size:.82rem;color:var(--muted);}
+  input[type=number],input[type=text],select{background:var(--code);border:1px solid var(--border);color:var(--text);padding:.35rem .6rem;border-radius:6px;font-size:.88rem;width:85px;}
+  input[type=text]{width:155px;}
+  .btn{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:.4rem .9rem;cursor:pointer;font-size:.85rem;}
+  .btn:hover{opacity:.85;}
+  .btn.green{background:var(--accent2);color:#000;}
+  .btn.red{background:var(--accent3);}
+  .output{background:var(--code);border-radius:6px;padding:.7rem 1rem;font-family:monospace;font-size:.85rem;color:var(--accent2);min-height:36px;white-space:pre-wrap;word-break:break-all;}
+  .bits{display:flex;flex-wrap:wrap;gap:4px;margin:.5rem 0;}
+  .bit{width:26px;height:26px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:.82rem;font-weight:bold;}
+  .bit-1{background:var(--accent);color:#fff;}
+  .bit-0{background:var(--card2);color:var(--muted);border:1px solid var(--border);}
+  .sieve-grid{display:flex;flex-wrap:wrap;gap:4px;margin:.7rem 0;}
+  .sg{width:34px;height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:bold;}
+  .sg.prime{background:var(--accent2);color:#000;}
+  .sg.composite{background:var(--card2);color:var(--muted);text-decoration:line-through;}
+  .sg.one{background:var(--border);color:var(--muted);}
+  .step{display:flex;gap:.6rem;margin:.4rem 0;align-items:flex-start;}
+  .step-num{background:var(--accent);color:#fff;border-radius:50%;width:22px;height:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:bold;}
+  .hl-g{color:var(--accent2);font-weight:600;}
+  .hl-y{color:var(--accent4);font-weight:600;}
+  .hl-r{color:var(--accent3);font-weight:600;}
+  .tag{display:inline-block;background:var(--accent);color:#fff;font-size:.7rem;padding:.12rem .45rem;border-radius:10px;margin-left:.4rem;}
+  .tag.g{background:var(--accent2);color:#000;}
+  .cipher-row{display:flex;gap:3px;flex-wrap:wrap;margin:.3rem 0;}
+  .cbox{min-width:28px;height:28px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-family:monospace;padding:0 3px;}
+  .cbox.orig{background:#2e3250;color:var(--accent4);}
+  .cbox.enc{background:var(--accent);color:#fff;}
+  footer{text-align:center;padding:2rem;color:var(--muted);font-size:.78rem;border-top:1px solid var(--border);margin-top:2rem;}
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1>Number Theory &amp; Cryptography</h1>
+  <p>Chapter 4 · Interactive Simulations &amp; Examples</p>
+</div>
+<nav id="nav">
+  <button class="active" onclick="show(0)">4.1 Divisibility</button>
+  <button onclick="show(1)">4.2 Representations</button>
+  <button onclick="show(2)">4.3 Primes &amp; GCD</button>
+  <button onclick="show(3)">4.4 Congruences</button>
+  <button onclick="show(4)">4.5 Applications</button>
+  <button onclick="show(5)">4.6 Cryptography</button>
+</nav>
+
+<!-- 4.1 -->
+<div class="section active" id="s0">
+  <h2>➗ 4.1 Divisibility &amp; Modular Arithmetic</h2>
+
+  <div class="card">
+    <h3>Divisibility Definition</h3>
+    <p>We say <span class="hl-g">a | b</span> (a divides b) if there exists integer k such that <span class="hl-y">b = a·k</span>.</p>
+    <div class="formula">a | b  ⟺  ∃k ∈ ℤ : b = a·k
+
+Examples:  3 | 12  since 12 = 3·4  ✅
+           5 | 30  since 30 = 5·6  ✅
+           7 | 15  → 15/7 not integer  ❌</div>
+
+    <div class="sim">
+      <div class="sim-title">🔬 Divisibility Tester</div>
+      <div class="controls">
+        <label>a =</label><input type="number" id="div_a" value="7">
+        <label>b =</label><input type="number" id="div_b" value="49">
+        <button class="btn" onclick="checkDiv()">Check a | b</button>
+      </div>
+      <div class="output" id="div_out">Enter values and click Check.</div>
+    </div>
+
+    <div class="sim">
+      <div class="sim-title">🔬 Find All Divisors</div>
+      <div class="controls">
+        <label>n =</label><input type="number" id="divs_n" value="60">
+        <button class="btn" onclick="findDivisors()">Find Divisors</button>
+      </div>
+      <div class="output" id="divs_out"></div>
+    </div>
+
+    <h3>Key Theorems</h3>
+    <div class="card2">
+      <div class="step"><div class="step-num">1</div><p>a|b and a|c → a|(b+c) and a|(b−c)</p></div>
+      <div class="step"><div class="step-num">2</div><p>a|b → a|(b·c) for any integer c</p></div>
+      <div class="step"><div class="step-num">3</div><p>a|b and b|c → a|c  (transitivity)</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Division Algorithm</h3>
+    <div class="formula">For a ∈ ℤ, d ∈ ℤ⁺:  a = d·q + r,  0 ≤ r &lt; d
+q = quotient  (a div d)
+r = remainder (a mod d)</div>
+    <p>Example: 23 = 5·4 + 3, so 23 div 5 = 4 and 23 mod 5 = 3.</p>
+    <div class="sim">
+      <div class="sim-title">🔬 Division Algorithm</div>
+      <div class="controls">
+        <label>a =</label><input type="number" id="da_a" value="23">
+        <label>d =</label><input type="number" id="da_d" value="5">
+        <button class="btn" onclick="divAlgo()">Compute</button>
+      </div>
+      <div class="output" id="da_out"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Modular Arithmetic</h3>
+    <p><span class="hl-g">a ≡ b (mod m)</span> means m divides (a−b). Think of a clock — values wrap around after m.</p>
+    <div class="formula">a mod m = r  ⟺  a = m·q + r,  0 ≤ r &lt; m
+
+Properties:
+(a + b) mod m = ((a mod m) + (b mod m)) mod m
+(a · b) mod m = ((a mod m) · (b mod m)) mod m</div>
+    <div class="sim">
+      <div class="sim-title">⏰ Modular Calculator</div>
+      <div class="controls">
+        <label>a =</label><input type="number" id="mc_a" value="14">
+        <select id="mc_op"><option>+</option><option>-</option><option>×</option></select>
+        <label>b =</label><input type="number" id="mc_b" value="9">
+        <label>mod</label><input type="number" id="mc_m" value="7">
+        <button class="btn" onclick="modCalc()">Calculate</button>
+      </div>
+      <div class="output" id="mc_out"></div>
+    </div>
+    <div class="sim">
+      <div class="sim-title">⏰ Clock Visualizer</div>
+      <div class="controls">
+        <label>n =</label><input type="number" id="mod_a" value="17">
+        <label>mod m =</label><input type="number" id="mod_m" value="5">
+        <button class="btn" onclick="modViz()">Show on Clock</button>
+      </div>
+      <canvas id="mod_canvas" width="200" height="200" style="display:none;margin:.5rem 0;"></canvas>
+      <div class="output" id="mod_out"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4.2 -->
+<div class="section" id="s1">
+  <h2>🔢 4.2 Integer Representations &amp; Algorithms</h2>
+
+  <div class="card">
+    <h3>Base-b Representations</h3>
+    <p>Any positive integer n has a unique representation in base b:</p>
+    <div class="formula">n = aₖ·bᵏ + aₖ₋₁·bᵏ⁻¹ + ... + a₁·b + a₀
+
+Common: Binary(2), Octal(8), Decimal(10), Hex(16)</div>
+    <div class="sim">
+      <div class="sim-title">🔬 Multi-Base Converter</div>
+      <div class="controls">
+        <label>Decimal:</label>
+        <input type="number" id="bc_n" value="255">
+        <button class="btn" onclick="baseConvert()">Convert</button>
+      </div>
+      <div class="output" id="bc_out"></div>
+      <div id="bc_bits" class="bits"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Binary Expansion (Positional Values)</h3>
+    <div class="formula">(1101)₂ = 1·2³ + 1·2² + 0·2¹ + 1·2⁰
+        =  8  +  4  +  0  +  1  = 13</div>
+    <div class="sim">
+      <div class="sim-title">🔬 Binary to Decimal Expander</div>
+      <div class="controls">
+        <label>Binary:</label>
+        <input type="text" id="bin_in" value="11010110">
+        <button class="btn" onclick="binExpand()">Expand</button>
+      </div>
+      <div class="output" id="bin_out"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Fast Modular Exponentiation</h3>
+    <p>Compute <span class="hl-g">bⁿ mod m</span> in <span class="hl-y">O(log n)</span> multiplications using repeated squaring — crucial for RSA!</p>
+    <div class="formula">Algorithm: write n in binary, square-and-multiply
+Example: 3^11 mod 7
+  11 = (1011)₂
+  Result built bit-by-bit from MSB</div>
+    <div class="sim">
+      <div class="sim-title">⚡ Modular Exponentiation (Step-by-Step)</div>
+      <div class="controls">
+        <label>b =</label><input type="number" id="me_b" value="3">
+        <label>n =</label><input type="number" id="me_n" value="644">
+        <label>mod =</label><input type="number" id="me_m" value="645">
+        <button class="btn" onclick="modExp()">Compute bⁿ mod m</button>
+      </div>
+      <div class="output" id="me_out"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Binary Addition</h3>
+    <div class="sim">
+      <div class="sim-title">🔬 Binary Adder</div>
+      <div class="controls">
+        <label>A:</label><input type="number" id="ba_a" value="25">
+        <label>B:</label><input type="number" id="ba_b" value="14">
+        <button class="btn" onclick="binaryAdd()">Add</button>
+      </div>
+      <div class="output" id="ba_out"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4.3 -->
+<div class="section" id="s2">
+  <h2>🔑 4.3 Primes &amp; Greatest Common Divisors</h2>
+
+  <div class="card">
+    <h3>Prime Numbers</h3>
+    <p>p &gt; 1 is prime if its only divisors are 1 and p. The <b>Fundamental Theorem of Arithmetic</b> guarantees unique prime factorization for every integer &gt; 1.</p>
+    <div class="formula">Every n > 1 = p₁^a₁ · p₂^a₂ · ... · pₖ^aₖ  (unique)</div>
+    <div class="sim">
+      <div class="sim-title">🔬 Primality Tester &amp; Factorizer</div>
+      <div class="controls">
+        <label>n =</label><input type="number" id="pt_n" value="84">
+        <button class="btn" onclick="primeTest()">Test &amp; Factor</button>
+      </div>
+      <div class="output" id="pt_out"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Sieve of Eratosthenes</h3>
+    <p>Eliminate multiples of each prime starting from 2. What remains are primes.</p>
+    <div class="sim">
+      <div class="sim-title">🧮 Interactive Sieve</div>
+      <div class="controls">
+        <label>Sieve up to:</label><input type="number" id="sv_n" value="100" style="width:65px">
+        <button class="btn" onclick="runSieve()">Run Sieve</button>
+      </div>
+      <div id="sieve_grid" class="sieve-grid"></div>
+      <div class="output" id="sv_out"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>GCD — Euclidean Algorithm</h3>
+    <div class="formula">gcd(a,b) = gcd(b, a mod b)   [repeat until b=0]
+Example: gcd(252,198):
+  252 = 198·1 + 54
+  198 = 54·3  + 36
+   54 = 36·1  + 18
+   36 = 18·2  +  0  → gcd = 18</div>
+    <div class="sim">
+      <div class="sim-title">🔬 Euclidean Algorithm (Step-by-Step)</div>
+      <div class="controls">
+        <label>a =</label><input type="number" id="gcd_a" value="252">
+        <label>b =</label><input type="number" id="gcd_b" value="198">
+        <button class="btn" onclick="euclidGCD()">Compute GCD</button>
+      </div>
+      <div class="output" id="gcd_out"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Extended Euclidean Algorithm (Bézout)</h3>
+    <div class="formula">Finds s, t such that:  gcd(a,b) = s·a + t·b</div>
+    <div class="sim">
+      <div class="sim-title">🔬 Extended GCD</div>
+      <div class="controls">
+        <label>a =</label><input type="number" id="egcd_a" value="35">
+        <label>b =</label><input type="number" id="egcd_b" value="15">
+        <button class="btn" onclick="extGCD()">Compute</button>
+      </div>
+      <div class="output" id="egcd_out"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>LCM</h3>
+    <div class="formula">lcm(a,b) = |a·b| / gcd(a,b)</div>
+    <div class="sim">
+      <div class="sim-title">🔬 LCM Calculator</div>
+      <div class="controls">
+        <label>a =</label><input type="number" id="lcm_a" value="12">
+        <label>b =</label><input type="number" id="lcm_b" value="18">
+        <button class="btn" onclick="calcLCM()">Compute LCM</button>
+      </div>
+      <div class="output" id="lcm_out"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4.4 -->
+<div class="section" id="s3">
+  <h2>⚖️ 4.4 Solving Congruences</h2>
+
+  <div class="card">
+    <h3>Linear Congruences</h3>
+    <div class="formula">ax ≡ b (mod m)
+Has solution ⟺ gcd(a,m) | b
+Number of solutions: d = gcd(a,m)</div>
+    <div class="sim">
+      <div class="sim-title">🔬 Linear Congruence Solver: ax ≡ b (mod m)</div>
+      <div class="controls">
+        <label>a =</label><input type="number" id="lc_a" value="3">
+        <label>b =</label><input type="number" id="lc_b" value="4">
+        <label>m =</label><input type="number" id="lc_m" value="7">
+        <button class="btn" onclick="solveLinearCong()">Solve</button>
+      </div>
+      <div class="output" id="lc_out"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Modular Inverse</h3>
+    <p><span class="hl-y">a⁻¹ mod m</span> exists iff gcd(a,m) = 1. Found via Extended Euclidean.</p>
+    <div class="formula">a · a⁻¹ ≡ 1 (mod m)</div>
+    <div class="sim">
+      <div class="sim-title">🔬 Modular Inverse Finder</div>
+      <div class="controls">
+        <label>a =</label><input type="number" id="mi_a" value="3">
+        <label>mod m =</label><input type="number" id="mi_m" value="7">
+        <button class="btn" onclick="modInverse()">Find a⁻¹</button>
+      </div>
+      <div class="output" id="mi_out"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Chinese Remainder Theorem (CRT)</h3>
+    <div class="formula">x ≡ a₁ (mod m₁)
+x ≡ a₂ (mod m₂)   [m₁,m₂ coprime]
+  ...
+Unique solution mod M = m₁·m₂·...·mₙ</div>
+    <div class="sim">
+      <div class="sim-title">🔬 CRT Solver (2 equations)</div>
+      <div class="controls">
+        <label>x ≡</label><input type="number" id="crt_a1" value="2">
+        <label>(mod</label><input type="number" id="crt_m1" value="3"><label>)</label>
+      </div>
+      <div class="controls">
+        <label>x ≡</label><input type="number" id="crt_a2" value="3">
+        <label>(mod</label><input type="number" id="crt_m2" value="5"><label>)</label>
+        <button class="btn" onclick="solveCRT()">Solve CRT</button>
+      </div>
+      <div class="output" id="crt_out"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Fermat's Little Theorem</h3>
+    <div class="formula">p prime, p ∤ a  →  a^(p-1) ≡ 1 (mod p)
+Corollary: a^p ≡ a (mod p)</div>
+    <div class="sim">
+      <div class="sim-title">🔬 Fermat's Little Theorem Verifier</div>
+      <div class="controls">
+        <label>a =</label><input type="number" id="flt_a" value="2">
+        <label>p (prime) =</label><input type="number" id="flt_p" value="7">
+        <button class="btn" onclick="fermatTest()">Verify</button>
+      </div>
+      <div class="output" id="flt_out"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4.5 -->
+<div class="section" id="s4">
+  <h2>🛠️ 4.5 Applications of Congruences</h2>
+
+  <div class="card">
+    <h3>Hashing</h3>
+    <div class="formula">h(k) = k mod m   (maps key k to one of m buckets)</div>
+    <div class="sim">
+      <div class="sim-title">🔬 Hash Table Simulator</div>
+      <div class="controls">
+        <label>Buckets m =</label><input type="number" id="ht_m" value="7" style="width:55px">
+        <label>Keys:</label><input type="text" id="ht_keys" value="25,12,36,7,49,51,8">
+        <button class="btn" onclick="hashSim()">Hash</button>
+      </div>
+      <div class="output" id="ht_out"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Pseudorandom Numbers — Linear Congruential Generator</h3>
+    <div class="formula">x_{n+1} = (a·xₙ + c) mod m
+Parameters: multiplier a, increment c, modulus m, seed x₀</div>
+    <div class="sim">
+      <div class="sim-title">🎲 LCG Simulator</div>
+      <div class="controls">
+        <label>a =</label><input type="number" id="lcg_a" value="1664525">
+        <label>c =</label><input type="number" id="lcg_c" value="1013904223">
+        <label>m =</label><input type="number" id="lcg_m" value="4294967296" style="width:110px">
+        <label>x₀ =</label><input type="number" id="lcg_x0" value="42">
+        <label>Count =</label><input type="number" id="lcg_n" value="10" style="width:50px">
+        <button class="btn" onclick="lcgGen()">Generate</button>
+      </div>
+      <div class="output" id="lcg_out"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Check Digits — ISBN-10</h3>
+    <div class="formula">Validity: Σᵢ₌₁¹⁰ i·dᵢ ≡ 0 (mod 11)
+Check digit = (11 - (Σᵢ₌₁⁹ i·dᵢ) mod 11) mod 11</div>
+    <div class="sim">
+      <div class="sim-title">📚 ISBN-10 Check Digit Calculator</div>
+      <div class="controls">
+        <label>First 9 digits:</label>
+        <input type="text" id="isbn_in" value="007462542">
+        <button class="btn" onclick="isbnCalc()">Find Check Digit</button>
+      </div>
+      <div class="output" id="isbn_out"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Calendar — Day of Week</h3>
+    <p>All calendar math reduces to modular arithmetic mod 7.</p>
+    <div class="sim">
+      <div class="sim-title">📅 Day-of-Week Calculator</div>
+      <div class="controls">
+        <label>Year:</label><input type="number" id="dw_y" value="2025" style="width:75px">
+        <label>Month:</label><input type="number" id="dw_mo" value="1" style="width:50px">
+        <label>Day:</label><input type="number" id="dw_d" value="1" style="width:50px">
+        <button class="btn" onclick="dayOfWeek()">Get Day</button>
+      </div>
+      <div class="output" id="dw_out"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4.6 -->
+<div class="section" id="s5">
+  <h2>🔐 4.6 Cryptography</h2>
+
+  <div class="card">
+    <h3>Caesar / Shift Cipher</h3>
+    <div class="formula">Encrypt: C = (P + k) mod 26
+Decrypt: P = (C − k + 26) mod 26</div>
+    <div class="sim">
+      <div class="sim-title">🔬 Caesar Cipher</div>
+      <div class="controls">
+        <label>Text:</label><input type="text" id="cc_text" value="HELLO WORLD">
+        <label>Shift k =</label><input type="number" id="cc_k" value="3" style="width:50px">
+        <button class="btn" onclick="caesarEnc()">Encrypt</button>
+        <button class="btn red" onclick="caesarDec()">Decrypt</button>
+      </div>
+      <div id="cc_visual"></div>
+      <div class="output" id="cc_out"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Affine Cipher</h3>
+    <div class="formula">Encrypt: C = (a·P + b) mod 26   [need gcd(a,26)=1]
+Decrypt: P = a⁻¹·(C − b) mod 26</div>
+    <div class="sim">
+      <div class="sim-title">🔬 Affine Cipher</div>
+      <div class="controls">
+        <label>Text:</label><input type="text" id="af_text" value="AFFINE" style="width:110px">
+        <label>a =</label><input type="number" id="af_a" value="5" style="width:50px">
+        <label>b =</label><input type="number" id="af_b" value="8" style="width:50px">
+        <button class="btn" onclick="affineEnc()">Encrypt</button>
+        <button class="btn red" onclick="affineDec()">Decrypt</button>
+      </div>
+      <div class="output" id="af_out"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>RSA Cryptosystem <span class="tag g">Public Key</span></h3>
+    <div class="formula">1. Pick primes p, q  →  n = p·q
+2. φ(n) = (p−1)(q−1)
+3. Choose e: 1 &lt; e &lt; φ(n), gcd(e,φ(n))=1
+4. Find d: e·d ≡ 1 (mod φ(n))
+Public key: (n, e)   Private key: (n, d)
+
+Encrypt: C = Mᵉ mod n
+Decrypt: M = Cᵈ mod n</div>
+    <div class="sim">
+      <div class="sim-title">🔐 RSA Key Generation</div>
+      <div class="controls">
+        <label>p (prime):</label><input type="number" id="rsa_p" value="61" style="width:60px">
+        <label>q (prime):</label><input type="number" id="rsa_q" value="53" style="width:60px">
+        <label>e:</label><input type="number" id="rsa_e" value="17" style="width:50px">
+        <button class="btn" onclick="rsaKeyGen()">Generate Keys</button>
+      </div>
+      <div class="output" id="rsa_keys"></div>
+      <div class="controls" style="margin-top:.6rem">
+        <label>Message M:</label><input type="number" id="rsa_m" value="65" style="width:65px">
+        <button class="btn green" onclick="rsaEncDec()">Encrypt &amp; Decrypt</button>
+      </div>
+      <div class="output" id="rsa_out"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Diffie-Hellman Key Exchange <span class="tag">Key Agreement</span></h3>
+    <div class="formula">Public: prime p, generator g
+Alice picks secret a → sends A = gᵃ mod p
+Bob   picks secret b → sends B = gᵇ mod p
+Shared secret: K = Bᵃ mod p = Aᵇ mod p = g^{ab} mod p
+(Eavesdropper sees A,B,p,g but cannot find K without discrete log)</div>
+    <div class="sim">
+      <div class="sim-title">🤝 Diffie-Hellman Simulator</div>
+      <div class="controls">
+        <label>p:</label><input type="number" id="dh_p" value="23" style="width:60px">
+        <label>g:</label><input type="number" id="dh_g" value="5" style="width:50px">
+        <label>Alice a:</label><input type="number" id="dh_a" value="6" style="width:50px">
+        <label>Bob b:</label><input type="number" id="dh_b" value="15" style="width:50px">
+        <button class="btn" onclick="dhSim()">Simulate</button>
+      </div>
+      <div class="output" id="dh_out"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Euler's Totient φ(n)</h3>
+    <div class="formula">φ(n) = count of integers in [1,n] coprime to n
+φ(p) = p−1  (p prime)
+φ(pq) = (p−1)(q−1)  (p,q distinct primes)</div>
+    <div class="sim">
+      <div class="sim-title">🔬 Euler Totient Calculator</div>
+      <div class="controls">
+        <label>n =</label><input type="number" id="phi_n" value="36">
+        <button class="btn" onclick="eulerPhi()">Compute φ(n)</button>
+      </div>
+      <div class="output" id="phi_out"></div>
+    </div>
+  </div>
+</div>
+
+<footer>Chapter 4 · Discrete Mathematics — Number Theory &amp; Cryptography</footer>
+
+<script>
+function bigModPow(base,exp,mod){
+  let result=1n,b=BigInt(base),e=BigInt(exp),m=BigInt(mod);
+  b=b%m;
+  while(e>0n){if(e%2n===1n)result=(result*b)%m;e=e/2n;b=(b*b)%m;}
+  return Number(result);
+}
+function gcd(a,b){return b===0?a:gcd(b,a%b);}
+function lcm(a,b){return Math.abs(a*b)/gcd(a,b);}
+function extGCDCalc(a,b){if(b===0)return[a,1,0];let[g,x,y]=extGCDCalc(b,a%b);return[g,y,x-Math.floor(a/b)*y];}
+function isPrime(n){if(n<2)return false;for(let i=2;i<=Math.sqrt(n);i++)if(n%i===0)return false;return true;}
+function primeFactors(n){let f={};for(let d=2;d*d<=n;d++){while(n%d===0){f[d]=(f[d]||0)+1;n=Math.floor(n/d);}}if(n>1)f[n]=(f[n]||0)+1;return f;}
+function modInv(a,m){let[g,x]=extGCDCalc(a,m);if(g!==1)return null;return((x%m)+m)%m;}
+function show(i){document.querySelectorAll('.section').forEach((s,j)=>s.classList.toggle('active',i===j));document.querySelectorAll('nav button').forEach((b,j)=>b.classList.toggle('active',i===j));}
+
+// 4.1
+function checkDiv(){let a=+document.getElementById('div_a').value,b=+document.getElementById('div_b').value,r=((b%a)+Math.abs(a))%Math.abs(a),q=Math.floor(b/a);document.getElementById('div_out').textContent=`${a} | ${b}?\n${b} = ${a} × ${q} + ${r}\n`+(r===0?`✅ YES: ${a} divides ${b}  (k=${q})`:`❌ NO: remainder=${r} ≠ 0`);}
+function findDivisors(){let n=+document.getElementById('divs_n').value,d=[];for(let i=1;i<=n;i++)if(n%i===0)d.push(i);document.getElementById('divs_out').textContent=`Divisors of ${n}: [${d.join(', ')}]\nCount: ${d.length}  |  Sum: ${d.reduce((a,b)=>a+b,0)}`;}
+function divAlgo(){let a=+document.getElementById('da_a').value,d=+document.getElementById('da_d').value,q=Math.floor(a/d),r=((a%d)+d)%d;document.getElementById('da_out').textContent=`${a} = ${d} × ${q} + ${r}\nQuotient q = ${q}\nRemainder r = ${r}\nVerify: ${d}×${q}+${r} = ${d*q+r} ✅`;}
+function modCalc(){let a=+document.getElementById('mc_a').value,b=+document.getElementById('mc_b').value,m=+document.getElementById('mc_m').value,op=document.getElementById('mc_op').value,result,expr;if(op==='+'){result=((a+b)%m+m)%m;expr=`${a}+${b}=${a+b}`;}else if(op==='-'){result=((a-b)%m+m)%m;expr=`${a}-${b}=${a-b}`;}else{result=((a*b)%m+m)%m;expr=`${a}×${b}=${a*b}`;}document.getElementById('mc_out').textContent=`(${a} ${op} ${b}) mod ${m} = ${expr} ≡ ${result} (mod ${m})`;}
+function modViz(){let a=+document.getElementById('mod_a').value,m=+document.getElementById('mod_m').value,r=((a%m)+m)%m;document.getElementById('mod_out').textContent=`${a} mod ${m} = ${r}\n${a} ≡ ${r} (mod ${m})`;let c=document.getElementById('mod_canvas');c.style.display='block';let ctx=c.getContext('2d'),cx=100,cy=100,rad=80;ctx.clearRect(0,0,200,200);ctx.fillStyle='#1a1d2e';ctx.fillRect(0,0,200,200);ctx.strokeStyle='#2e3250';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,rad,0,2*Math.PI);ctx.stroke();for(let i=0;i<m;i++){let ang=(i/m)*2*Math.PI-Math.PI/2,x=cx+rad*Math.cos(ang),y=cy+rad*Math.sin(ang);ctx.beginPath();ctx.arc(x,y,i===r?10:5,0,2*Math.PI);ctx.fillStyle=i===r?'#00d4aa':'#6c63ff';ctx.fill();ctx.fillStyle='#e8eaf0';ctx.font='11px monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(i,x,y);}ctx.fillStyle='#ffd93d';ctx.font='12px monospace';ctx.textAlign='center';ctx.fillText(`${a} mod ${m}=${r}`,cx,cy);}
+
+// 4.2
+function baseConvert(){let n=+document.getElementById('bc_n').value;document.getElementById('bc_out').textContent=`Decimal:     ${n}\nBinary:      ${n.toString(2)}\nOctal:       ${n.toString(8)}\nHexadecimal: ${n.toString(16).toUpperCase()}`;let bin=n.toString(2),bd=document.getElementById('bc_bits');bd.innerHTML='';for(let b of bin){let d=document.createElement('div');d.className='bit bit-'+b;d.textContent=b;bd.appendChild(d);}}
+function binExpand(){let bin=document.getElementById('bin_in').value.replace(/[^01]/g,''),n=bin.length,total=0,steps=[];for(let i=0;i<n;i++){let bit=+bin[i],pow=n-1-i,val=bit*Math.pow(2,pow);total+=val;steps.push(`${bit}·2^${pow}=${val}`);}document.getElementById('bin_out').textContent=`(${bin})₂ = ${steps.join(' + ')}\n= ${total} decimal`;}
+function modExp(){let b=+document.getElementById('me_b').value,n=+document.getElementById('me_n').value,m=+document.getElementById('me_m').value,binN=n.toString(2),steps=[`Binary(${n}) = ${binN}\nSquare-and-multiply:\n`],x=1,pw=b%m;for(let i=binN.length-1;i>=0;i--){if(+binN[i]){let prev=x;x=(x*pw)%m;steps.push(`bit[${i}]=1: x=(${prev}×${pw})%${m}=${x}`);}if(i>0)pw=(pw*pw)%m;}document.getElementById('me_out').textContent=steps.join('\n')+`\n\nAnswer: ${b}^${n} mod ${m} = ${bigModPow(b,n,m)}`;}
+function binaryAdd(){let a=+document.getElementById('ba_a').value,b=+document.getElementById('ba_b').value,s=a+b;document.getElementById('ba_out').textContent=`  ${a.toString(2).padStart(8,'0')}  (${a})\n+ ${b.toString(2).padStart(8,'0')}  (${b})\n─────────────────\n ${s.toString(2).padStart(9,'0')}  (${s})`;}
+
+// 4.3
+function primeTest(){let n=+document.getElementById('pt_n').value,f=primeFactors(n),fs=Object.entries(f).map(([p,e])=>e>1?`${p}^${e}`:p).join(' × ');document.getElementById('pt_out').textContent=`${n} is ${isPrime(n)?'✅ PRIME':'❌ COMPOSITE'}\n`+(isPrime(n)?`Only divisors: 1 and ${n}.`:`Factorization: ${n} = ${fs}`);}
+function runSieve(){let n=Math.min(+document.getElementById('sv_n').value,200),s=Array(n+1).fill(true);s[0]=s[1]=false;for(let i=2;i*i<=n;i++)if(s[i])for(let j=i*i;j<=n;j+=i)s[j]=false;let primes=[],grid=document.getElementById('sieve_grid');grid.innerHTML='';for(let i=2;i<=n;i++){if(s[i])primes.push(i);let d=document.createElement('div');d.className='sg '+(i===1?'one':s[i]?'prime':'composite');d.textContent=i;grid.appendChild(d);}document.getElementById('sv_out').textContent=`Found ${primes.length} primes ≤ ${n}:\n[${primes.join(', ')}]`;}
+function euclidGCD(){let a=+document.getElementById('gcd_a').value,b=+document.getElementById('gcd_b').value,steps=[],oa=a,ob=b;while(b!==0){let q=Math.floor(a/b),r=a%b;steps.push(`gcd(${a},${b}): ${a}=${b}·${q}+${r}`);a=b;b=r;}steps.push(`→ gcd(${oa},${ob}) = ${a}`);document.getElementById('gcd_out').textContent=steps.join('\n');}
+function extGCD(){let a=+document.getElementById('egcd_a').value,b=+document.getElementById('egcd_b').value,[g,s,t]=extGCDCalc(a,b);document.getElementById('egcd_out').textContent=`gcd(${a},${b}) = ${g}\nBézout: s=${s}, t=${t}\nVerify: ${s}·${a} + ${t}·${b} = ${s*a+t*b} ${s*a+t*b===g?'✅':'❌'}`;}
+function calcLCM(){let a=+document.getElementById('lcm_a').value,b=+document.getElementById('lcm_b').value,g=gcd(a,b),l=lcm(a,b);document.getElementById('lcm_out').textContent=`gcd(${a},${b}) = ${g}\nlcm(${a},${b}) = |${a}·${b}|/${g} = ${Math.abs(a*b)}/${g} = ${l}`;}
+
+// 4.4
+function solveLinearCong(){let a=+document.getElementById('lc_a').value,b=+document.getElementById('lc_b').value,m=+document.getElementById('lc_m').value,d=gcd(a,m);if(b%d!==0){document.getElementById('lc_out').textContent=`❌ No solution!\ngcd(${a},${m})=${d} does not divide ${b}`;return;}let a1=a/d,b1=b/d,m1=m/d,inv=modInv(a1,m1),x0=((inv*b1)%m1+m1)%m1,sols=[];for(let i=0;i<d;i++)sols.push(x0+i*m1);document.getElementById('lc_out').textContent=`gcd(${a},${m})=${d} | ${b} → ${d} solution(s)\nReduce: ${a1}x ≡ ${b1} (mod ${m1})\nx₀ = ${x0} (mod ${m1})\nSolutions mod ${m}: {${sols.join(', ')}}`;}
+function modInverse(){let a=+document.getElementById('mi_a').value,m=+document.getElementById('mi_m').value,inv=modInv(a,m);if(inv===null){document.getElementById('mi_out').textContent=`❌ No inverse! gcd(${a},${m})=${gcd(a,m)} ≠ 1`;return;}document.getElementById('mi_out').textContent=`${a}⁻¹ mod ${m} = ${inv}\nVerify: ${a} × ${inv} = ${a*inv} ≡ ${(a*inv)%m} (mod ${m}) ✅`;}
+function solveCRT(){let a1=+document.getElementById('crt_a1').value,m1=+document.getElementById('crt_m1').value,a2=+document.getElementById('crt_a2').value,m2=+document.getElementById('crt_m2').value;if(gcd(m1,m2)!==1){document.getElementById('crt_out').textContent=`m₁=${m1} and m₂=${m2} must be coprime!`;return;}let M=m1*m2,M1=m2,M2=m1,y1=modInv(M1,m1),y2=modInv(M2,m2),x=((a1*M1*y1+a2*M2*y2)%M+M)%M;document.getElementById('crt_out').textContent=`M=${m1}×${m2}=${M}\nM₁=${M1}, y₁=${y1} (inv of ${M1} mod ${m1})\nM₂=${M2}, y₂=${y2} (inv of ${M2} mod ${m2})\nx = ${a1}·${M1}·${y1} + ${a2}·${M2}·${y2} ≡ ${x} (mod ${M})\n✅ Solution: x ≡ ${x} (mod ${M})`;}
+function fermatTest(){let a=+document.getElementById('flt_a').value,p=+document.getElementById('flt_p').value;if(!isPrime(p)){document.getElementById('flt_out').textContent=`${p} is not prime!`;return;}let r=bigModPow(a,p-1,p);document.getElementById('flt_out').textContent=`p=${p} (prime), a=${a}\na^(p-1) = ${a}^${p-1} mod ${p} = ${r}\n`+(r===1?'✅ Fermat verified! Result=1':'❌ Check if a is divisible by p');}
+
+// 4.5
+function hashSim(){let m=+document.getElementById('ht_m').value,keys=document.getElementById('ht_keys').value.split(',').map(Number),buckets=Array.from({length:m},()=>[]);keys.forEach(k=>buckets[((k%m)+m)%m].push(k));let out=`h(k) = k mod ${m}\n\n`;buckets.forEach((b,i)=>out+=`Bucket ${i}: [${b.join(', ')}]${b.length>1?' ← COLLISION':''}\n`);document.getElementById('ht_out').textContent=out;}
+function lcgGen(){let a=BigInt(document.getElementById('lcg_a').value),c=BigInt(document.getElementById('lcg_c').value),m=BigInt(document.getElementById('lcg_m').value),x=BigInt(document.getElementById('lcg_x0').value),n=+document.getElementById('lcg_n').value,seq=[];for(let i=0;i<n;i++){x=(a*x+c)%m;seq.push(Number(x));}document.getElementById('lcg_out').textContent=`x_{n+1} = (${a}·x + ${c}) mod ${m}\n\n${seq.join(', ')}`;}
+function isbnCalc(){let d=document.getElementById('isbn_in').value.replace(/\D/g,'').slice(0,9);if(d.length!==9){document.getElementById('isbn_out').textContent='Need exactly 9 digits.';return;}let sum=0;for(let i=0;i<9;i++)sum+=(i+1)*+d[i];let check=(11-(sum%11))%11,cs=check===10?'X':String(check);document.getElementById('isbn_out').textContent=`Weighted sum: ${sum}\nCheck = (11 − ${sum}%11) mod 11 = ${check}\nCheck digit: ${cs}\nFull ISBN-10: ${d}${cs}`;}
+function dayOfWeek(){let y=+document.getElementById('dw_y').value,m=+document.getElementById('dw_mo').value,d=+document.getElementById('dw_d').value,date=new Date(y,m-1,d),days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],dow=date.getDay();document.getElementById('dw_out').textContent=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')} is a ${days[dow]}\nDay index: ${dow} (0=Sun...6=Sat)`;}
+
+// 4.6
+function caesarEnc(){let text=document.getElementById('cc_text').value.toUpperCase(),k=+document.getElementById('cc_k').value,enc='',vis='<div class="cipher-row">';for(let c of text){if(c.match(/[A-Z]/)){let p=c.charCodeAt(0)-65,e=(p+k)%26;enc+=String.fromCharCode(e+65);vis+=`<div class="cbox orig">${c}</div>`;}else{enc+=c;vis+=`<div class="cbox orig">${c}</div>`;}}vis+='</div><div style="color:var(--muted);font-size:.78rem;margin:.25rem 0">↓ +'+k+' shift</div><div class="cipher-row">';for(let c of enc)vis+=`<div class="cbox enc">${c}</div>`;vis+='</div>';document.getElementById('cc_visual').innerHTML=vis;document.getElementById('cc_out').textContent=`Encrypted: ${enc}`;}
+function caesarDec(){let text=document.getElementById('cc_text').value.toUpperCase(),k=+document.getElementById('cc_k').value,dec='';for(let c of text){if(c.match(/[A-Z]/))dec+=String.fromCharCode(((c.charCodeAt(0)-65-k+26)%26)+65);else dec+=c;}document.getElementById('cc_out').textContent=`Decrypted: ${dec}`;}
+function affineEnc(){let text=document.getElementById('af_text').value.toUpperCase(),a=+document.getElementById('af_a').value,b=+document.getElementById('af_b').value;if(gcd(a,26)!==1){document.getElementById('af_out').textContent='gcd(a,26) must be 1!';return;}let enc='';for(let c of text){if(c.match(/[A-Z]/))enc+=String.fromCharCode(((a*(c.charCodeAt(0)-65)+b)%26)+65);else enc+=c;}document.getElementById('af_out').textContent=`Encrypted: ${enc}`;}
+function affineDec(){let text=document.getElementById('af_text').value.toUpperCase(),a=+document.getElementById('af_a').value,b=+document.getElementById('af_b').value,inv=modInv(a,26);if(inv===null){document.getElementById('af_out').textContent='No inverse for a mod 26!';return;}let dec='';for(let c of text){if(c.match(/[A-Z]/))dec+=String.fromCharCode(((inv*((c.charCodeAt(0)-65-b+26)%26)+26)%26)+65);else dec+=c;}document.getElementById('af_out').textContent=`a⁻¹ mod 26 = ${inv}\nDecrypted: ${dec}`;}
+
+let rsaN,rsaE,rsaD;
+function rsaKeyGen(){let p=+document.getElementById('rsa_p').value,q=+document.getElementById('rsa_q').value,e=+document.getElementById('rsa_e').value;if(!isPrime(p)||!isPrime(q)){document.getElementById('rsa_keys').textContent='p and q must be prime!';return;}rsaN=p*q;let phi=(p-1)*(q-1);if(gcd(e,phi)!==1){document.getElementById('rsa_keys').textContent=`gcd(${e},${phi})≠1, choose different e!`;return;}rsaE=e;rsaD=modInv(e,phi);document.getElementById('rsa_keys').textContent=`p=${p}, q=${q}\nn = p·q = ${rsaN}\nφ(n) = (p−1)(q−1) = ${phi}\ne = ${e}  [gcd(e,φ)=1 ✅]\nd = e⁻¹ mod φ(n) = ${rsaD}\n\n🔑 Public key:  (n=${rsaN}, e=${rsaE})\n🔒 Private key: (n=${rsaN}, d=${rsaD})`;}
+function rsaEncDec(){if(!rsaN){document.getElementById('rsa_out').textContent='Generate keys first!';return;}let M=+document.getElementById('rsa_m').value;if(M>=rsaN){document.getElementById('rsa_out').textContent=`M must be < n=${rsaN}`;return;}let C=bigModPow(M,rsaE,rsaN),Dec=bigModPow(C,rsaD,rsaN);document.getElementById('rsa_out').textContent=`Message M = ${M}\n\nEncrypt: C = M^e mod n = ${M}^${rsaE} mod ${rsaN} = ${C}\nDecrypt: M = C^d mod n = ${C}^${rsaD} mod ${rsaN} = ${Dec}\n\n${Dec===M?'✅ Decryption matches original!':'❌ Mismatch'}`;}
+function dhSim(){let p=+document.getElementById('dh_p').value,g=+document.getElementById('dh_g').value,a=+document.getElementById('dh_a').value,b=+document.getElementById('dh_b').value,A=bigModPow(g,a,p),B=bigModPow(g,b,p),Ka=bigModPow(B,a,p),Kb=bigModPow(A,b,p);document.getElementById('dh_out').textContent=`Public: p=${p}, g=${g}\n\nAlice secret a=${a} → A = g^a mod p = ${g}^${a} mod ${p} = ${A}\nBob   secret b=${b} → B = g^b mod p = ${g}^${b} mod ${p} = ${B}\n\nAlice: K = B^a mod p = ${B}^${a} mod ${p} = ${Ka}\nBob:   K = A^b mod p = ${A}^${b} mod ${p} = ${Kb}\n\n${Ka===Kb?'✅ Shared secret K = '+Ka:'❌ Mismatch'}`;}
+function eulerPhi(){let n=+document.getElementById('phi_n').value,count=0,cops=[];for(let i=1;i<=n;i++)if(gcd(i,n)===1){count++;cops.push(i);}document.getElementById('phi_out').textContent=`φ(${n}) = ${count}\nCoprime to ${n}: [${cops.join(', ')}]`;}
+</script>
+</body>
+</html>

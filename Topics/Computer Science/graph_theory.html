@@ -1,0 +1,2054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Graph Theory — Complete Guide (Rosen)</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: #2a2a3e;
+    --accent: #7c3aed;
+    --accent2: #06b6d4;
+    --accent3: #f59e0b;
+    --accent4: #10b981;
+    --accent5: #f43f5e;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --text-bright: #f8fafc;
+    --node-default: #7c3aed;
+    --node-visited: #10b981;
+    --node-active: #f59e0b;
+    --edge-default: #4a4a6a;
+    --edge-active: #06b6d4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+    text-align: center;
+  }
+  #hero-canvas {
+    position: absolute; inset: 0; z-index: 0;
+    opacity: 0.4;
+  }
+  .hero-content { position: relative; z-index: 1; }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(124,58,237,0.15);
+    border: 1px solid rgba(124,58,237,0.4);
+    color: #a78bfa;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    padding: 0.4rem 1rem;
+    border-radius: 2rem;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    font-weight: 800;
+    line-height: 1.05;
+    background: linear-gradient(135deg, #f8fafc 0%, #a78bfa 50%, #06b6d4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+  .hero p {
+    font-size: 1.1rem;
+    color: var(--text-dim);
+    max-width: 600px;
+    margin: 0 auto 2rem;
+  }
+  .hero-ref {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent2);
+    opacity: 0.7;
+  }
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,15,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  nav ul {
+    display: flex; gap: 0; list-style: none;
+    min-width: max-content;
+  }
+  nav ul li a {
+    display: block;
+    padding: 1rem 0.9rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+    border-bottom: 2px solid transparent;
+  }
+  nav ul li a:hover { color: var(--text-bright); border-bottom-color: var(--accent); }
+  /* SECTIONS */
+  section { max-width: 1100px; margin: 0 auto; padding: 5rem 2rem; }
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 0.5rem;
+  }
+  h2 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    color: var(--text-bright);
+    margin-bottom: 1rem;
+  }
+  h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent2);
+    margin: 2rem 0 0.75rem;
+  }
+  h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent3);
+    margin: 1.5rem 0 0.5rem;
+  }
+  p { color: var(--text-dim); margin-bottom: 1rem; }
+  strong { color: var(--text-bright); }
+  .divider {
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 5rem 0;
+  }
+  /* DEFINITION BOXES */
+  .def-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 0.5rem;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .def-box .def-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+  .def-box p { margin: 0; color: var(--text); }
+  .theorem-box { border-left-color: var(--accent3); }
+  .theorem-box .def-label { color: var(--accent3); }
+  .example-box { border-left-color: var(--accent4); }
+  .example-box .def-label { color: var(--accent4); }
+  /* FORMULA */
+  .formula {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 1rem 1.5rem;
+    margin: 1rem 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--accent2);
+    text-align: center;
+  }
+  /* CANVAS CONTAINERS */
+  .canvas-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    position: relative;
+  }
+  .canvas-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+  }
+  canvas.sim { display: block; margin: 0 auto; border-radius: 0.5rem; }
+  /* CONTROLS */
+  .controls {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+    margin-top: 1rem; justify-content: center;
+  }
+  button.ctrl {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.4rem 1rem;
+    border-radius: 0.3rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  button.ctrl:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.ctrl.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .status-bar {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent4);
+    text-align: center;
+    margin-top: 0.75rem;
+    min-height: 1.2em;
+  }
+  /* GRID */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0; }
+  @media(max-width:680px) { .grid2 { grid-template-columns: 1fr; } }
+  /* TABLE */
+  .tbl-wrap { overflow-x: auto; margin: 1.5rem 0; }
+  table {
+    width: 100%; border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  th {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 0.6rem 1rem;
+    text-align: left;
+    color: var(--accent2);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  td {
+    border: 1px solid var(--border);
+    padding: 0.6rem 1rem;
+    color: var(--text-dim);
+  }
+  tr:hover td { background: var(--surface2); }
+  /* BADGE ROW */
+  .badge-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+  .badge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 2rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .badge-purple { background: rgba(124,58,237,0.15); color: #a78bfa; border: 1px solid rgba(124,58,237,0.3); }
+  .badge-cyan { background: rgba(6,182,212,0.12); color: #67e8f9; border: 1px solid rgba(6,182,212,0.3); }
+  .badge-amber { background: rgba(245,158,11,0.12); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
+  .badge-green { background: rgba(16,185,129,0.12); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
+  .badge-red { background: rgba(244,63,94,0.12); color: #fda4af; border: 1px solid rgba(244,63,94,0.3); }
+  /* SLIDER */
+  input[type=range] {
+    accent-color: var(--accent);
+    width: 140px;
+    vertical-align: middle;
+  }
+  label.ctrl-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s, transform 0.6s; }
+  .reveal.visible { opacity: 1; transform: none; }
+  /* LEGEND */
+  .legend { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.75rem; justify-content: center; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--text-dim); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  /* SELECT */
+  select.ctrl {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.3rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+  /* INFO PANEL */
+  .info-panel {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    margin-top: 0.75rem;
+    line-height: 1.6;
+  }
+  .info-panel span { color: var(--accent2); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-badge">Discrete Mathematics · Kenneth H. Rosen</div>
+    <h1>Graph Theory</h1>
+    <p>A complete visual guide covering graphs, connectivity, paths, planarity and coloring — built for CSE beginners.</p>
+    <div class="hero-ref">// Chapters 10 · Rosen 8th Edition</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <ul>
+    <li><a href="#s1">01 · Models</a></li>
+    <li><a href="#s2">02 · Terminology</a></li>
+    <li><a href="#s3">03 · Representation</a></li>
+    <li><a href="#s4">04 · Connectivity</a></li>
+    <li><a href="#s5">05 · Euler & Hamilton</a></li>
+    <li><a href="#s6">06 · Shortest Path</a></li>
+    <li><a href="#s7">07 · Planar Graphs</a></li>
+    <li><a href="#s8">08 · Coloring</a></li>
+  </ul>
+</nav>
+
+
+<!-- ══════════════ SECTION 1 · GRAPH MODELS ══════════════ -->
+<section id="s1" class="reveal">
+  <div class="section-tag">Chapter 10.1</div>
+  <h2>Graphs and Graph Models</h2>
+  <p>Graph theory studies <strong>pairwise relationships</strong> between objects. It powers GPS navigation, social networks, circuit design, scheduling — nearly all of computer science.</p>
+
+  <div class="def-box">
+    <div class="def-label">Definition · Graph</div>
+    <p>A <strong>graph G = (V, E)</strong> consists of a nonempty set <strong>V</strong> of <em>vertices</em> (nodes) and a set <strong>E</strong> of <em>edges</em>. Each edge connects one or two vertices, called its <em>endpoints</em>.</p>
+  </div>
+
+  <h3>Types of Graphs</h3>
+  <div class="tbl-wrap">
+    <table>
+      <tr><th>Type</th><th>Edges</th><th>Multiple Edges?</th><th>Loops?</th></tr>
+      <tr><td>Simple Graph</td><td>Undirected</td><td>No</td><td>No</td></tr>
+      <tr><td>Multigraph</td><td>Undirected</td><td>Yes</td><td>No</td></tr>
+      <tr><td>Pseudograph</td><td>Undirected</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td>Simple Digraph</td><td>Directed</td><td>No</td><td>No</td></tr>
+      <tr><td>Directed Multigraph</td><td>Directed</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td>Mixed Graph</td><td>Both</td><td>Yes</td><td>Yes</td></tr>
+    </table>
+  </div>
+
+  <h3>Real-World Models</h3>
+  <div class="grid2">
+    <div class="def-box example-box">
+      <div class="def-label">Example · Social Network</div>
+      <p>Vertices = people. Edges = friendships. Simple undirected graph. Degree = number of friends.</p>
+    </div>
+    <div class="def-box example-box">
+      <div class="def-label">Example · Web Graph</div>
+      <p>Vertices = webpages. Directed edges = hyperlinks. PageRank algorithm runs on this digraph.</p>
+    </div>
+    <div class="def-box example-box">
+      <div class="def-label">Example · Road Network</div>
+      <p>Vertices = intersections. Edges = roads (weighted by distance). GPS uses shortest-path algorithms here.</p>
+    </div>
+    <div class="def-box example-box">
+      <div class="def-label">Example · Task Scheduling</div>
+      <p>Vertices = tasks. Directed edges = dependency (A→B means A must finish before B). Topological sort used.</p>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE: Build a graph -->
+  <div class="canvas-wrap">
+    <div class="canvas-title">// Interactive · Click canvas to add nodes · Click two nodes to add edge</div>
+    <canvas id="build-canvas" class="sim" width="720" height="360"></canvas>
+    <div class="controls">
+      <button class="ctrl active" id="build-mode-node" onclick="setBuildMode('node')">Add Node</button>
+      <button class="ctrl" id="build-mode-edge" onclick="setBuildMode('edge')">Add Edge</button>
+      <button class="ctrl" id="build-mode-directed" onclick="toggleDirected()">Undirected</button>
+      <button class="ctrl" onclick="clearBuildGraph()">Clear</button>
+    </div>
+    <div class="status-bar" id="build-status">Mode: Add Node — click canvas to place vertices</div>
+    <div class="info-panel" id="build-info">
+      Nodes: <span id="bi-nodes">0</span> &nbsp;|&nbsp; Edges: <span id="bi-edges">0</span> &nbsp;|&nbsp; Type: <span id="bi-type">Undirected Simple Graph</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════ SECTION 2 · TERMINOLOGY ══════════════ -->
+<section id="s2" class="reveal">
+  <div class="section-tag">Chapter 10.2</div>
+  <h2>Graph Terminology & Special Graphs</h2>
+
+  <h3>Degree</h3>
+  <div class="def-box">
+    <div class="def-label">Definition · Degree</div>
+    <p>The <strong>degree</strong> of vertex v, written <strong>deg(v)</strong>, is the number of edges incident to v. A loop counts twice. In a digraph: <strong>in-degree</strong> = edges coming in; <strong>out-degree</strong> = edges going out.</p>
+  </div>
+
+  <div class="def-box theorem-box">
+    <div class="def-label">Theorem · Handshaking Lemma</div>
+    <p>For any undirected graph G = (V, E):</p>
+  </div>
+  <div class="formula">∑<sub>v ∈ V</sub> deg(v) = 2|E|</div>
+  <p><strong>Consequence:</strong> Every graph has an <em>even</em> number of vertices with odd degree. This is a fundamental counting fact used everywhere.</p>
+
+  <h3>Special Graph Types</h3>
+  <div class="grid2">
+    <div class="def-box">
+      <div class="def-label">Complete Graph Kₙ</div>
+      <p>Every pair of vertices connected by exactly one edge. Kₙ has n(n−1)/2 edges. Every vertex has degree n−1.</p>
+    </div>
+    <div class="def-box">
+      <div class="def-label">Cycle Graph Cₙ</div>
+      <p>n vertices arranged in a ring. Each vertex has degree 2. Minimum n = 3.</p>
+    </div>
+    <div class="def-box">
+      <div class="def-label">Wheel Graph Wₙ</div>
+      <p>Cₙ plus one central hub connected to all. Hub degree = n; rim vertices degree = 3.</p>
+    </div>
+    <div class="def-box">
+      <div class="def-label">Bipartite Graph</div>
+      <p>Vertices split into two disjoint sets V₁, V₂. Every edge goes between V₁ and V₂ — never within same set. A graph is bipartite iff it has no odd-length cycle.</p>
+    </div>
+    <div class="def-box">
+      <div class="def-label">Complete Bipartite Kₘ,ₙ</div>
+      <p>Every vertex in V₁ connected to every vertex in V₂. Has m·n edges.</p>
+    </div>
+    <div class="def-box">
+      <div class="def-label">Hypercube Qₙ</div>
+      <p>Vertices = n-bit strings. Edge between strings differing in exactly 1 bit. Qₙ has 2ⁿ vertices and n·2ⁿ⁻¹ edges. Used in parallel computing.</p>
+    </div>
+  </div>
+
+  <!-- SPECIAL GRAPHS VIEWER -->
+  <div class="canvas-wrap">
+    <div class="canvas-title">// Special Graphs Visualizer</div>
+    <canvas id="special-canvas" class="sim" width="720" height="380"></canvas>
+    <div class="controls">
+      <select class="ctrl" id="special-select" onchange="drawSpecialGraph()">
+        <option value="K5">Complete K₅</option>
+        <option value="K33">Complete Bipartite K₃,₃</option>
+        <option value="C6">Cycle C₆</option>
+        <option value="W5">Wheel W₅</option>
+        <option value="Q3">Hypercube Q₃</option>
+        <option value="Petersen">Petersen Graph</option>
+      </select>
+    </div>
+    <div class="info-panel" id="special-info">Select a graph above to visualize it.</div>
+  </div>
+
+  <!-- DEGREE EXPLORER -->
+  <div class="canvas-wrap">
+    <div class="canvas-title">// Degree Explorer · Hover nodes to see degree · Verify Handshaking Lemma</div>
+    <canvas id="degree-canvas" class="sim" width="720" height="320"></canvas>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div> deg 1</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#06b6d4"></div> deg 2</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> deg 3</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> deg 4+</div>
+    </div>
+    <div class="info-panel">Sum of degrees = <span id="deg-sum">—</span> &nbsp;|&nbsp; 2 × |E| = <span id="deg-2e">—</span> &nbsp;|&nbsp; Handshaking holds: <span id="deg-check">—</span></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════ SECTION 3 · REPRESENTATION & ISOMORPHISM ══════════════ -->
+<section id="s3" class="reveal">
+  <div class="section-tag">Chapter 10.3</div>
+  <h2>Representing Graphs & Graph Isomorphism</h2>
+
+  <h3>Adjacency Matrix</h3>
+  <div class="def-box">
+    <div class="def-label">Definition</div>
+    <p>For graph G with vertices v₁…vₙ, the <strong>adjacency matrix A</strong> is an n×n matrix where A[i][j] = 1 if {vᵢ,vⱼ} is an edge, else 0. For multigraphs, A[i][j] = number of edges between them.</p>
+  </div>
+  <p>Properties: symmetric for undirected, diagonal all-zeros for simple graph, row sum = degree of vᵢ.</p>
+
+  <h3>Incidence Matrix</h3>
+  <div class="def-box">
+    <div class="def-label">Definition</div>
+    <p>n×m matrix M where M[i][j] = 1 if vertex vᵢ is incident with edge eⱼ, else 0. Column sum always = 2 (each edge has two endpoints).</p>
+  </div>
+
+  <h3>Adjacency List</h3>
+  <p>More memory-efficient. For each vertex store list of its neighbors. Total space: O(V + E) vs O(V²) for matrix.</p>
+
+  <!-- REPRESENTATION DEMO -->
+  <div class="canvas-wrap">
+    <div class="canvas-title">// Graph Representation Demo · Select representation type</div>
+    <div style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start">
+      <canvas id="rep-canvas" class="sim" width="320" height="280" style="flex-shrink:0"></canvas>
+      <div style="flex:1;min-width:280px">
+        <div class="controls" style="justify-content:flex-start;margin-bottom:1rem">
+          <button class="ctrl active" onclick="showRep('matrix')">Adj Matrix</button>
+          <button class="ctrl" onclick="showRep('incidence')">Incidence</button>
+          <button class="ctrl" onclick="showRep('list')">Adj List</button>
+        </div>
+        <div id="rep-output" style="font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-dim);background:var(--surface2);border:1px solid var(--border);border-radius:0.5rem;padding:1rem;min-height:200px;white-space:pre;overflow-x:auto"></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Graph Isomorphism</h3>
+  <div class="def-box">
+    <div class="def-label">Definition · Isomorphism</div>
+    <p>Graphs G₁=(V₁,E₁) and G₂=(V₂,E₂) are <strong>isomorphic</strong> if there exists a bijection f: V₁→V₂ such that {u,v}∈E₁ iff {f(u),f(v)}∈E₂. They are "same graph, different labeling."</p>
+  </div>
+
+  <h4>Necessary Conditions (Isomorphism Invariants)</h4>
+  <div class="badge-row">
+    <span class="badge badge-purple">Same |V|</span>
+    <span class="badge badge-cyan">Same |E|</span>
+    <span class="badge badge-amber">Same degree sequence</span>
+    <span class="badge badge-green">Same # connected components</span>
+    <span class="badge badge-red">Same # cycles</span>
+  </div>
+  <p>These are <em>necessary but not sufficient</em>. If any differ → not isomorphic. If all match → might be isomorphic (need explicit bijection to confirm).</p>
+
+  <!-- ISOMORPHISM CHECK -->
+  <div class="canvas-wrap">
+    <div class="canvas-title">// Isomorphism Inspector · Two random graphs · Check invariants</div>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap">
+      <div style="flex:1;min-width:280px">
+        <div style="font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--text-dim);margin-bottom:0.5rem">GRAPH G₁</div>
+        <canvas id="iso1-canvas" class="sim" width="320" height="220"></canvas>
+      </div>
+      <div style="flex:1;min-width:280px">
+        <div style="font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--text-dim);margin-bottom:0.5rem">GRAPH G₂</div>
+        <canvas id="iso2-canvas" class="sim" width="320" height="220"></canvas>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="ctrl" onclick="genIsoGraphs(true)">Generate Isomorphic Pair</button>
+      <button class="ctrl" onclick="genIsoGraphs(false)">Generate Non-Isomorphic</button>
+    </div>
+    <div class="info-panel" id="iso-info">Click a button to generate graph pairs and check invariants.</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════ SECTION 4 · CONNECTIVITY ══════════════ -->
+<section id="s4" class="reveal">
+  <div class="section-tag">Chapter 10.4</div>
+  <h2>Connectivity</h2>
+
+  <h3>Paths and Circuits</h3>
+  <div class="def-box">
+    <div class="def-label">Definition · Path</div>
+    <p>A <strong>path</strong> of length n from u to v is a sequence u=v₀, e₁, v₁, e₂, …, eₙ, vₙ=v of alternating vertices and edges. A <strong>simple path</strong> visits no vertex more than once.</p>
+  </div>
+  <div class="def-box">
+    <div class="def-label">Definition · Circuit / Cycle</div>
+    <p>A <strong>circuit</strong> (closed walk) starts and ends at same vertex. A <strong>cycle</strong> is a simple circuit — no repeated vertex except start=end.</p>
+  </div>
+
+  <h3>Connected Graphs</h3>
+  <div class="def-box">
+    <div class="def-label">Definition · Connected</div>
+    <p>An undirected graph is <strong>connected</strong> if there is a path between every pair of vertices. Otherwise it's <strong>disconnected</strong>, and each maximal connected subgraph is a <strong>connected component</strong>.</p>
+  </div>
+  <div class="def-box">
+    <div class="def-label">Definition · Strongly / Weakly Connected (Digraphs)</div>
+    <p><strong>Strongly connected:</strong> path from u to v AND v to u for every pair. <strong>Weakly connected:</strong> underlying undirected graph is connected.</p>
+  </div>
+
+  <h3>Cut Vertices and Bridges</h3>
+  <div class="def-box">
+    <div class="def-label">Definition</div>
+    <p>A <strong>cut vertex</strong> (articulation point): removing it increases connected components. A <strong>bridge</strong>: removing it disconnects the graph. Critical for network reliability analysis.</p>
+  </div>
+
+  <h3>Connectivity Numbers</h3>
+  <div class="grid2">
+    <div class="def-box">
+      <div class="def-label">Vertex Connectivity κ(G)</div>
+      <p>Min vertices to remove to disconnect G (or make trivial). κ(Kₙ) = n−1 (most robust). κ(G) ≤ λ(G) ≤ δ(G).</p>
+    </div>
+    <div class="def-box">
+      <div class="def-label">Edge Connectivity λ(G)</div>
+      <p>Min edges to remove to disconnect G. Menger's theorem links this to max disjoint paths.</p>
+    </div>
+  </div>
+
+  <!-- BFS / DFS SIMULATION -->
+  <div class="canvas-wrap">
+    <div class="canvas-title">// BFS & DFS Traversal · See how connectivity is explored</div>
+    <canvas id="bfs-canvas" class="sim" width="720" height="360"></canvas>
+    <div class="controls">
+      <button class="ctrl" onclick="startBFS()">Run BFS</button>
+      <button class="ctrl" onclick="startDFS()">Run DFS</button>
+      <button class="ctrl" onclick="resetTraversal()">Reset</button>
+      <button class="ctrl" onclick="genTraversalGraph()">New Graph</button>
+    </div>
+    <div class="status-bar" id="bfs-status">Click Run BFS or Run DFS to start traversal from the red node.</div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#f43f5e"></div> Start</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> Queue/Stack</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> Visited</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div> Unvisited</div>
+    </div>
+    <div class="info-panel">Visited order: <span id="bfs-order">—</span></div>
+  </div>
+
+  <!-- CUT VERTEX DEMO -->
+  <div class="canvas-wrap">
+    <div class="canvas-title">// Cut Vertex & Bridge Detector · Hover nodes/edges to highlight</div>
+    <canvas id="cut-canvas" class="sim" width="720" height="320"></canvas>
+    <div class="controls">
+      <button class="ctrl" onclick="findCutVertices()">Find Cut Vertices</button>
+      <button class="ctrl" onclick="findBridges()">Find Bridges</button>
+      <button class="ctrl" onclick="resetCut()">Reset</button>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#f43f5e"></div> Cut Vertex</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> Bridge Edge</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div> Normal</div>
+    </div>
+    <div class="status-bar" id="cut-status">Click Find Cut Vertices or Find Bridges</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════ SECTION 5 · EULER & HAMILTON ══════════════ -->
+<section id="s5" class="reveal">
+  <div class="section-tag">Chapter 10.5</div>
+  <h2>Euler and Hamiltonian Graphs</h2>
+
+  <h3>Euler Paths and Circuits</h3>
+  <div class="def-box">
+    <div class="def-label">Definition · Euler Circuit</div>
+    <p>A circuit that visits <strong>every edge exactly once</strong> (may revisit vertices). Named after Leonhard Euler who solved the Königsberg Bridge Problem in 1736 — birth of graph theory.</p>
+  </div>
+  <div class="def-box">
+    <div class="def-label">Definition · Euler Path</div>
+    <p>A path (not circuit) that uses every edge exactly once. Starts and ends at different vertices.</p>
+  </div>
+  <div class="def-box theorem-box">
+    <div class="def-label">Theorem · Euler's Conditions</div>
+    <p>
+      <strong>Euler Circuit exists</strong> iff G is connected AND every vertex has <em>even</em> degree.<br>
+      <strong>Euler Path exists</strong> iff G is connected AND exactly <em>two</em> vertices have odd degree (those are the endpoints).
+    </p>
+  </div>
+
+  <div class="def-box example-box">
+    <div class="def-label">Historical · Königsberg Bridges</div>
+    <p>Seven bridges over the Pregel River connecting 4 land masses. Euler proved no walk crossing each bridge exactly once exists — all 4 vertices had odd degree. This proof founded graph theory.</p>
+  </div>
+
+  <h3>Hamiltonian Paths and Circuits</h3>
+  <div class="def-box">
+    <div class="def-label">Definition · Hamiltonian Circuit</div>
+    <p>A circuit that visits <strong>every vertex exactly once</strong> (may skip edges). Named after William Rowan Hamilton.</p>
+  </div>
+  <div class="def-box theorem-box">
+    <div class="def-label">Theorem · Dirac's Condition (Sufficient)</div>
+    <p>If G is simple, n ≥ 3, and every vertex has deg(v) ≥ n/2, then G has a Hamiltonian circuit.</p>
+  </div>
+  <div class="def-box theorem-box">
+    <div class="def-label">Theorem · Ore's Condition (Sufficient)</div>
+    <p>If for every pair of non-adjacent vertices u,v: deg(u)+deg(v) ≥ n, then Hamiltonian circuit exists.</p>
+  </div>
+  <p><strong>Key distinction:</strong> Euler = traverse all <em>edges</em>; Hamilton = visit all <em>vertices</em>. Euler conditions are easy to check; Hamilton is NP-complete in general.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <tr><th></th><th>Euler</th><th>Hamiltonian</th></tr>
+      <tr><td>What is traversed?</td><td>Every edge once</td><td>Every vertex once</td></tr>
+      <tr><td>Characterization</td><td>Degree conditions (easy)</td><td>No simple characterization (NP-hard)</td></tr>
+      <tr><td>Algorithm</td><td>Fleury's / Hierholzer's O(E)</td><td>No poly-time known</td></tr>
+      <tr><td>Application</td><td>Route planning, circuit boards</td><td>TSP, DNA sequencing</td></tr>
+    </table>
+  </div>
+
+  <!-- EULER / HAMILTON SIMULATOR -->
+  <div class="canvas-wrap">
+    <div class="canvas-title">// Euler & Hamiltonian Path Simulator · Fleury's Algorithm animated</div>
+    <canvas id="euler-canvas" class="sim" width="720" height="380"></canvas>
+    <div class="controls">
+      <select class="ctrl" id="euler-graph-select" onchange="loadEulerGraph()">
+        <option value="euler-circuit">Euler Circuit Graph</option>
+        <option value="euler-path">Euler Path Graph</option>
+        <option value="no-euler">No Euler (Königsberg)</option>
+        <option value="hamilton">Hamiltonian Graph</option>
+        <option value="no-hamilton">No Hamiltonian</option>
+      </select>
+      <button class="ctrl" onclick="checkEuler()">Check Euler</button>
+      <button class="ctrl" onclick="animateEuler()">Animate Euler</button>
+      <button class="ctrl" onclick="animateHamilton()">Animate Hamilton</button>
+      <button class="ctrl" onclick="resetEuler()">Reset</button>
+    </div>
+    <div class="status-bar" id="euler-status">Select a graph and click Check Euler</div>
+    <div class="info-panel" id="euler-info">Degrees: <span id="euler-degrees">—</span></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════ SECTION 6 · SHORTEST PATH ══════════════ -->
+<section id="s6" class="reveal">
+  <div class="section-tag">Chapter 10.6</div>
+  <h2>Shortest-Path Problems</h2>
+
+  <p>Given a weighted graph, find the path from source to destination with <strong>minimum total weight</strong>. Real applications: GPS, network routing (OSPF), airline connections.</p>
+
+  <h3>Dijkstra's Algorithm</h3>
+  <div class="def-box">
+    <div class="def-label">Algorithm · Dijkstra (1959)</div>
+    <p>Finds shortest paths from a single source to all vertices in a weighted graph with <strong>non-negative weights</strong>. Greedy approach using priority queue.</p>
+  </div>
+  <div class="formula">Time: O((V + E) log V) with binary heap &nbsp;|&nbsp; O(V²) with array</div>
+
+  <h4>Algorithm Steps:</h4>
+  <ol style="color:var(--text-dim);padding-left:1.5rem;line-height:2">
+    <li>Set dist[source] = 0, dist[all others] = ∞</li>
+    <li>Add all vertices to priority queue keyed by dist</li>
+    <li>Extract vertex u with min dist</li>
+    <li>For each neighbor v of u: if dist[u] + w(u,v) &lt; dist[v], update dist[v] (relaxation)</li>
+    <li>Repeat until queue empty</li>
+  </ol>
+
+  <h3>Floyd-Warshall Algorithm</h3>
+  <div class="def-box">
+    <div class="def-label">Algorithm · Floyd-Warshall</div>
+    <p>Finds shortest paths between <strong>all pairs</strong> of vertices. Works with negative weights (not negative cycles). Dynamic programming approach.</p>
+  </div>
+  <div class="formula">D[i][j][k] = min(D[i][j][k−1], D[i][k][k−1] + D[k][j][k−1]) &nbsp;|&nbsp; O(V³)</div>
+
+  <!-- DIJKSTRA SIMULATOR -->
+  <div class="canvas-wrap">
+    <div class="canvas-title">// Dijkstra's Algorithm · Click start node then run</div>
+    <canvas id="dijkstra-canvas" class="sim" width="720" height="400"></canvas>
+    <div class="controls">
+      <button class="ctrl" onclick="stepDijkstra()">Step</button>
+      <button class="ctrl" onclick="runDijkstra()">Run All</button>
+      <button class="ctrl" onclick="resetDijkstra()">Reset</button>
+      <button class="ctrl" onclick="newDijkstraGraph()">New Graph</button>
+    </div>
+    <div class="status-bar" id="dijk-status">Click a node to set source, then Step or Run All</div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#f43f5e"></div> Source</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> In Queue</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> Finalized</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#06b6d4"></div> Shortest Path</div>
+    </div>
+    <div class="info-panel" id="dijk-info">Distances: <span id="dijk-dist">—</span></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════ SECTION 7 · PLANAR GRAPHS ══════════════ -->
+<section id="s7" class="reveal">
+  <div class="section-tag">Chapter 10.7</div>
+  <h2>Planar Graphs</h2>
+
+  <div class="def-box">
+    <div class="def-label">Definition · Planar Graph</div>
+    <p>A graph that can be drawn in the plane with <strong>no edge crossings</strong>. The drawing itself (without crossings) is called a <strong>planar embedding</strong>.</p>
+  </div>
+
+  <h3>Euler's Formula for Planar Graphs</h3>
+  <div class="def-box theorem-box">
+    <div class="def-label">Theorem · Euler's Planar Formula</div>
+    <p>For a connected planar graph with V vertices, E edges, and F faces (regions, including unbounded outer face):</p>
+  </div>
+  <div class="formula">V − E + F = 2</div>
+  <p>This is the planar graph version of Euler's characteristic. Works for any planar embedding!</p>
+
+  <div class="def-box example-box">
+    <div class="def-label">Example</div>
+    <p>Cube graph: V=8, E=12, F=6 → 8−12+6 = 2 ✓ &nbsp;&nbsp; Triangle: V=3, E=3, F=2 → 3−3+2 = 2 ✓</p>
+  </div>
+
+  <h3>Inequalities for Planar Graphs</h3>
+  <div class="def-box theorem-box">
+    <div class="def-label">Corollary</div>
+    <p>For simple connected planar graph with V ≥ 3:</p>
+  </div>
+  <div class="formula">E ≤ 3V − 6 &nbsp;&nbsp;&nbsp; (in general) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; E ≤ 2V − 4 &nbsp;&nbsp;&nbsp; (if no triangles)</div>
+  <p>Use to <strong>prove non-planarity</strong>: if E > 3V−6, graph is NOT planar.</p>
+
+  <h3>Kuratowski's Theorem</h3>
+  <div class="def-box theorem-box">
+    <div class="def-label">Theorem · Kuratowski (1930)</div>
+    <p>A graph is planar iff it contains no subgraph that is a <strong>subdivision</strong> of K₅ or K₃,₃. (A subdivision replaces edges with paths.)</p>
+  </div>
+  <div class="grid2">
+    <div class="def-box">
+      <div class="def-label">K₅ Check</div>
+      <p>V=5, E=10. Check: E ≤ 3V−6 → 10 ≤ 9. FALSE → K₅ not planar.</p>
+    </div>
+    <div class="def-box">
+      <div class="def-label">K₃,₃ Check</div>
+      <p>V=6, E=9, bipartite so no triangles. Check: E ≤ 2V−4 → 9 ≤ 8. FALSE → K₃,₃ not planar.</p>
+    </div>
+  </div>
+
+  <!-- PLANARITY DEMO -->
+  <div class="canvas-wrap">
+    <div class="canvas-title">// Planar Graph Demo · Drag nodes to redraw without crossings</div>
+    <canvas id="planar-canvas" class="sim" width="720" height="380"></canvas>
+    <div class="controls">
+      <select class="ctrl" id="planar-select" onchange="loadPlanarGraph()">
+        <option value="planar-simple">Simple Planar</option>
+        <option value="k4">K₄ (Planar)</option>
+        <option value="k5">K₅ (NOT Planar)</option>
+        <option value="k33">K₃,₃ (NOT Planar)</option>
+        <option value="petersen">Petersen (NOT Planar)</option>
+      </select>
+      <button class="ctrl" onclick="checkPlanarity()">Check Euler Formula</button>
+      <button class="ctrl" onclick="resetPlanar()">Reset Layout</button>
+    </div>
+    <div class="status-bar" id="planar-status">Drag nodes to rearrange the graph</div>
+    <div class="info-panel" id="planar-info">V=<span id="pl-v">—</span> E=<span id="pl-e">—</span> F=<span id="pl-f">—</span> | V−E+F=<span id="pl-euler">—</span> | Status: <span id="pl-status">—</span></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════ SECTION 8 · GRAPH COLORING ══════════════ -->
+<section id="s8" class="reveal">
+  <div class="section-tag">Chapter 10.8</div>
+  <h2>Graph Coloring</h2>
+
+  <div class="def-box">
+    <div class="def-label">Definition · Graph Coloring</div>
+    <p>Assignment of colors to vertices so that <strong>no two adjacent vertices share the same color</strong>. The minimum number of colors needed is the <strong>chromatic number χ(G)</strong>.</p>
+  </div>
+
+  <h3>The Four Color Theorem</h3>
+  <div class="def-box theorem-box">
+    <div class="def-label">Theorem · Four Color Theorem (Appel & Haken, 1976)</div>
+    <p>Every planar graph can be colored with at most <strong>4 colors</strong>. First major theorem proved with computer assistance (checking 1,936 reducible configurations).</p>
+  </div>
+
+  <h3>Chromatic Numbers of Special Graphs</h3>
+  <div class="tbl-wrap">
+    <table>
+      <tr><th>Graph</th><th>χ(G)</th><th>Reason</th></tr>
+      <tr><td>Bipartite (non-trivial)</td><td>2</td><td>2-colorable (proven by BFS 2-coloring)</td></tr>
+      <tr><td>Odd Cycle C₂ₖ₊₁</td><td>3</td><td>Need 3rd color for the "closing" vertex</td></tr>
+      <tr><td>Even Cycle C₂ₖ</td><td>2</td><td>Bipartite</td></tr>
+      <tr><td>Complete Kₙ</td><td>n</td><td>All pairs adjacent</td></tr>
+      <tr><td>Tree</td><td>2</td><td>Always bipartite</td></tr>
+      <tr><td>Planar Graph</td><td>≤ 4</td><td>Four Color Theorem</td></tr>
+      <tr><td>Petersen Graph</td><td>3</td><td>Not bipartite, not complete</td></tr>
+    </table>
+  </div>
+
+  <h3>Greedy Coloring Algorithm</h3>
+  <p>Assign colors in order: give each vertex the smallest color not used by its already-colored neighbors. Produces at most Δ(G)+1 colors where Δ is max degree. NOT always optimal.</p>
+
+  <div class="def-box theorem-box">
+    <div class="def-label">Brook's Theorem</div>
+    <p>χ(G) ≤ Δ(G) unless G is a complete graph or odd cycle, in which case χ(G) = Δ(G)+1.</p>
+  </div>
+
+  <h3>Applications of Coloring</h3>
+  <div class="grid2">
+    <div class="def-box example-box">
+      <div class="def-label">Exam Scheduling</div>
+      <p>Vertices = exams. Edge if same student takes both. Color = time slot. χ(G) = minimum slots needed.</p>
+    </div>
+    <div class="def-box example-box">
+      <div class="def-label">Register Allocation</div>
+      <p>In compilers, variables that are "live" at same time can't share a register. Coloring = register assignment.</p>
+    </div>
+    <div class="def-box example-box">
+      <div class="def-label">Map Coloring</div>
+      <p>Countries sharing border need different colors. Dual graph of map = planar graph → 4 colors always enough.</p>
+    </div>
+    <div class="def-box example-box">
+      <div class="def-label">Sudoku</div>
+      <p>Sudoku is a graph coloring problem on a 81-vertex graph where edges connect cells in same row/col/box. χ = 9.</p>
+    </div>
+  </div>
+
+  <!-- COLORING SIMULATOR -->
+  <div class="canvas-wrap">
+    <div class="canvas-title">// Graph Coloring Simulator · Greedy coloring animated</div>
+    <canvas id="color-canvas" class="sim" width="720" height="380"></canvas>
+    <div class="controls">
+      <select class="ctrl" id="color-graph-select" onchange="loadColorGraph()">
+        <option value="bipartite">Bipartite (χ=2)</option>
+        <option value="odd-cycle">Odd Cycle C₅ (χ=3)</option>
+        <option value="k4-color">K₄ (χ=4)</option>
+        <option value="petersen-color">Petersen (χ=3)</option>
+        <option value="random-color">Random Graph</option>
+      </select>
+      <button class="ctrl" onclick="stepColor()">Step</button>
+      <button class="ctrl" onclick="runColor()">Auto Color</button>
+      <button class="ctrl" onclick="resetColor()">Reset</button>
+    </div>
+    <div class="status-bar" id="color-status">Select a graph and click Step or Auto Color</div>
+    <div class="info-panel">Colors used: <span id="color-count">0</span> &nbsp;|&nbsp; χ(G) = <span id="chroma-num">?</span> &nbsp;|&nbsp; Order: <span id="color-order">—</span></div>
+  </div>
+
+  <!-- INTERACTIVE COLORING: let user color -->
+  <div class="canvas-wrap">
+    <div class="canvas-title">// Try It Yourself · Click a color then click a vertex to color it</div>
+    <canvas id="manual-color-canvas" class="sim" width="720" height="340"></canvas>
+    <div class="controls" id="manual-color-palette">
+      <button class="ctrl" style="background:#f43f5e;border-color:#f43f5e;color:#fff" onclick="setManualColor(0)">Red</button>
+      <button class="ctrl" style="background:#06b6d4;border-color:#06b6d4;color:#fff" onclick="setManualColor(1)">Cyan</button>
+      <button class="ctrl" style="background:#10b981;border-color:#10b981;color:#fff" onclick="setManualColor(2)">Green</button>
+      <button class="ctrl" style="background:#f59e0b;border-color:#f59e0b;color:#fff" onclick="setManualColor(3)">Amber</button>
+      <button class="ctrl" onclick="resetManualColor()">Reset</button>
+      <button class="ctrl" onclick="newManualGraph()">New Graph</button>
+    </div>
+    <div class="status-bar" id="manual-status">Select a color then click vertices to color them</div>
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+<div style="background:var(--surface);border-top:1px solid var(--border);padding:3rem 2rem;text-align:center">
+  <div style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--text-dim);max-width:600px;margin:0 auto;line-height:2">
+    <div style="color:var(--accent2);margin-bottom:0.5rem;font-weight:700">GRAPH THEORY COMPLETE REFERENCE</div>
+    Based on: Kenneth H. Rosen, <em>Discrete Mathematics and Its Applications</em>, 8th Ed., Chapter 10<br>
+    Topics: Graph Models · Terminology · Representation · Isomorphism · Connectivity · Euler & Hamilton · Shortest Paths · Planarity · Coloring
+  </div>
+</div>
+
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// UTILITY FUNCTIONS
+// ═══════════════════════════════════════════════════════════════
+const COLORS = ['#f43f5e','#06b6d4','#10b981','#f59e0b','#a78bfa','#fb923c','#34d399','#60a5fa'];
+const NODE_R = 18;
+
+function dist(a, b) { return Math.hypot(a.x-b.x, a.y-b.y); }
+function lerp(a, b, t) { return a + (b-a)*t; }
+function clamp(v, mn, mx) { return Math.max(mn, Math.min(mx, v)); }
+
+function drawNode(ctx, x, y, r, fillColor, label, textColor='#fff', strokeColor=null, strokeW=2) {
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI*2);
+  ctx.fillStyle = fillColor;
+  ctx.fill();
+  if(strokeColor) { ctx.strokeStyle = strokeColor; ctx.lineWidth = strokeW; ctx.stroke(); }
+  ctx.fillStyle = textColor;
+  ctx.font = `bold ${Math.max(9, r*0.7)}px 'Space Mono',monospace`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(label, x, y);
+}
+
+function drawEdge(ctx, x1, y1, x2, y2, color='#4a4a6a', w=2, directed=false, label=null) {
+  const dx = x2-x1, dy = y2-y1, len = Math.hypot(dx,dy);
+  if(len < 1) return;
+  ctx.beginPath();
+  ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+  ctx.strokeStyle = color; ctx.lineWidth = w;
+  ctx.stroke();
+  if(directed) {
+    const angle = Math.atan2(dy, dx);
+    const ax = x2 - Math.cos(angle)*20, ay = y2 - Math.sin(angle)*20;
+    ctx.beginPath();
+    ctx.moveTo(ax, ay);
+    ctx.lineTo(ax - 8*Math.cos(angle-0.4), ay - 8*Math.sin(angle-0.4));
+    ctx.lineTo(ax - 8*Math.cos(angle+0.4), ay - 8*Math.sin(angle+0.4));
+    ctx.closePath(); ctx.fillStyle = color; ctx.fill();
+  }
+  if(label !== null) {
+    const mx = (x1+x2)/2, my = (y1+y2)/2;
+    ctx.fillStyle = '#f59e0b';
+    ctx.font = "bold 11px 'Space Mono',monospace";
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#0a0a0f';
+    ctx.fillRect(mx-10, my-8, 20, 16);
+    ctx.fillStyle = '#f59e0b';
+    ctx.fillText(label, mx, my);
+  }
+}
+
+function getCanvasPos(canvas, e) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  let cx, cy;
+  if(e.touches) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
+  else { cx = e.clientX; cy = e.clientY; }
+  return { x: (cx - rect.left)*scaleX, y: (cy - rect.top)*scaleY };
+}
+
+function circleLayout(n, cx, cy, r) {
+  const nodes = [];
+  for(let i=0;i<n;i++) {
+    const angle = (2*Math.PI*i/n) - Math.PI/2;
+    nodes.push({x: cx+r*Math.cos(angle), y: cy+r*Math.sin(angle), id:i});
+  }
+  return nodes;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HERO CANVAS ANIMATION
+// ═══════════════════════════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, nodes=[], edges=[];
+
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function initNodes() {
+    nodes = [];
+    const n = 18;
+    for(let i=0;i<n;i++) {
+      nodes.push({
+        x: Math.random()*W, y: Math.random()*H,
+        vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4
+      });
+    }
+    edges = [];
+    for(let i=0;i<n;i++) for(let j=i+1;j<n;j++) {
+      if(Math.random()<0.25) edges.push([i,j]);
+    }
+  }
+  initNodes();
+
+  function frame() {
+    ctx.clearRect(0,0,W,H);
+    nodes.forEach(n => {
+      n.x += n.vx; n.y += n.vy;
+      if(n.x<0||n.x>W) n.vx*=-1;
+      if(n.y<0||n.y>H) n.vy*=-1;
+    });
+    edges.forEach(([a,b]) => {
+      const na=nodes[a],nb=nodes[b];
+      const d=dist(na,nb), alpha=Math.max(0,1-d/300);
+      ctx.beginPath(); ctx.moveTo(na.x,na.y); ctx.lineTo(nb.x,nb.y);
+      ctx.strokeStyle=`rgba(124,58,237,${alpha*0.5})`; ctx.lineWidth=1; ctx.stroke();
+    });
+    nodes.forEach(n => {
+      ctx.beginPath(); ctx.arc(n.x,n.y,3,0,Math.PI*2);
+      ctx.fillStyle='rgba(167,139,250,0.7)'; ctx.fill();
+    });
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 1: BUILD GRAPH
+// ═══════════════════════════════════════════════════════════════
+let buildNodes=[], buildEdges=[], buildMode='node', buildDirected=false, buildSelected=null;
+const buildCanvas = document.getElementById('build-canvas');
+const buildCtx = buildCanvas.getContext('2d');
+
+function setBuildMode(m) {
+  buildMode=m; buildSelected=null;
+  document.getElementById('build-mode-node').classList.toggle('active',m==='node');
+  document.getElementById('build-mode-edge').classList.toggle('active',m==='edge');
+  document.getElementById('build-status').textContent = m==='node' ? 'Mode: Add Node — click canvas to place vertices' : 'Mode: Add Edge — click first node, then second';
+  redrawBuild();
+}
+
+function toggleDirected() {
+  buildDirected=!buildDirected;
+  document.getElementById('build-mode-directed').textContent = buildDirected ? 'Directed' : 'Undirected';
+  updateBuildInfo();
+  redrawBuild();
+}
+
+function clearBuildGraph() {
+  buildNodes=[]; buildEdges=[]; buildSelected=null;
+  updateBuildInfo(); redrawBuild();
+}
+
+function updateBuildInfo() {
+  document.getElementById('bi-nodes').textContent=buildNodes.length;
+  document.getElementById('bi-edges').textContent=buildEdges.length;
+  let type = buildDirected ? 'Directed ' : 'Undirected ';
+  // check multi edges
+  const key = e => buildDirected ? `${e[0]}-${e[1]}` : [e[0],e[1]].sort().join('-');
+  const keys = buildEdges.map(key);
+  const unique = new Set(keys);
+  if(keys.length > unique.size) type += 'Multi';
+  else type += 'Simple';
+  type += ' Graph';
+  document.getElementById('bi-type').textContent=type;
+}
+
+buildCanvas.addEventListener('click', e => {
+  const pos = getCanvasPos(buildCanvas, e);
+  if(buildMode==='node') {
+    // check not too close
+    const tooClose = buildNodes.some(n => dist(n,pos)<NODE_R*2.2);
+    if(!tooClose) {
+      buildNodes.push({x:pos.x,y:pos.y,id:buildNodes.length});
+      updateBuildInfo(); redrawBuild();
+    }
+  } else {
+    const hit = buildNodes.find(n => dist(n,pos)<NODE_R+4);
+    if(!hit) return;
+    if(buildSelected===null) {
+      buildSelected=hit.id;
+      document.getElementById('build-status').textContent=`Selected node ${hit.id+1} — click second node`;
+      redrawBuild();
+    } else {
+      if(buildSelected !== hit.id) {
+        buildEdges.push([buildSelected, hit.id]);
+        document.getElementById('build-status').textContent=`Edge added: ${buildSelected+1} → ${hit.id+1}`;
+      }
+      buildSelected=null; updateBuildInfo(); redrawBuild();
+    }
+  }
+});
+
+function redrawBuild() {
+  const ctx=buildCtx, W=buildCanvas.width, H=buildCanvas.height;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#12121a'; ctx.fillRect(0,0,W,H);
+  buildEdges.forEach(([a,b]) => {
+    const na=buildNodes[a],nb=buildNodes[b];
+    if(!na||!nb) return;
+    drawEdge(ctx,na.x,na.y,nb.x,nb.y,'#4a4a6a',2,buildDirected);
+  });
+  buildNodes.forEach((n,i) => {
+    const isSel = i===buildSelected;
+    drawNode(ctx,n.x,n.y,NODE_R, isSel?'#f59e0b':'#7c3aed', String(i+1), '#fff', isSel?'#fff':'#a78bfa',2);
+  });
+}
+redrawBuild();
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 2: SPECIAL GRAPHS
+// ═══════════════════════════════════════════════════════════════
+const specialCanvas = document.getElementById('special-canvas');
+const specialCtx = specialCanvas.getContext('2d');
+
+function drawSpecialGraph() {
+  const type = document.getElementById('special-select').value;
+  const ctx=specialCtx, W=specialCanvas.width, H=specialCanvas.height;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#12121a'; ctx.fillRect(0,0,W,H);
+  let nodes=[], edges=[], info='';
+  const cx=W/2, cy=H/2;
+
+  if(type==='K5') {
+    nodes = circleLayout(5,cx,cy,130);
+    for(let i=0;i<5;i++) for(let j=i+1;j<5;j++) edges.push([i,j]);
+    info='K₅: V=5, E=10, deg=4 for all. Not planar (10 > 3×5−6=9).';
+  } else if(type==='K33') {
+    const top=[{x:cx-120,y:cy-80},{x:cx,y:cy-80},{x:cx+120,y:cy-80}];
+    const bot=[{x:cx-120,y:cy+80},{x:cx,y:cy+80},{x:cx+120,y:cy+80}];
+    nodes=[...top,...bot];
+    for(let i=0;i<3;i++) for(let j=3;j<6;j++) edges.push([i,j]);
+    info='K₃,₃: V=6, E=9. Complete bipartite. Not planar (9 > 2×6−4=8). Top row=V₁, Bottom=V₂.';
+  } else if(type==='C6') {
+    nodes = circleLayout(6,cx,cy,130);
+    for(let i=0;i<6;i++) edges.push([i,(i+1)%6]);
+    info='C₆: V=6, E=6. Even cycle → bipartite → χ=2. All degrees = 2. Has Euler circuit.';
+  } else if(type==='W5') {
+    nodes=[{x:cx,y:cy},...circleLayout(5,cx,cy,130)];
+    for(let i=0;i<5;i++) { edges.push([0,i+1]); edges.push([i+1,(i%5)+2>5?1:(i%5)+2]); }
+    // fix cycle
+    edges=[[0,1],[0,2],[0,3],[0,4],[0,5],[1,2],[2,3],[3,4],[4,5],[5,1]];
+    info='W₅: Wheel = C₅ + hub. Hub degree=5, rim degree=3 each. V=6, E=10.';
+  } else if(type==='Q3') {
+    // 3-bit strings
+    const pos3 = [{x:cx-140,y:cy-90},{x:cx-40,y:cy-90},{x:cx+60,y:cy-90},{x:cx+160,y:cy-90},
+                  {x:cx-140,y:cy+90},{x:cx-40,y:cy+90},{x:cx+60,y:cy+90},{x:cx+160,y:cy+90}];
+    nodes=pos3;
+    const labels=['000','001','010','011','100','101','110','111'];
+    for(let i=0;i<8;i++) for(let j=i+1;j<8;j++) {
+      const diff=(i^j);
+      if((diff&(diff-1))===0) edges.push([i,j]); // exactly 1 bit diff
+    }
+    const ctx2=ctx;
+    edges.forEach(([a,b])=>drawEdge(ctx2,nodes[a].x,nodes[a].y,nodes[b].x,nodes[b].y,'#4a4a6a',2));
+    nodes.forEach((n,i)=>{
+      ctx2.beginPath();ctx2.arc(n.x,n.y,22,0,Math.PI*2);
+      ctx2.fillStyle='#7c3aed';ctx2.fill();
+      ctx2.fillStyle='#fff';ctx2.font="bold 10px 'Space Mono',monospace";
+      ctx2.textAlign='center';ctx2.textBaseline='middle';
+      ctx2.fillText(labels[i],n.x,n.y);
+    });
+    document.getElementById('special-info').textContent='Q₃: 8 vertices (3-bit strings). Edge iff 1 bit differs. All degrees=3. Used in parallel computing interconnects.';
+    return;
+  } else if(type==='Petersen') {
+    const outer=circleLayout(5,cx,cy,140);
+    const inner=circleLayout(5,cx,cy,70);
+    nodes=[...outer,...inner];
+    for(let i=0;i<5;i++) { edges.push([i,(i+1)%5]); edges.push([i,i+5]); }
+    edges.push([5,7],[7,9],[9,6],[6,8],[8,5]);
+    info='Petersen: V=10, E=15, 3-regular. Not planar, χ=3, no Hamiltonian circuit. Famous counterexample in graph theory.';
+  }
+
+  edges.forEach(([a,b])=>drawEdge(ctx,nodes[a].x,nodes[a].y,nodes[b].x,nodes[b].y,'#4a4a6a',2));
+  nodes.forEach((n,i)=>drawNode(ctx,n.x,n.y,NODE_R,'#7c3aed',String(i+1),'#fff','#a78bfa',2));
+  document.getElementById('special-info').textContent=info;
+}
+drawSpecialGraph();
+
+// ═══════════════════════════════════════════════════════════════
+// DEGREE EXPLORER
+// ═══════════════════════════════════════════════════════════════
+const degCanvas = document.getElementById('degree-canvas');
+const degCtx = degCanvas.getContext('2d');
+let degNodes=[], degEdges=[];
+
+function initDegGraph() {
+  const W=degCanvas.width, H=degCanvas.height;
+  degNodes = circleLayout(7, W/2, H/2, 120);
+  degEdges = [[0,1],[0,2],[1,2],[1,3],[2,4],[3,4],[3,5],[4,6],[5,6],[0,6]];
+  degNodes.forEach((n,i)=>{ n.id=i; n.label=String.fromCharCode(65+i); });
+  redrawDegree();
+}
+
+function getDegColor(d) {
+  if(d<=1) return '#7c3aed';
+  if(d===2) return '#06b6d4';
+  if(d===3) return '#f59e0b';
+  return '#10b981';
+}
+
+function redrawDegree(hovered=-1) {
+  const ctx=degCtx, W=degCanvas.width, H=degCanvas.height;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#12121a'; ctx.fillRect(0,0,W,H);
+  const deg = new Array(degNodes.length).fill(0);
+  degEdges.forEach(([a,b])=>{deg[a]++;deg[b]++;});
+  degEdges.forEach(([a,b])=>{
+    const col=(a===hovered||b===hovered)?'#f59e0b':'#4a4a6a';
+    drawEdge(ctx,degNodes[a].x,degNodes[a].y,degNodes[b].x,degNodes[b].y,col,2);
+  });
+  degNodes.forEach((n,i)=>{
+    const d=deg[i], col=getDegColor(d);
+    const stroke=i===hovered?'#fff':'#2a2a3e';
+    drawNode(ctx,n.x,n.y,NODE_R+2,col,n.label,'#fff',stroke,2.5);
+    if(i===hovered) {
+      ctx.fillStyle='#f59e0b';
+      ctx.font="bold 12px 'Space Mono',monospace";
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(`deg=${d}`,n.x,n.y-NODE_R-14);
+    }
+  });
+  const sumDeg = deg.reduce((a,b)=>a+b,0);
+  document.getElementById('deg-sum').textContent=sumDeg;
+  document.getElementById('deg-2e').textContent=2*degEdges.length;
+  document.getElementById('deg-check').textContent=sumDeg===2*degEdges.length?'✓ YES':'✗ NO';
+}
+
+degCanvas.addEventListener('mousemove',e=>{
+  const pos=getCanvasPos(degCanvas,e);
+  const hit=degNodes.findIndex(n=>dist(n,pos)<NODE_R+6);
+  redrawDegree(hit);
+});
+degCanvas.addEventListener('mouseleave',()=>redrawDegree());
+initDegGraph();
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 3: REPRESENTATION
+// ═══════════════════════════════════════════════════════════════
+const repCanvas = document.getElementById('rep-canvas');
+const repCtx = repCanvas.getContext('2d');
+const repNodes = circleLayout(5, 160, 140, 100);
+repNodes.forEach((n,i)=>{ n.id=i; n.label=String.fromCharCode(65+i); });
+const repEdges = [[0,1],[0,2],[1,2],[1,3],[2,4],[3,4]];
+
+function drawRepGraph() {
+  const ctx=repCtx, W=repCanvas.width, H=repCanvas.height;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#12121a'; ctx.fillRect(0,0,W,H);
+  repEdges.forEach(([a,b])=>drawEdge(ctx,repNodes[a].x,repNodes[a].y,repNodes[b].x,repNodes[b].y,'#4a4a6a',2));
+  repNodes.forEach(n=>drawNode(ctx,n.x,n.y,NODE_R,'#7c3aed',n.label,'#fff','#a78bfa',2));
+}
+
+function showRep(type) {
+  if (typeof event !== 'undefined' && event && event.target && event.target.classList) {
+    const btns = event.target.closest('.controls');
+    if (btns) btns.querySelectorAll('.ctrl').forEach(b=>b.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+  const n=repNodes.length, m=repEdges.length;
+  let out='';
+  if(type==='matrix') {
+    const A=Array.from({length:n},()=>new Array(n).fill(0));
+    repEdges.forEach(([a,b])=>{A[a][b]=1;A[b][a]=1;});
+    out='Adjacency Matrix:\n\n';
+    out+='   '+repNodes.map(n=>n.label).join('  ')+'\n';
+    A.forEach((row,i)=>{ out+=repNodes[i].label+' ['+row.join(', ')+']\n'; });
+    out+='\nA[i][j] = 1 if edge between vᵢ and vⱼ\nRow sum = degree of vertex';
+  } else if(type==='incidence') {
+    const M=Array.from({length:n},()=>new Array(m).fill(0));
+    repEdges.forEach(([a,b],j)=>{M[a][j]=1;M[b][j]=1;});
+    out='Incidence Matrix:\n\n';
+    out+='   '+repEdges.map((_,i)=>`e${i+1}`).join(' ')+'\n';
+    M.forEach((row,i)=>{ out+=repNodes[i].label+' ['+row.join(', ')+']\n'; });
+    out+='\nM[i][j] = 1 if vᵢ incident with eⱼ\nCol sum always = 2';
+  } else {
+    out='Adjacency List:\n\n';
+    const adj=Array.from({length:n},()=>[]);
+    repEdges.forEach(([a,b])=>{adj[a].push(b);adj[b].push(a);});
+    adj.forEach((list,i)=>{ out+=repNodes[i].label+' → ['+list.map(j=>repNodes[j].label).join(', ')+']\n'; });
+    out+='\nSpace: O(V+E) vs O(V²) for matrix\nBetter for sparse graphs';
+  }
+  document.getElementById('rep-output').textContent=out;
+}
+
+drawRepGraph();
+showRep('matrix');
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 3: ISOMORPHISM
+// ═══════════════════════════════════════════════════════════════
+const iso1Canvas=document.getElementById('iso1-canvas');
+const iso2Canvas=document.getElementById('iso2-canvas');
+const iso1Ctx=iso1Canvas.getContext('2d');
+const iso2Ctx=iso2Canvas.getContext('2d');
+
+function drawIsoGraph(ctx, canvas, nodes, edges, colors=null) {
+  const W=canvas.width,H=canvas.height;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#12121a'; ctx.fillRect(0,0,W,H);
+  edges.forEach(([a,b])=>drawEdge(ctx,nodes[a].x,nodes[a].y,nodes[b].x,nodes[b].y,'#4a4a6a',2));
+  nodes.forEach((n,i)=>{
+    const col=colors?colors[i]:'#7c3aed';
+    drawNode(ctx,n.x,n.y,NODE_R,col,n.label||String(i+1),'#fff','#a78bfa',2);
+  });
+}
+
+let isoG1nodes=[], isoG1edges=[], isoG2nodes=[], isoG2edges=[];
+
+function degSeq(nodes, edges) {
+  const deg=new Array(nodes.length).fill(0);
+  edges.forEach(([a,b])=>{deg[a]++;deg[b]++;});
+  return deg.sort((a,b)=>b-a);
+}
+
+function genIsoGraphs(isomorphic) {
+  // Base graph
+  isoG1nodes=circleLayout(5,150,110,85);
+  isoG1nodes.forEach((n,i)=>n.label=String(i+1));
+  isoG1edges=[[0,1],[0,2],[1,3],[2,4],[3,4],[1,2]];
+
+  if(isomorphic) {
+    // Permute vertices
+    const perm=[2,0,4,1,3];
+    isoG2nodes=circleLayout(5,150,110,85);
+    isoG2nodes.forEach((n,i)=>n.label=String(i+1));
+    isoG2edges=isoG1edges.map(([a,b])=>[perm[a],perm[b]]);
+  } else {
+    isoG2nodes=circleLayout(5,150,110,85);
+    isoG2nodes.forEach((n,i)=>n.label=String(i+1));
+    isoG2edges=[[0,1],[0,2],[0,3],[1,2],[3,4]]; // different deg sequence
+  }
+
+  drawIsoGraph(iso1Ctx,iso1Canvas,isoG1nodes,isoG1edges);
+  drawIsoGraph(iso2Ctx,iso2Canvas,isoG2nodes,isoG2edges);
+
+  const d1=degSeq(isoG1nodes,isoG1edges).join(',');
+  const d2=degSeq(isoG2nodes,isoG2edges).join(',');
+  const same = d1===d2 && isoG1nodes.length===isoG2nodes.length && isoG1edges.length===isoG2edges.length;
+  const verdict = isomorphic ? 'ISOMORPHIC (same structure, different labeling)' : 'NOT ISOMORPHIC (different degree sequence)';
+  document.getElementById('iso-info').innerHTML=
+    `G₁: |V|=${isoG1nodes.length}, |E|=${isoG1edges.length}, deg-seq=[${d1}]\n`+
+    `G₂: |V|=${isoG2nodes.length}, |E|=${isoG2edges.length}, deg-seq=[${d2}]\n`+
+    `Invariants match: ${same?'YES':'NO'} → ${verdict}`;
+}
+genIsoGraphs(true);
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 4: BFS / DFS
+// ═══════════════════════════════════════════════════════════════
+const bfsCanvas=document.getElementById('bfs-canvas');
+const bfsCtx=bfsCanvas.getContext('2d');
+let travNodes=[], travEdges=[], travColors=[], travEdgeColors=[], travTimer=null, travOrder=[];
+
+function genTraversalGraph() {
+  const W=bfsCanvas.width,H=bfsCanvas.height;
+  travNodes=circleLayout(9,W/2,H/2,150);
+  travNodes.forEach((n,i)=>{ n.id=i; n.label=String.fromCharCode(65+i); });
+  travEdges=[[0,1],[0,2],[1,3],[1,4],[2,5],[2,6],[3,7],[4,8],[5,8],[6,7],[7,8]];
+  resetTraversal();
+}
+
+function resetTraversal() {
+  clearTimeout(travTimer);
+  travColors=new Array(travNodes.length).fill('#7c3aed');
+  travEdgeColors=new Array(travEdges.length).fill('#4a4a6a');
+  travOrder=[];
+  document.getElementById('bfs-status').textContent='Click Run BFS or Run DFS to start traversal from the red node.';
+  document.getElementById('bfs-order').textContent='—';
+  if(travNodes.length) { travColors[0]='#f43f5e'; }
+  redrawTraversal();
+}
+
+function redrawTraversal() {
+  const ctx=bfsCtx, W=bfsCanvas.width, H=bfsCanvas.height;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#12121a'; ctx.fillRect(0,0,W,H);
+  travEdges.forEach(([a,b],i)=>drawEdge(ctx,travNodes[a].x,travNodes[a].y,travNodes[b].x,travNodes[b].y,travEdgeColors[i],travEdgeColors[i]==='#06b6d4'?3:2));
+  travNodes.forEach((n,i)=>drawNode(ctx,n.x,n.y,NODE_R,travColors[i],n.label,'#fff','#2a2a3e',2));
+}
+
+function adjList(nodes, edges) {
+  const adj=Array.from({length:nodes.length},()=>[]);
+  edges.forEach(([a,b])=>{adj[a].push(b);adj[b].push(a);});
+  return adj;
+}
+
+function startBFS() {
+  clearTimeout(travTimer);
+  resetTraversal();
+  const adj=adjList(travNodes,travEdges);
+  const visited=new Array(travNodes.length).fill(false);
+  const steps=[];
+  const queue=[0]; visited[0]=true;
+  while(queue.length) {
+    const u=queue.shift();
+    steps.push({type:'visit',node:u});
+    adj[u].forEach(v=>{
+      if(!visited[v]) {
+        visited[v]=true; queue.push(v);
+        const ei=travEdges.findIndex(([a,b])=>(a===u&&b===v)||(a===v&&b===u));
+        steps.push({type:'edge',edge:ei,node:v});
+      }
+    });
+  }
+  animateSteps(steps,'BFS');
+}
+
+function startDFS() {
+  clearTimeout(travTimer);
+  resetTraversal();
+  const adj=adjList(travNodes,travEdges);
+  const visited=new Array(travNodes.length).fill(false);
+  const steps=[];
+  function dfs(u) {
+    visited[u]=true; steps.push({type:'visit',node:u});
+    adj[u].forEach(v=>{
+      if(!visited[v]) {
+        const ei=travEdges.findIndex(([a,b])=>(a===u&&b===v)||(a===v&&b===u));
+        steps.push({type:'edge',edge:ei,node:v});
+        dfs(v);
+      }
+    });
+  }
+  dfs(0);
+  animateSteps(steps,'DFS');
+}
+
+function animateSteps(steps, name) {
+  let i=0;
+  travColors[0]='#f43f5e';
+  const order=[];
+  function next() {
+    if(i>=steps.length) {
+      document.getElementById('bfs-status').textContent=`${name} complete! Visited ${order.length} nodes.`;
+      return;
+    }
+    const s=steps[i++];
+    if(s.type==='visit') {
+      travColors[s.node]=s.node===0?'#f43f5e':'#10b981';
+      order.push(travNodes[s.node].label);
+      document.getElementById('bfs-order').textContent=order.join(' → ');
+      document.getElementById('bfs-status').textContent=`${name}: Visiting ${travNodes[s.node].label}`;
+    } else {
+      travEdgeColors[s.edge]='#06b6d4';
+      travColors[s.node]='#f59e0b';
+    }
+    redrawTraversal();
+    travTimer=setTimeout(next,600);
+  }
+  next();
+}
+
+genTraversalGraph();
+
+// ═══════════════════════════════════════════════════════════════
+// CUT VERTEX DEMO
+// ═══════════════════════════════════════════════════════════════
+const cutCanvas=document.getElementById('cut-canvas');
+const cutCtx=cutCanvas.getContext('2d');
+let cutNodes=[], cutEdges=[], cutHighNodes=[], cutHighEdges=[];
+
+function initCutGraph() {
+  const W=cutCanvas.width,H=cutCanvas.height;
+  cutNodes=[
+    {x:120,y:160},{x:220,y:80},{x:220,y:240},{x:360,y:160},
+    {x:480,y:80},{x:480,y:240},{x:600,y:160}
+  ];
+  cutNodes.forEach((n,i)=>{ n.id=i; n.label=String.fromCharCode(65+i); });
+  cutEdges=[[0,1],[0,2],[1,2],[1,3],[2,3],[3,4],[3,5],[4,6],[5,6]];
+  cutHighNodes=[]; cutHighEdges=[];
+  redrawCut();
+}
+
+function redrawCut() {
+  const ctx=cutCtx,W=cutCanvas.width,H=cutCanvas.height;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#12121a'; ctx.fillRect(0,0,W,H);
+  cutEdges.forEach(([a,b],i)=>{
+    const col=cutHighEdges.includes(i)?'#f59e0b':'#4a4a6a';
+    drawEdge(ctx,cutNodes[a].x,cutNodes[a].y,cutNodes[b].x,cutNodes[b].y,col,cutHighEdges.includes(i)?3:2);
+  });
+  cutNodes.forEach((n,i)=>{
+    const col=cutHighNodes.includes(i)?'#f43f5e':'#7c3aed';
+    drawNode(ctx,n.x,n.y,NODE_R,col,n.label,'#fff','#2a2a3e',2);
+  });
+}
+
+function findCutVertices() {
+  // Simple: for each vertex, check connectivity without it
+  const n=cutNodes.length;
+  const adj=adjList(cutNodes,cutEdges);
+  const cuts=[];
+  for(let skip=0;skip<n;skip++) {
+    const vis=new Array(n).fill(false);
+    let start=skip===0?1:0;
+    const q=[start]; vis[start]=true; let count=1;
+    while(q.length) {
+      const u=q.shift();
+      adj[u].forEach(v=>{ if(v!==skip&&!vis[v]){vis[v]=true;count++;q.push(v);} });
+    }
+    if(count < n-1) cuts.push(skip);
+  }
+  cutHighNodes=cuts; cutHighEdges=[];
+  redrawCut();
+  document.getElementById('cut-status').textContent='Cut vertices (red): '+cuts.map(i=>cutNodes[i].label).join(', ')+(cuts.length?'':'None found');
+}
+
+function findBridges() {
+  const n=cutNodes.length;
+  const bridges=[];
+  cutEdges.forEach(([a,b],idx)=>{
+    const tempEdges=cutEdges.filter((_,i)=>i!==idx);
+    const adj=Array.from({length:n},()=>[]);
+    tempEdges.forEach(([x,y])=>{adj[x].push(y);adj[y].push(x);});
+    const vis=new Array(n).fill(false);
+    const q=[0]; vis[0]=true; let count=1;
+    while(q.length){ const u=q.shift(); adj[u].forEach(v=>{if(!vis[v]){vis[v]=true;count++;q.push(v);}}); }
+    if(count<n) bridges.push(idx);
+  });
+  cutHighEdges=bridges; cutHighNodes=[];
+  redrawCut();
+  document.getElementById('cut-status').textContent='Bridges (yellow): '+bridges.map(i=>`${cutNodes[cutEdges[i][0]].label}-${cutNodes[cutEdges[i][1]].label}`).join(', ')+(bridges.length?'':'None');
+}
+function resetCut() { cutHighNodes=[]; cutHighEdges=[]; redrawCut(); document.getElementById('cut-status').textContent='Cleared'; }
+initCutGraph();
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 5: EULER / HAMILTON
+// ═══════════════════════════════════════════════════════════════
+const eulerCanvas=document.getElementById('euler-canvas');
+const eulerCtx=eulerCanvas.getContext('2d');
+let eulerNodes=[], eulerEdges=[], eulerEdgeUsed=[], eulerAnim=null, eulerPath=[], eulerEdgeColors=[];
+let hamiltonNodes=[], hamiltonPath=[];
+
+function loadEulerGraph() {
+  clearTimeout(eulerAnim);
+  const type=document.getElementById('euler-graph-select').value;
+  const W=eulerCanvas.width,H=eulerCanvas.height;
+  const cx=W/2,cy=H/2;
+  if(type==='euler-circuit') {
+    eulerNodes=circleLayout(6,cx,cy,150);
+    eulerEdges=[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,3],[1,4]]; // all even degree
+  } else if(type==='euler-path') {
+    eulerNodes=circleLayout(5,cx,cy,140);
+    eulerEdges=[[0,1],[1,2],[2,3],[3,4],[4,0],[0,2],[1,3]]; // 2 odd degree nodes
+  } else if(type==='no-euler') {
+    // Königsberg: 4 vertices, all odd degree
+    eulerNodes=[{x:cx,y:cy-80},{x:cx-120,y:cy},{x:cx+120,y:cy},{x:cx,y:cy+80}];
+    eulerEdges=[[0,1],[0,2],[0,3],[1,3],[2,3],[1,2],[1,2]]; // multi-edges
+  } else if(type==='hamilton') {
+    eulerNodes=circleLayout(8,cx,cy,160);
+    eulerEdges=[];
+    for(let i=0;i<8;i++) eulerEdges.push([i,(i+1)%8]);
+    eulerEdges.push([0,4],[1,5],[2,6],[3,7]);
+  } else {
+    eulerNodes=circleLayout(6,cx,cy,140);
+    eulerEdges=[[0,1],[0,2],[1,2]]; // only a triangle, no Hamilton for rest
+  }
+  eulerNodes.forEach((n,i)=>{ n.id=i; n.label=String.fromCharCode(65+i); });
+  eulerEdgeUsed=new Array(eulerEdges.length).fill(false);
+  eulerEdgeColors=new Array(eulerEdges.length).fill('#4a4a6a');
+  eulerPath=[];
+  document.getElementById('euler-status').textContent='Graph loaded. Click Check Euler to analyze.';
+  redrawEuler();
+}
+
+function redrawEuler() {
+  const ctx=eulerCtx,W=eulerCanvas.width,H=eulerCanvas.height;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#12121a'; ctx.fillRect(0,0,W,H);
+  eulerEdges.forEach(([a,b],i)=>{
+    const col=eulerEdgeColors[i]||'#4a4a6a';
+    // offset parallel edges
+    const na=eulerNodes[a],nb=eulerNodes[b];
+    if(!na||!nb) return;
+    drawEdge(ctx,na.x,na.y,nb.x,nb.y,col,eulerEdgeColors[i]==='#06b6d4'?3:2);
+  });
+  eulerNodes.forEach((n,i)=>{
+    const isPath=eulerPath.includes(i);
+    drawNode(ctx,n.x,n.y,NODE_R,isPath?'#10b981':'#7c3aed',n.label,'#fff','#a78bfa',2);
+    // degree label
+    const deg=eulerEdges.filter(([a,b])=>a===i||b===i).length;
+    ctx.fillStyle=deg%2===0?'#10b981':'#f43f5e';
+    ctx.font="bold 10px 'Space Mono',monospace";
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(`d=${deg}`,n.x,n.y+NODE_R+12);
+  });
+}
+
+function checkEuler() {
+  const deg=new Array(eulerNodes.length).fill(0);
+  eulerEdges.forEach(([a,b])=>{ if(a<eulerNodes.length)deg[a]++; if(b<eulerNodes.length)deg[b]++; });
+  const odd=eulerNodes.filter((_,i)=>deg[i]%2!==0).map((_,i)=>i);
+  let msg;
+  if(odd.length===0) msg=`✓ EULER CIRCUIT exists! All ${eulerNodes.length} vertices have even degree.`;
+  else if(odd.length===2) msg=`✓ EULER PATH exists! Exactly 2 odd-degree vertices: ${odd.map(i=>eulerNodes[i].label).join(', ')}. Start/end there.`;
+  else msg=`✗ No Euler path/circuit. ${odd.length} odd-degree vertices (need 0 or 2). Königsberg-type!`;
+  document.getElementById('euler-status').textContent=msg;
+  document.getElementById('euler-degrees').textContent=eulerNodes.map((_,i)=>`${eulerNodes[i].label}:${deg[i]}`).join(', ');
+  redrawEuler();
+}
+
+function animateEuler() {
+  clearTimeout(eulerAnim);
+  eulerEdgeColors=new Array(eulerEdges.length).fill('#4a4a6a');
+  eulerPath=[];
+  // Simple Hierholzer visualization
+  const colors=['#06b6d4','#10b981','#f59e0b','#f43f5e','#a78bfa'];
+  let ci=0;
+  eulerEdges.forEach((e,i)=>{ setTimeout(()=>{ eulerEdgeColors[i]=colors[ci++%colors.length]; eulerPath.push(e[0],e[1]); redrawEuler(); }, i*400); });
+  document.getElementById('euler-status').textContent='Animating Euler traversal...';
+}
+
+function animateHamilton() {
+  clearTimeout(eulerAnim);
+  eulerEdgeColors=new Array(eulerEdges.length).fill('#4a4a6a');
+  eulerPath=[];
+  // Show Hamiltonian cycle (visit each node once)
+  const n=eulerNodes.length;
+  for(let i=0;i<n;i++) {
+    setTimeout(()=>{
+      eulerPath.push(i);
+      // find edge to next
+      const next=(i+1)%n;
+      const ei=eulerEdges.findIndex(([a,b])=>(a===i&&b===next)||(a===next&&b===i));
+      if(ei>=0) eulerEdgeColors[ei]='#f43f5e';
+      redrawEuler();
+      if(i===n-1) document.getElementById('euler-status').textContent=`Hamilton cycle: ${eulerNodes.map(n=>n.label).join('→')}→${eulerNodes[0].label}. Each VERTEX visited once!`;
+    }, i*500);
+  }
+  document.getElementById('euler-status').textContent='Animating Hamiltonian path...';
+}
+
+function resetEuler() {
+  clearTimeout(eulerAnim);
+  eulerEdgeColors=new Array(eulerEdges.length).fill('#4a4a6a');
+  eulerPath=[];
+  document.getElementById('euler-status').textContent='Reset.';
+  redrawEuler();
+}
+loadEulerGraph();
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 6: DIJKSTRA
+// ═══════════════════════════════════════════════════════════════
+const dijkCanvas=document.getElementById('dijkstra-canvas');
+const dijkCtx=dijkCanvas.getContext('2d');
+let dijkNodes=[], dijkEdges=[], dijkDist=[], dijkPrev=[], dijkFinalized=[], dijkQueue=[], dijkSource=-1, dijkSteps=[], dijkStepIdx=0;
+
+function newDijkstraGraph() {
+  const W=dijkCanvas.width,H=dijkCanvas.height;
+  dijkNodes=circleLayout(8,W/2,H/2,160);
+  dijkNodes.forEach((n,i)=>{ n.id=i; n.label=String.fromCharCode(65+i); });
+  dijkEdges=[
+    {a:0,b:1,w:4},{a:0,b:2,w:2},{a:1,b:3,w:5},{a:2,b:3,w:8},{a:2,b:4,w:10},
+    {a:1,b:4,w:6},{a:3,b:5,w:2},{a:4,b:5,w:3},{a:3,b:6,w:4},{a:5,b:7,w:1},{a:6,b:7,w:2}
+  ];
+  dijkSource=-1; dijkDist=new Array(dijkNodes.length).fill(Infinity);
+  dijkFinalized=[]; dijkQueue=[]; dijkSteps=[]; dijkStepIdx=0;
+  document.getElementById('dijk-status').textContent='Click a node to set source.';
+  document.getElementById('dijk-dist').textContent='—';
+  redrawDijk();
+}
+
+function dijkNodeColor(i) {
+  if(i===dijkSource) return '#f43f5e';
+  if(dijkFinalized.includes(i)) return '#10b981';
+  if(dijkQueue.includes(i)) return '#f59e0b';
+  return '#7c3aed';
+}
+
+function redrawDijk() {
+  const ctx=dijkCtx,W=dijkCanvas.width,H=dijkCanvas.height;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#12121a'; ctx.fillRect(0,0,W,H);
+  dijkEdges.forEach(e=>{
+    const na=dijkNodes[e.a],nb=dijkNodes[e.b];
+    const inPath=dijkFinalized.includes(e.a)&&dijkFinalized.includes(e.b)&&
+                 (dijkPrev[e.b]===e.a||dijkPrev[e.a]===e.b);
+    drawEdge(ctx,na.x,na.y,nb.x,nb.y,inPath?'#06b6d4':'#4a4a6a',inPath?3:2,false,e.w);
+  });
+  dijkNodes.forEach((n,i)=>{
+    drawNode(ctx,n.x,n.y,NODE_R,dijkNodeColor(i),n.label,'#fff','#2a2a3e',2);
+    if(dijkDist[i]!==undefined&&dijkDist[i]!==Infinity&&dijkDist[i]>=0) {
+      ctx.fillStyle='#f59e0b';
+      ctx.font="bold 11px 'Space Mono',monospace";
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(dijkDist[i]===Infinity?'∞':String(dijkDist[i]),n.x,n.y+NODE_R+14);
+    }
+  });
+}
+
+dijkCanvas.addEventListener('click',e=>{
+  if(dijkStepIdx>0) return;
+  const pos=getCanvasPos(dijkCanvas,e);
+  const hit=dijkNodes.findIndex(n=>dist(n,pos)<NODE_R+5);
+  if(hit<0) return;
+  dijkSource=hit;
+  dijkDist=new Array(dijkNodes.length).fill(Infinity);
+  dijkDist[hit]=0; dijkPrev=new Array(dijkNodes.length).fill(-1);
+  dijkFinalized=[]; dijkQueue=[hit]; dijkStepIdx=0;
+  // Precompute steps
+  dijkSteps=[];
+  const dist2=[...dijkDist], prev2=[...dijkPrev];
+  const fin=[], inQ=[hit];
+  const adj=Array.from({length:dijkNodes.length},()=>[]);
+  dijkEdges.forEach(e=>{adj[e.a].push({v:e.b,w:e.w});adj[e.b].push({v:e.a,w:e.w});});
+  while(inQ.length){
+    inQ.sort((a,b)=>dist2[a]-dist2[b]);
+    const u=inQ.shift();
+    fin.push(u);
+    dijkSteps.push({fin:[...fin],q:[...inQ],dist:[...dist2],prev:[...prev2],msg:`Extract min: ${dijkNodes[u].label} (dist=${dist2[u]})`});
+    adj[u].forEach(({v,w})=>{
+      if(dist2[u]+w<dist2[v]){
+        dist2[v]=dist2[u]+w; prev2[v]=u;
+        if(!fin.includes(v)&&!inQ.includes(v)) inQ.push(v);
+        dijkSteps.push({fin:[...fin],q:[...inQ],dist:[...dist2],prev:[...prev2],msg:`Relax: ${dijkNodes[u].label}→${dijkNodes[v].label}, dist=${dist2[v]}`});
+      }
+    });
+  }
+  document.getElementById('dijk-status').textContent=`Source: ${dijkNodes[hit].label}. Click Step or Run All.`;
+  redrawDijk();
+});
+
+function stepDijkstra() {
+  if(dijkSource<0){document.getElementById('dijk-status').textContent='Click a node first!';return;}
+  if(dijkStepIdx>=dijkSteps.length){document.getElementById('dijk-status').textContent='Dijkstra complete!';return;}
+  const s=dijkSteps[dijkStepIdx++];
+  dijkFinalized=[...s.fin]; dijkQueue=[...s.q]; dijkDist=[...s.dist]; dijkPrev=[...s.prev];
+  document.getElementById('dijk-status').textContent=s.msg;
+  document.getElementById('dijk-dist').textContent=dijkNodes.map((n,i)=>`${n.label}:${dijkDist[i]===Infinity?'∞':dijkDist[i]}`).join(', ');
+  redrawDijk();
+}
+
+let dijkRunTimer=null;
+function runDijkstra() {
+  if(dijkSource<0){document.getElementById('dijk-status').textContent='Click a node first!';return;}
+  function step(){
+    if(dijkStepIdx<dijkSteps.length){stepDijkstra();dijkRunTimer=setTimeout(step,400);}
+  }
+  step();
+}
+function resetDijkstra(){clearTimeout(dijkRunTimer);newDijkstraGraph();}
+newDijkstraGraph();
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 7: PLANAR
+// ═══════════════════════════════════════════════════════════════
+const planarCanvas=document.getElementById('planar-canvas');
+const planarCtx=planarCanvas.getContext('2d');
+let planarNodes=[], planarEdges=[], planarDragging=-1, planarIsPlanar=true;
+
+function loadPlanarGraph() {
+  const type=document.getElementById('planar-select').value;
+  const W=planarCanvas.width,H=planarCanvas.height;
+  const cx=W/2,cy=H/2;
+  if(type==='planar-simple') {
+    planarNodes=circleLayout(5,cx,cy,140);
+    planarEdges=[[0,1],[1,2],[2,3],[3,4],[4,0],[0,2]];
+    planarIsPlanar=true;
+  } else if(type==='k4') {
+    planarNodes=circleLayout(4,cx,cy,130);
+    planarEdges=[[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]];
+    planarIsPlanar=true;
+  } else if(type==='k5') {
+    planarNodes=circleLayout(5,cx,cy,150);
+    planarEdges=[];
+    for(let i=0;i<5;i++) for(let j=i+1;j<5;j++) planarEdges.push([i,j]);
+    planarIsPlanar=false;
+  } else if(type==='k33') {
+    planarNodes=[{x:cx-120,y:cy-90},{x:cx,y:cy-90},{x:cx+120,y:cy-90},
+                 {x:cx-120,y:cy+90},{x:cx,y:cy+90},{x:cx+120,y:cy+90}];
+    planarEdges=[];
+    for(let i=0;i<3;i++) for(let j=3;j<6;j++) planarEdges.push([i,j]);
+    planarIsPlanar=false;
+  } else if(type==='petersen') {
+    const outer=circleLayout(5,cx,cy,160);
+    const inner=circleLayout(5,cx,cy,80);
+    planarNodes=[...outer,...inner];
+    planarEdges=[];
+    for(let i=0;i<5;i++){planarEdges.push([i,(i+1)%5]);planarEdges.push([i,i+5]);}
+    planarEdges.push([5,7],[7,9],[9,6],[6,8],[8,5]);
+    planarIsPlanar=false;
+  }
+  planarNodes.forEach((n,i)=>{ n.id=i; n.label=String.fromCharCode(65+i); });
+  resetPlanar();
+}
+
+function countCrossings() {
+  let cross=0;
+  for(let i=0;i<planarEdges.length;i++) for(let j=i+1;j<planarEdges.length;j++) {
+    const [a,b]=planarEdges[i],[c,d]=planarEdges[j];
+    if(a===c||a===d||b===c||b===d) continue;
+    if(segmentsIntersect(planarNodes[a],planarNodes[b],planarNodes[c],planarNodes[d])) cross++;
+  }
+  return cross;
+}
+
+function segmentsIntersect(p1,p2,p3,p4) {
+  const d1=dir(p3,p4,p1),d2=dir(p3,p4,p2),d3=dir(p1,p2,p3),d4=dir(p1,p2,p4);
+  if(((d1>0&&d2<0)||(d1<0&&d2>0))&&((d3>0&&d4<0)||(d3<0&&d4>0))) return true;
+  return false;
+}
+function dir(pi,pj,pk) { return (pk.x-pi.x)*(pj.y-pi.y)-(pj.x-pi.x)*(pk.y-pi.y); }
+
+function redrawPlanar() {
+  const ctx=planarCtx,W=planarCanvas.width,H=planarCanvas.height;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#12121a'; ctx.fillRect(0,0,W,H);
+  const cross=countCrossings();
+  planarEdges.forEach(([a,b],i)=>{
+    const na=planarNodes[a],nb=planarNodes[b];
+    // Check if this edge crosses any other
+    let crosses=false;
+    for(let j=0;j<planarEdges.length;j++){
+      if(j===i) continue;
+      const [c,d]=planarEdges[j];
+      if(a===c||a===d||b===c||b===d) continue;
+      if(segmentsIntersect(na,nb,planarNodes[c],planarNodes[d])) crosses=true;
+    }
+    drawEdge(ctx,na.x,na.y,nb.x,nb.y,crosses?'#f43f5e':'#4a4a6a',crosses?3:2);
+  });
+  planarNodes.forEach((n,i)=>drawNode(ctx,n.x,n.y,NODE_R,'#7c3aed',n.label,'#fff','#a78bfa',2));
+  document.getElementById('planar-status').textContent=cross>0?`${cross} crossing(s) detected — try dragging nodes to eliminate them`:'No crossings! Planar embedding achieved.';
+  // Update info
+  const V=planarNodes.length,E=planarEdges.length;
+  document.getElementById('pl-v').textContent=V;
+  document.getElementById('pl-e').textContent=E;
+  document.getElementById('pl-f').textContent='?';
+  document.getElementById('pl-euler').textContent='?';
+  document.getElementById('pl-status').textContent=planarIsPlanar?(cross===0?'✓ Planar':'✓ Planar (rearrange to show)'):'✗ NOT Planar (Kuratowski)';
+}
+
+planarCanvas.addEventListener('mousedown',e=>{
+  const pos=getCanvasPos(planarCanvas,e);
+  planarDragging=planarNodes.findIndex(n=>dist(n,pos)<NODE_R+5);
+});
+planarCanvas.addEventListener('mousemove',e=>{
+  if(planarDragging<0) return;
+  const pos=getCanvasPos(planarCanvas,e);
+  planarNodes[planarDragging].x=pos.x; planarNodes[planarDragging].y=pos.y;
+  redrawPlanar();
+});
+planarCanvas.addEventListener('mouseup',()=>{ planarDragging=-1; });
+planarCanvas.addEventListener('mouseleave',()=>{ planarDragging=-1; });
+
+function checkPlanarity() {
+  const V=planarNodes.length,E=planarEdges.length;
+  const F=E-V+2; // assume connected, by Euler formula
+  document.getElementById('pl-v').textContent=V;
+  document.getElementById('pl-e').textContent=E;
+  document.getElementById('pl-f').textContent=F;
+  document.getElementById('pl-euler').textContent=V-E+F;
+  document.getElementById('dijk-status');
+}
+
+function resetPlanar() { redrawPlanar(); }
+loadPlanarGraph();
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 8: COLORING
+// ═══════════════════════════════════════════════════════════════
+const colorCanvas=document.getElementById('color-canvas');
+const colorCtx=colorCanvas.getContext('2d');
+let colorNodes=[], colorEdges=[], nodeColors=[], colorStep=0, colorOrder=[], colorTimer=null;
+const PALETTE=['#f43f5e','#06b6d4','#10b981','#f59e0b','#a78bfa','#fb923c'];
+
+function loadColorGraph() {
+  clearTimeout(colorTimer);
+  const type=document.getElementById('color-graph-select').value;
+  const W=colorCanvas.width,H=colorCanvas.height;
+  const cx=W/2,cy=H/2;
+  if(type==='bipartite') {
+    colorNodes=[{x:cx-180,y:cy-80},{x:cx-60,y:cy-80},{x:cx+60,y:cy-80},{x:cx+180,y:cy-80},
+                {x:cx-120,y:cy+80},{x:cx,y:cy+80},{x:cx+120,y:cy+80}];
+    colorEdges=[[0,4],[0,5],[1,4],[1,6],[2,5],[2,6],[3,5],[3,6]];
+    document.getElementById('chroma-num').textContent='2';
+  } else if(type==='odd-cycle') {
+    colorNodes=circleLayout(5,cx,cy,140);
+    colorEdges=[[0,1],[1,2],[2,3],[3,4],[4,0]];
+    document.getElementById('chroma-num').textContent='3';
+  } else if(type==='k4-color') {
+    colorNodes=circleLayout(4,cx,cy,130);
+    colorEdges=[[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]];
+    document.getElementById('chroma-num').textContent='4';
+  } else if(type==='petersen-color') {
+    const outer=circleLayout(5,cx,cy,160); const inner=circleLayout(5,cx,cy,80);
+    colorNodes=[...outer,...inner];
+    colorEdges=[];
+    for(let i=0;i<5;i++){colorEdges.push([i,(i+1)%5]);colorEdges.push([i,i+5]);}
+    colorEdges.push([5,7],[7,9],[9,6],[6,8],[8,5]);
+    document.getElementById('chroma-num').textContent='3';
+  } else {
+    // Random
+    colorNodes=circleLayout(8,cx,cy,155);
+    colorEdges=[];
+    for(let i=0;i<8;i++) for(let j=i+1;j<8;j++) if(Math.random()<0.35) colorEdges.push([i,j]);
+    document.getElementById('chroma-num').textContent='?';
+  }
+  colorNodes.forEach((n,i)=>{ n.id=i; n.label=String.fromCharCode(65+i); });
+  nodeColors=new Array(colorNodes.length).fill(-1);
+  colorStep=0; colorOrder=[...Array(colorNodes.length).keys()];
+  document.getElementById('color-count').textContent='0';
+  document.getElementById('color-order').textContent='—';
+  document.getElementById('color-status').textContent='Graph loaded. Step or Auto Color.';
+  redrawColor();
+}
+
+function getValidColor(node, colors, edges) {
+  const neighborColors=new Set();
+  edges.forEach(([a,b])=>{ if(a===node&&colors[b]>=0) neighborColors.add(colors[b]); if(b===node&&colors[a]>=0) neighborColors.add(colors[a]); });
+  for(let c=0;c<PALETTE.length;c++) if(!neighborColors.has(c)) return c;
+  return PALETTE.length-1;
+}
+
+function stepColor() {
+  if(colorStep>=colorNodes.length) { document.getElementById('color-status').textContent='All vertices colored!'; return; }
+  const v=colorOrder[colorStep];
+  const c=getValidColor(v,nodeColors,colorEdges);
+  nodeColors[v]=c;
+  colorStep++;
+  const used=new Set(nodeColors.filter(c=>c>=0)).size;
+  document.getElementById('color-count').textContent=used;
+  document.getElementById('color-order').textContent=colorOrder.slice(0,colorStep).map(i=>colorNodes[i].label).join('→');
+  document.getElementById('color-status').textContent=`Colored ${colorNodes[v].label} with color ${c+1}`;
+  if(colorStep===colorNodes.length) document.getElementById('chroma-num').textContent='≤'+used;
+  redrawColor();
+}
+
+function runColor() {
+  clearTimeout(colorTimer);
+  function s(){if(colorStep<colorNodes.length){stepColor();colorTimer=setTimeout(s,500);}}
+  s();
+}
+function resetColor() { clearTimeout(colorTimer); nodeColors=new Array(colorNodes.length).fill(-1); colorStep=0; document.getElementById('color-count').textContent='0'; document.getElementById('color-status').textContent='Reset.'; redrawColor(); }
+
+function isValidColoring() {
+  return colorEdges.every(([a,b])=>nodeColors[a]<0||nodeColors[b]<0||nodeColors[a]!==nodeColors[b]);
+}
+
+function redrawColor() {
+  const ctx=colorCtx,W=colorCanvas.width,H=colorCanvas.height;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#12121a'; ctx.fillRect(0,0,W,H);
+  colorEdges.forEach(([a,b])=>{
+    const conflict=nodeColors[a]>=0&&nodeColors[b]>=0&&nodeColors[a]===nodeColors[b];
+    drawEdge(ctx,colorNodes[a].x,colorNodes[a].y,colorNodes[b].x,colorNodes[b].y,conflict?'#f43f5e':'#4a4a6a',conflict?3:2);
+  });
+  colorNodes.forEach((n,i)=>{
+    const col=nodeColors[i]>=0?PALETTE[nodeColors[i]]:'#3a3a5a';
+    drawNode(ctx,n.x,n.y,NODE_R,col,n.label,'#fff',nodeColors[i]>=0?'#fff':'#4a4a6a',2);
+  });
+}
+loadColorGraph();
+
+// MANUAL COLORING
+const manualCanvas=document.getElementById('manual-color-canvas');
+const manualCtx=manualCanvas.getContext('2d');
+let manualNodes=[], manualEdges=[], manualColors=[], manualSelected=0;
+
+function newManualGraph() {
+  const W=manualCanvas.width,H=manualCanvas.height;
+  manualNodes=circleLayout(7,W/2,H/2,130);
+  manualNodes.forEach((n,i)=>{ n.id=i; n.label=String.fromCharCode(65+i); });
+  manualEdges=[[0,1],[0,2],[1,2],[1,3],[2,4],[3,4],[3,5],[4,6],[5,6],[0,5]];
+  manualColors=new Array(manualNodes.length).fill(-1);
+  redrawManual();
+}
+
+function setManualColor(c) { manualSelected=c; document.getElementById('manual-status').textContent=`Color selected: ${['Red','Cyan','Green','Amber'][c]}. Click a vertex.`; }
+function resetManualColor() { manualColors=new Array(manualNodes.length).fill(-1); document.getElementById('manual-status').textContent='Reset!'; redrawManual(); }
+
+manualCanvas.addEventListener('click',e=>{
+  const pos=getCanvasPos(manualCanvas,e);
+  const hit=manualNodes.findIndex(n=>dist(n,pos)<NODE_R+5);
+  if(hit<0) return;
+  manualColors[hit]=manualSelected;
+  const conflict=manualEdges.some(([a,b])=>(a===hit||b===hit)&&manualColors[a]===manualColors[b]&&manualColors[a]>=0&&a!==b);
+  document.getElementById('manual-status').textContent=conflict?`⚠ CONFLICT! Node ${manualNodes[hit].label} has same color as neighbor!`:`Colored ${manualNodes[hit].label}. Valid so far.`;
+  redrawManual();
+});
+
+function redrawManual() {
+  const ctx=manualCtx,W=manualCanvas.width,H=manualCanvas.height;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#12121a'; ctx.fillRect(0,0,W,H);
+  manualEdges.forEach(([a,b])=>{
+    const conflict=manualColors[a]>=0&&manualColors[b]>=0&&manualColors[a]===manualColors[b];
+    drawEdge(ctx,manualNodes[a].x,manualNodes[a].y,manualNodes[b].x,manualNodes[b].y,conflict?'#f43f5e':'#4a4a6a',conflict?3:2);
+  });
+  manualNodes.forEach((n,i)=>{
+    const col=manualColors[i]>=0?PALETTE[manualColors[i]]:'#3a3a5a';
+    drawNode(ctx,n.x,n.y,NODE_R,col,n.label,'#fff',manualColors[i]>=0?'#fff':'#4a4a6a',2);
+  });
+  const used=new Set(manualColors.filter(c=>c>=0)).size;
+  const allDone=manualColors.every(c=>c>=0);
+  const valid=manualEdges.every(([a,b])=>manualColors[a]<0||manualColors[b]<0||manualColors[a]!==manualColors[b]);
+  if(allDone) document.getElementById('manual-status').textContent=valid?`✓ Valid coloring! Used ${used} color(s).`:`✗ Invalid! Conflicts exist.`;
+}
+newManualGraph();
+
+// ═══════════════════════════════════════════════════════════════
+// SCROLL REVEAL
+// ═══════════════════════════════════════════════════════════════
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// ═══════════════════════════════════════════════════════════════
+// CANVAS RESIZE (responsive)
+// ═══════════════════════════════════════════════════════════════
+function resizeCanvas(canvas, drawFn) {
+  const w = Math.min(720, canvas.parentElement.offsetWidth - 48);
+  canvas.style.width = w + 'px';
+}
+
+</script>
+</body>
+</html>
